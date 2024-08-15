@@ -1,3 +1,9 @@
+# ROS build ignores
+atlas_ws/build/
+atlas_ws/install/
+atlas_ws/log/
+
+## Default ignores below ##
 devel/
 logs/
 build/
