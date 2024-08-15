@@ -1,3 +1,4 @@
+import sys
 import rclpy
 from rclpy.node import Node
 from std_msgs.msg import String
@@ -17,6 +18,16 @@ def main(args: dict = None):
     
     actuation = Actuation()
     rclpy.spin(actuation)
+    actuation.destroy_node()
+
+    actuation = Actuation()
+    try:
+        actuation.get_logger().info("Starting actuation node, shut down with CTRL-C")
+        rclpy.spin(actuation)
+    except KeyboardInterrupt:
+        pass
+    except rclpy.exceptions.ExternalShutdownException:
+        sys.exit(1)
     actuation.destroy_node()
 
     rclpy.shutdown()

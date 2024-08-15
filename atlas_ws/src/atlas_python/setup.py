@@ -1,4 +1,6 @@
 from setuptools import find_packages, setup
+import os
+from glob import glob
 
 package_name = 'atlas_python'
 
@@ -9,6 +11,7 @@ setup(
     data_files=[
         ('share/ament_index/resource_index/packages',
             ['resource/' + package_name]),
+        (os.path.join("share", package_name, "models"), glob("resource/models/*.pt")),
         ('share/' + package_name, ['package.xml']),
     ],
     install_requires=['setuptools'],
@@ -21,7 +24,10 @@ setup(
     entry_points={
         'console_scripts': [
             'atlas_test_node = atlas_python.atlas_test_node:main',
-            'actuation = atlas_python.actuation:main'
+            'actuation = atlas_python.actuation:main',
+            'camera = atlas_python.camera:main',
+            'viewer = atlas_python.viewer:main',
+            'object_detection = atlas_python.object_detection:main',
         ],
     },
 )

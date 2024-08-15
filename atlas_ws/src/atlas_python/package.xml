@@ -17,4 +17,8 @@
   </export>
 
   <exec_depend>python-rpi.gpio-pip</exec_depend>
+  <exec_depend>python-opencv</exec_depend>
+  <exec_depend>python3-ultralytics-pip</exec_depend>
+  <exec_depend>python-numpy</exec_depend>
+  <exec_depend>python-matplotlib</exec_depend>
 </package>
