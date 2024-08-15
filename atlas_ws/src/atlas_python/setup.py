@@ -20,7 +20,8 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'atlas_test_node = atlas_python.atlas_test_node:main'
+            'atlas_test_node = atlas_python.atlas_test_node:main',
+            'actuation = atlas_python.actuation:main'
         ],
     },
 )
