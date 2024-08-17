@@ -1,6 +1,5 @@
 import RPi.GPIO as GPIO
 import time
-from scripts.odometry import *
 
 # Set up GPIO mode
 GPIO.setmode(GPIO.BCM)

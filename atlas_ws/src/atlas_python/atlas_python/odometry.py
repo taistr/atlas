@@ -55,6 +55,8 @@ WHEEL_BASELINE = 10/100 #meters
 class odometryNode(Node):
     def __init__(self):
         super().__init__('odometry_node')
+        self.name = "odometry"
+        self.get_logger().info("Odometry Node Online!")
         # GPIO Set Up
         self.levLA = 0
         self.levLB = 0
