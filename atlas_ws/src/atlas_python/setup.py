@@ -28,6 +28,7 @@ setup(
             'camera = atlas_python.camera:main',
             'viewer = atlas_python.viewer:main',
             'object_detection = atlas_python.object_detection:main',
+            'motor_driver = atlas_python.motor_driver:main',
         ],
     },
 )
