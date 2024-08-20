@@ -23,11 +23,11 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
+            'actuation_test = atlas_python.actuation_test:main',
             'camera = atlas_python.camera:main',
             'hello = atlas_python.hello:main',
             'motor_driver = atlas_python.motor_driver:main',
             'object_detection = atlas_python.object_detection:main',
-            'odometry_test = atlas_python.odometry_test:main',
             'odometry = atlas_python.odometry:main'
             'viewer = atlas_python.viewer:main',
         ],
