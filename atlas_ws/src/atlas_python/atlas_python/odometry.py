@@ -51,10 +51,9 @@ WHEEL_BASELINE = 10/100 #meters
 # Source 1: https://gist.github.com/savetheclocktower/9b5f67c20f6c04e65ed88f2e594d43c1?permalink_comment_id=3628601
 # Source 2: Google Gemini
 # Source 3: https://github.com/eden-desta/ros2_differential_drive/blob/ros2/src/differential_drive/diff_tf.py
-class odometryNode(Node):
+class Odometry(Node):
     def __init__(self):
-        super().__init__('odometry_node')
-        self.name = "odometry"
+        super().__init__('odometry')
         self.get_logger().info("Odometry Node Online!")
        
         # Odometry data set up
