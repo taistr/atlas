@@ -38,7 +38,7 @@ class ActuationTest(Node):
         self.pwm_b = GPIO.PWM(ENB, 100)  # PWM frequency set to 100 Hz
         self.pwm_b.start(0)  # Start PWM with 0% duty cycle
 
-        self.test_timer = self.create_timer(timer_period_sec=3)
+        self.test_timer = self.create_timer(timer_period_sec=3, callback=self.test_callback)
         self.flag = False
     
 
