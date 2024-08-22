@@ -1,174 +1,187 @@
-# RUN THIS AS A BACKGROUND PROCESS
-
-# ROS 2 Set ups
 import sys
+from dataclasses import dataclass
+import math
+
 import rclpy
 from rclpy.node import Node
-
-try:
-    import RPi.GPIO as GPIO
-except RuntimeError: # RPi.GPIO throws errors when not on RPi
-    from unittest.mock import MagicMock as GPIO
-
-import time
-import os
-import signal
-import subprocess
-import sys
-import threading
-from math import sin, cos, pi
-
-from geometry_msgs.msg import Quaternion
-from geometry_msgs.msg import Twist
-from geometry_msgs.msg import TransformStamped
+from rclpy.executors import MultiThreadedExecutor
+from rcl_interfaces.msg import ParameterDescriptor, ParameterType
+from rclpy.qos import QoSProfile, QoSHistoryPolicy, QoSDurabilityPolicy, QoSReliabilityPolicy
+from std_msgs.msg import String
 from nav_msgs.msg import Odometry
-from tf2_ros import TransformBroadcaster
-from std_msgs.msg import Int16
-from atlas_msgs.msg import DiffDriveMotorVelocities
-from atlas_msgs.msg import DiffDriveEncoderReadings
-
-NS_TO_SEC= 1000000000
-
-# Raspberry Pi GPIO settings
-#Left Motor Encoder inputs
-GPIO_LA = 2
-GPIO_LB = 3
-#Right Motor Encoder inputs
-GPIO_RA = 4
-GPIO_RB = 5
-
-# Define Tick Rate for motor drives - Anh
-TICK_RATE = 100 #100Hz
-
-# Robot Params
-WHEEL_OD = 56/1000 #meters
-
-## NEED TO CHANGE
-WHEEL_BASELINE = 10/100 #meters
-##################################
+from atlas_msgs.msg import EncoderCount, WheelVelocity
+from geometry_msgs.msg import Quaternion
+from tf_transformations import quaternion_from_euler
 
 
-# Source 1: https://gist.github.com/savetheclocktower/9b5f67c20f6c04e65ed88f2e594d43c1?permalink_comment_id=3628601
-# Source 2: Google Gemini
-# Source 3: https://github.com/eden-desta/ros2_differential_drive/blob/ros2/src/differential_drive/diff_tf.py
-class Odometry(Node):
+@dataclass
+class Pose:
+    """Dataclass to store Atlas' pose"""
+    x: float = 0.0 # position in xy plane
+    y: float = 0.0
+    theta: float = 0.0 # orientation
+    v: float = 0.0 # linear velocity
+    w: float = 0.0 # angular velocity
+
+@dataclass
+class WheelVelocity:
+    """Dataclass to store Atlas' wheel velocities"""
+    left: float = 0.0
+    right: float = 0.0
+
+class OdometryNode(Node):
     def __init__(self):
-        super().__init__('odometry')
+        super().__init__("odometry")
+        self.initialise_parameters()
+
+        # Set up variables
+        self.pose = Pose()
+        self.wheel_velocities = WheelVelocity()
+        self.wheel_radius = self.get_parameter("wheel_radius").get_parameter_value().double_value
+        self.wheel_base = self.get_parameter("wheel_base").get_parameter_value().double_value
+        self.counts_per_rev = self.get_parameter("counts_per_rev").get_parameter_value().integer_value
+        self.prev_encoder_msg: EncoderCount | None = None
+
+        # Set up ROS 2 interfaces
+        odometry_publish_rate = 1.0/self.get_parameter("publish_rate").get_parameter_value().double_value
+        self.odometry_update_timer = self.create_timer(odometry_publish_rate, self.odometry_callback)
+        self.encoder_subcriber = self.create_subscription(
+            EncoderCount, 
+            "atlas/encoder_count", 
+            self.encoder_callback, 
+            qos_profile=QoSProfile(
+                depth=10,
+                history=QoSHistoryPolicy.KEEP_LAST,
+                durability=QoSDurabilityPolicy.VOLATILE,
+                reliability=QoSReliabilityPolicy.BEST_EFFORT
+            )
+        )
+        self.odometry_publisher = self.create_publisher(
+            Odometry, 
+            "atlas/odometry", 
+            qos_profile=QoSProfile(
+                depth=10,
+                history=QoSHistoryPolicy.KEEP_LAST,
+                durability=QoSDurabilityPolicy.VOLATILE,
+                reliability=QoSReliabilityPolicy.BEST_EFFORT
+            )
+        )
+
         self.get_logger().info("Odometry Node Online!")
-       
-        # Odometry data set up
-        self.x = 0.0  # position in xy plane
-        self.y = 0.0
-        self.th = 0.0
-        self.dx = 0.0  # speeds in x/rotation
-        self.dr = 0.0
-        self.base_frame_id = self.declare_parameter('base_frame_id', 'base_link').value # robot's base frame
-        self.odom_frame_id = self.declare_parameter('odom_frame_id', 'odom').value  # odometry reference frame
 
-        # Subscription set up
-        self.subscription = self.create_subscription(DiffDriveEncoderReadings,'encReading_perTick',self.periodicPublisher,10)
+    def initialise_parameters(self) -> None:
+        """Declare parameters for the encoder node"""
+        self.declare_parameter(
+            "publish_rate",
+            value=50,
+            descriptor=ParameterDescriptor(
+                type=ParameterType.PARAMETER_DOUBLE,
+                description="Rate at which odometry data is published (Hz)"
+            )
+        )
+        self.declare_parameter(
+            "counts_per_rev",
+            value=48,
+            descriptor=ParameterDescriptor(
+                type=ParameterType.PARAMETER_INTEGER,
+                description="Number of encoder counts per revolution"
+            )
+        )
+        self.declare_parameter(
+            "wheel_base",
+            value=0.1,
+            descriptor=ParameterDescriptor(
+                type=ParameterType.PARAMETER_DOUBLE,
+                description="Distance between the two wheels of the robot (m)"
+            )
+        )
+        self.declare_parameter(
+            "wheel_radius",
+            value=0.05,
+            descriptor=ParameterDescriptor(
+                type=ParameterType.PARAMETER_DOUBLE,
+                description="Radius of the wheels of the robot (m)"
+            )
+        )
 
-        # Publisher set up
-        self.publisher_ = self.create_publisher(Odometry, "odometry_pertick", queue_size = 10)
-    
-        # Publishing Timer
-        self.timer = self.create_timer(1/TICK_RATE, self.periodicPublisher)
+    def update_pose(self, msg: EncoderCount) -> None:
+        circumference = 2 * math.pi * self.wheel_radius
+        delta_s_left = circumference * ((msg.left - self.prev_encoder_msg.left) / self.counts_per_rev)
+        delta_s_right = circumference * ((msg.right - self.prev_encoder_msg.right) / self.counts_per_rev)
 
+        delta_s = (delta_s_left + delta_s_right) / 2
+        delta_theta = (delta_s_right - delta_s_left) / self.wheel_base
 
-    def periodicPublisher(self, encReading_perTick):
-        # Calculate elapsed time
-        current_time = self.get_clock().now()
-        time_elapsed = current_time - self.last_publish_time
-        time_elapsed = time_elapsed.nanoseconds / NS_TO_SEC
-        ticks_elapsed = time_elapsed/(1/TICK_RATE)
+        self.pose.x += delta_s * math.cos(self.pose.theta + delta_theta / 2.0)
+        self.pose.y += delta_s * math.sin(self.pose.theta + delta_theta / 2.0)
+        self.pose.theta += delta_theta
 
-        # Calculate counts per tick
-        if ticks_elapsed > 0:
-            Lcounts_perTick = encReading_perTick.l_motor_encoder_val
-            Rcounts_perTick = encReading_perTick.r_motor_encoder_val
-        else:
-            print("Odometry: Time period = 0")
+        delta_t = (msg.time - self.prev_encoder_msg.time) / 1e9 # seconds
+        self.pose.v = delta_s / delta_t
+        self.pose.w = delta_theta / delta_t
 
-        # Convert counts/tick to m/tick
-        Lw = Lcounts_perTick * (360/48) * (1/74.8317)       #Counts/Tick * Angle/Count * Exact Gear Ratio = Angle/Tick * Exact Gear Ratio (Degrees/Tick)
-        Lv = (Lw/360) * (pi*WHEEL_OD)      # meter/tick
-        Rw = Rcounts_perTick * (360/48) * (1/74.8317)       #Counts/Tick * Angle/Count * Exact Gear Ratio = Angle/Tick * Exact Gear Ratio (Degrees/Tick)
-        Rv = (Rw/360) * (pi*WHEEL_OD)      # meter/tick
+    def encoder_callback(self, msg: EncoderCount) -> None:
+        """Callback function for the encoder data. Updates the odometry data"""
+        if self.prev_encoder_msg is None:
+            self.prev_encoder_msg = msg
+            return
+        
+        self.update_pose(msg)
+        self.prev_encoder_msg = msg
 
-        # Displacement/Tick
-        #Polar coords
-        d_perTick = (Rv + Lv) / 2     #meter/Tick
-        th_perTick = (Rv - Lv) / WHEEL_BASELINE      #Degrees/Tick
-        #Cartesian coords
-        if Lv != 0:
-            x_perTick = cos(th_perTick) * d_perTick
-            y_perTick = -sin(th_perTick) * d_perTick
-            self.x = self.x + (cos(self.th) * x_perTick - sin(self.th)*y_perTick)
-            self.y = self.y + (sin(self.th) * x_perTick + cos(self.th)*y_perTick)
-        if th_perTick != 0:
-            self.th = self.th + th_perTick 
-        #Quaternion
-        """
-        If you're curious about the values in a quaternion:
-            If v(v1, v2, v3) is the axis of rotation:
-             x = v1 * sin (theta / 2)
-             y = v2 * sin (theta / 2)
-             z = v3 * sin (theta / 2)
-            w represents the "amount" of rotation:
-             w = cos(theta/2)
-        """
-        quaternion = Quaternion()
-        quaternion.x = 0.0
-        quaternion.y = 0.0
-        quaternion.z = sin(self.th/2)
-        quaternion.w = cos(self.th/2)
+    def get_odometry(self) -> Odometry:
+        """Get the current odometry data"""
+        msg: Odometry = Odometry()
+        msg.header.stamp = self.get_clock().now().to_msg()
+        msg.header.frame_id = "odom"
+        msg.child_frame_id = "base_link"
 
-        # Velocities 
-        self.dx = d_perTick / time_elapsed   #meter/second
-        self.dr = th_perTick / time_elapsed  #degrees/second
-
-        # Odometry message
-        msg = Odometry()
-        msg.header.stamp = current_time.to_msg()
-        msg.header.frame_id = self.odom_frame_id
-        msg.pose.pose.position.x = self.x
-        msg.pose.pose.position.y = self.y
+        # Set the position
+        msg.pose.pose.position.x = self.pose.x
+        msg.pose.pose.position.y = self.pose.y
         msg.pose.pose.position.z = 0.0
-        msg.pose.pose.orientation = quaternion
-        msg.child_frame_id = self.base_frame_id
-        msg.twist.twist.linear.x = self.dx
+
+        # Set the orientation (quaternion)
+        quaternion = quaternion_from_euler(0, 0, self.pose.theta)
+        msg.pose.pose.orientation = Quaternion(*quaternion)
+
+        # Set the velocity
+        msg.twist.twist.linear.x = self.pose.v
         msg.twist.twist.linear.y = 0.0
-        msg.twist.twist.angular.z = self.dr
+        msg.twist.twist.linear.z = 0.0
+        msg.twist.twist.angular.x = 0.0
+        msg.twist.twist.angular.y = 0.0
+        msg.twist.twist.angular.z = self.pose.w
 
-        #Publish information
-        self.publisher_.publish(msg)
+        return msg
 
-        #Reset counter values
-        self.Llast_counter = self.Lcounter
-        self.Rlast_counter = self.Rcounter
-        self.last_publish_time = current_time    
+    def odometry_callback(self) -> None:
+        """Publish the odometry data"""
+
+        #Publish the Wheel Velocities
+
+        # Publish the odometry message
+        msg = self.get_odometry()
+        self.odometry_publisher.publish(msg)
+
+    def timer_callback(self):
+        self.get_logger().info("callback worked")
     
 
-class encoderError(Exception):
-    print("Encoder Error Occurred. Bypassing Error")
-    pass
-
-
-def main(args=None):
-    rclpy.init(args = args)
+def main(args: dict = None):
+    rclpy.init(args=args)
+    
+    odometry = OdometryNode()
     try:
-        odometry_node = odometryNode()
-        rclpy.spin(odometry_node)
-    except rclpy.exceptions.ROSInterruptException:
+        odometry.get_logger().info("Starting Actuation Test!")
+        rclpy.spin(odometry, MultiThreadedExecutor())
+    except KeyboardInterrupt:
         pass
+    except rclpy.exceptions.ExternalShutdownException:
+        sys.exit(1)
+    finally:
+        odometry.cleanup()  # Ensure GPIO cleanup happens
+        odometry.destroy_node()
 
-    odometry_node.destroy_node()
     rclpy.shutdown()
-
-
-if __name__ == "__main__":  
-    main()
-   
-
-
 

@@ -26,6 +26,7 @@ setup(
             'actuation_test = atlas_python.actuation_test:main',
             'camera = atlas_python.camera:main',
             'encoder_test = atlas_python.encoder_test:main',
+            'encoder = atlas_python.encoder:main',
             'hello = atlas_python.hello:main',
             'motor_driver = atlas_python.motor_driver:main',
             'object_detection = atlas_python.object_detection:main',

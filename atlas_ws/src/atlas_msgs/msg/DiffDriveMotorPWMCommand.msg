@@ -1,5 +1,0 @@
-bool is_pwm
-float32 l_motor_duty_cycle
-bool l_motor_forward
-float32 r_motor_duty_cycle
-bool r_motor_forward

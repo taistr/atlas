@@ -16,7 +16,7 @@ ENCODER_RIGHT_B = 24
 
 class EncoderTest(Node):
     def __init__(self):
-        super().__init__("encoder")
+        super().__init__("encoder_Test")
         self.get_logger().info("Encoder Test Initialising")
 
         GPIO.setmode(GPIO.BCM)

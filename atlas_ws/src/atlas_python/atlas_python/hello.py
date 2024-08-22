@@ -16,19 +16,15 @@ class Hello(Node):
 def main(args: dict = None):
     rclpy.init(args=args)
     
-    actuation = Hello()
-    rclpy.spin(actuation)
-    actuation.destroy_node()
-
-    actuation = Hello()
+    hello = Hello()
     try:
-        actuation.get_logger().info("Starting Hello World!")
-        rclpy.spin(actuation)
+        hello.get_logger().info("Starting Hello World!")
+        rclpy.spin(hello)
     except KeyboardInterrupt:
         pass
     except rclpy.exceptions.ExternalShutdownException:
         sys.exit(1)
-    actuation.destroy_node()
+    hello.destroy_node()
 
     rclpy.shutdown()
 
