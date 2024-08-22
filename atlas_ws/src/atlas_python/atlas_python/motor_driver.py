@@ -1,5 +1,6 @@
 import rclpy
 from rclpy.node import Node
+from rclpy.executors import MultiThreadedExecutor
 from rcl_interfaces.msg import ParameterDescriptor, ParameterType
 from rclpy.qos import QoSProfile, QoSHistoryPolicy, QoSDurabilityPolicy, QoSReliabilityPolicy
 from geometry_msgs.msg import Twist
@@ -267,7 +268,7 @@ def main(args: dict = None):
     
     motor_driver = MotorDriver()
     try:
-        rclpy.spin(motor_driver)
+        rclpy.spin(motor_driver, MultiThreadedExecutor())
     except KeyboardInterrupt:
         pass
     except rclpy.exceptions.ExternalShutdownException:

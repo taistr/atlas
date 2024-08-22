@@ -44,16 +44,21 @@ class ActuationTest(Node):
 
     def test_callback(self) -> None:
         self.get_logger().info("Test Callback!")
-        if self.flag:
-            self.set_motor_direction(IN1, IN2, True)
-            self.set_motor_direction(IN3, IN4, True)
-            self.set_motor_speed(self.pwm_a, 100)
-            self.set_motor_speed(self.pwm_b, 100)
-        else:
-            self.set_motor_direction(IN1, IN2, False)
-            self.set_motor_direction(IN3, IN4, False)
-            self.set_motor_speed(self.pwm_a, 75)
-            self.set_motor_speed(self.pwm_b, 75)
+        # if self.flag:
+        #     self.set_motor_direction(IN1, IN2, True)
+        #     self.set_motor_direction(IN3, IN4, True)
+        #     self.set_motor_speed(self.pwm_a, 100)
+        #     self.set_motor_speed(self.pwm_b, 100)
+        # else:
+        #     self.set_motor_direction(IN1, IN2, False)
+        #     self.set_motor_direction(IN3, IN4, False)
+        #     self.set_motor_speed(self.pwm_a, 75)
+        #     self.set_motor_speed(self.pwm_b, 75)
+
+        self.set_motor_direction(IN1, IN2, True)
+        self.set_motor_direction(IN3, IN4, True)
+        self.set_motor_speed(self.pwm_a, 100)
+        self.set_motor_speed(self.pwm_b, 100)
 
         self.flag = not self.flag
 

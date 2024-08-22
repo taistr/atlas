@@ -1,6 +1,7 @@
 import sys
 import rclpy
 from rclpy.node import Node
+from rclpy.executors import MultiThreadedExecutor
 from rcl_interfaces.msg import ParameterDescriptor, ParameterType
 from rclpy.qos import QoSProfile, QoSHistoryPolicy, QoSDurabilityPolicy, QoSReliabilityPolicy
 from std_msgs.msg import String
@@ -21,10 +22,10 @@ class Encoder(Node):
         self.encoder_count = EncoderCount(left=0, right=0)
 
         # Get parameters
-        self.ENCODER_LEFT_A = self.get_parameter("encoder_left_a").get_parameter_value().integer_value
-        self.ENCODER_LEFT_B = self.get_parameter("encoder_left_b").get_parameter_value().integer_value  
-        self.ENCODER_RIGHT_A = self.get_parameter("encoder_right_a").get_parameter_value().integer_value
-        self.ENCODER_RIGHT_B = self.get_parameter("encoder_right_b").get_parameter_value().integer_value
+        self.ENCODER_LEFT_A = self.get_parameter("encoder_left_a").value
+        self.ENCODER_LEFT_B = self.get_parameter("encoder_left_b").value 
+        self.ENCODER_RIGHT_A = self.get_parameter("encoder_right_a").value
+        self.ENCODER_RIGHT_B = self.get_parameter("encoder_right_b").value
 
         # Set-up GPIO pins
         GPIO.setmode(GPIO.BCM)
@@ -32,8 +33,8 @@ class Encoder(Node):
         GPIO.setup(self.ENCODER_LEFT_B, GPIO.IN, pull_up_down=GPIO.PUD_UP)
         GPIO.setup(self.ENCODER_RIGHT_A, GPIO.IN, pull_up_down=GPIO.PUD_UP)
         GPIO.setup(self.ENCODER_RIGHT_B, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-        GPIO.add_event_detect(self.ENCODER_LEFT_A, GPIO.BOTH, callback=self.left_encoder_callback)
-        GPIO.add_event_detect(self.ENCODER_RIGHT_A, GPIO.BOTH, callback=self.right_encoder_callback)
+        GPIO.add_event_detect(self.ENCODER_LEFT_B, GPIO.BOTH, callback=self.left_encoder_callback)
+        GPIO.add_event_detect(self.ENCODER_RIGHT_B, GPIO.BOTH, callback=self.right_encoder_callback)
 
         # Set up timer to publish encoder data
         self.encoder_publisher = self.create_publisher(
@@ -46,7 +47,7 @@ class Encoder(Node):
                 reliability=QoSReliabilityPolicy.RELIABLE
             )
         )
-        publish_period = 1.0 / self.get_parameter("publish_rate").get_parameter_value().double_value
+        publish_period = 1.0 / self.get_parameter("publish_rate").value
         self.encoder_publish_timer = self.create_timer(publish_period, self.timer_callback)
 
         self.get_logger().info("Encoder Node Online!")
@@ -64,7 +65,7 @@ class Encoder(Node):
         )
         self.declare_parameter(
             "encoder_left_a",
-            value=27,
+            value=5,
             descriptor=ParameterDescriptor(
                 type=ParameterType.PARAMETER_INTEGER,
                 description="GPIO pin for left encoder A",
@@ -72,7 +73,7 @@ class Encoder(Node):
         )
         self.declare_parameter(
             "encoder_left_b",
-            value=22,
+            value=6,
             descriptor=ParameterDescriptor(
                 type=ParameterType.PARAMETER_INTEGER,
                 description="GPIO pin for left encoder B",
@@ -80,7 +81,7 @@ class Encoder(Node):
         )
         self.declare_parameter(
             "encoder_right_a",
-            value=23,
+            value=25,
             descriptor=ParameterDescriptor(
                 type=ParameterType.PARAMETER_INTEGER,
                 description="GPIO pin for right encoder A",
@@ -88,7 +89,7 @@ class Encoder(Node):
         )
         self.declare_parameter(
             "encoder_right_b",
-            value=24,
+            value=16,
             descriptor=ParameterDescriptor(
                 type=ParameterType.PARAMETER_INTEGER,
                 description="GPIO pin for right encoder B",
@@ -121,7 +122,7 @@ def main(args: dict = None):
     
     encoder = Encoder()
     try:
-        rclpy.spin(encoder)
+        rclpy.spin(encoder, MultiThreadedExecutor())
     except KeyboardInterrupt:
         pass
     except rclpy.exceptions.ExternalShutdownException:
