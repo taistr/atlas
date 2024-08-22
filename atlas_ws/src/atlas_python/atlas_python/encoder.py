@@ -43,7 +43,7 @@ class Encoder(Node):
                 depth=10,
                 history=QoSHistoryPolicy.KEEP_LAST,
                 durability=QoSDurabilityPolicy.VOLATILE,
-                reliability=QoSReliabilityPolicy.BEST_EFFORT
+                reliability=QoSReliabilityPolicy.RELIABLE
             )
         )
         publish_period = 1.0 / self.get_parameter("publish_rate").get_parameter_value().double_value
@@ -121,7 +121,6 @@ def main(args: dict = None):
     
     encoder = Encoder()
     try:
-        encoder.get_logger().info("Starting Actuation Test!")
         rclpy.spin(encoder)
     except KeyboardInterrupt:
         pass

@@ -9,7 +9,7 @@ from rcl_interfaces.msg import ParameterDescriptor, ParameterType
 from rclpy.qos import QoSProfile, QoSHistoryPolicy, QoSDurabilityPolicy, QoSReliabilityPolicy
 from std_msgs.msg import String
 from nav_msgs.msg import Odometry
-from atlas_msgs.msg import EncoderCount, WheelVelocity
+from atlas_msgs.msg import EncoderCount
 from geometry_msgs.msg import Quaternion
 from tf_transformations import quaternion_from_euler
 
@@ -23,12 +23,6 @@ class Pose:
     v: float = 0.0 # linear velocity
     w: float = 0.0 # angular velocity
 
-@dataclass
-class WheelVelocity:
-    """Dataclass to store Atlas' wheel velocities"""
-    left: float = 0.0
-    right: float = 0.0
-
 class OdometryNode(Node):
     def __init__(self):
         super().__init__("odometry")
@@ -36,7 +30,6 @@ class OdometryNode(Node):
 
         # Set up variables
         self.pose = Pose()
-        self.wheel_velocities = WheelVelocity()
         self.wheel_radius = self.get_parameter("wheel_radius").get_parameter_value().double_value
         self.wheel_base = self.get_parameter("wheel_base").get_parameter_value().double_value
         self.counts_per_rev = self.get_parameter("counts_per_rev").get_parameter_value().integer_value
@@ -63,7 +56,7 @@ class OdometryNode(Node):
                 depth=10,
                 history=QoSHistoryPolicy.KEEP_LAST,
                 durability=QoSDurabilityPolicy.VOLATILE,
-                reliability=QoSReliabilityPolicy.BEST_EFFORT
+                reliability=QoSReliabilityPolicy.RELIABLE
             )
         )
 
@@ -105,18 +98,22 @@ class OdometryNode(Node):
         )
 
     def update_pose(self, msg: EncoderCount) -> None:
+        """Update the pose data based on the encoder data"""
+        delta_t = (msg.time - self.prev_encoder_msg.time) / 1e9 # seconds
+
         circumference = 2 * math.pi * self.wheel_radius
+        # Calculate the distance travelled by each wheel
         delta_s_left = circumference * ((msg.left - self.prev_encoder_msg.left) / self.counts_per_rev)
         delta_s_right = circumference * ((msg.right - self.prev_encoder_msg.right) / self.counts_per_rev)
 
+        # Calculate the change in position and orientation
         delta_s = (delta_s_left + delta_s_right) / 2
         delta_theta = (delta_s_right - delta_s_left) / self.wheel_base
 
+        # Update the pose
         self.pose.x += delta_s * math.cos(self.pose.theta + delta_theta / 2.0)
         self.pose.y += delta_s * math.sin(self.pose.theta + delta_theta / 2.0)
         self.pose.theta += delta_theta
-
-        delta_t = (msg.time - self.prev_encoder_msg.time) / 1e9 # seconds
         self.pose.v = delta_s / delta_t
         self.pose.w = delta_theta / delta_t
 
@@ -158,22 +155,15 @@ class OdometryNode(Node):
     def odometry_callback(self) -> None:
         """Publish the odometry data"""
 
-        #Publish the Wheel Velocities
-
         # Publish the odometry message
-        msg = self.get_odometry()
-        self.odometry_publisher.publish(msg)
-
-    def timer_callback(self):
-        self.get_logger().info("callback worked")
-    
+        odom_msg = self.get_odometry()
+        self.odometry_publisher.publish(odom_msg)
 
 def main(args: dict = None):
     rclpy.init(args=args)
     
     odometry = OdometryNode()
     try:
-        odometry.get_logger().info("Starting Actuation Test!")
         rclpy.spin(odometry, MultiThreadedExecutor())
     except KeyboardInterrupt:
         pass

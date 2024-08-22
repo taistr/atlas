@@ -1,21 +1,31 @@
-import sys
-from simple_pid.pid import PID
-
 import rclpy
 from rclpy.node import Node
 from rcl_interfaces.msg import ParameterDescriptor, ParameterType
-from atlas_msgs.msg import EncoderCount
+from rclpy.qos import QoSProfile, QoSHistoryPolicy, QoSDurabilityPolicy, QoSReliabilityPolicy
+from geometry_msgs.msg import Twist
+from nav_msgs.msg import Odometry
 
+import sys
+from simple_pid.pid import PID
+from dataclasses import dataclass
 try:
     import RPi.GPIO as GPIO
 except RuntimeError:  # RPi.GPIO throws errors when not on RPi
     from unittest.mock import MagicMock
     GPIO = MagicMock()
 
+@dataclass
+class WheelVelocity:
+    left: float
+    right: float
+
 class MotorDriver(Node):
     def __init__(self):
         super().__init__("motor_driver")
         self.initialise_parameters()
+
+        self.measured_velocity = WheelVelocity(left=0.0, right=0.0)
+        self.requested_velocity = WheelVelocity(left=0.0, right=0.0)
 
         # Set up variables
         self.wheel_base = self.get_parameter("wheel_base").get_parameter_value().double_value
@@ -49,22 +59,39 @@ class MotorDriver(Node):
         ki = self.get_parameter("ki").get_parameter_value().double_value
         kd = self.get_parameter("kd").get_parameter_value().double_value
 
-        self.pid_left = PID(kp, ki, kd, setpoint=0)
-        self.pid_right = PID(kp, ki, kd, setpoint=0)
+        self.pid_left: PID = PID(kp, ki, kd, setpoint=0, sample_time=None)
+        self.pid_right: PID = PID(kp, ki, kd, setpoint=0, sample_time=None)
 
         self.pid_left.output_limits = (0, 100) # Set output limits (assuming PWM range of 0-100)
         self.pid_right.output_limits = (0, 100)
         
         # Create ROS interfaces
-        self.create_timer(
+        self.control_loop_timer = self.create_timer(
             1.0 / self.get_parameter("control_loop_rate").get_parameter_value().double_value,
+            self.control_loop
         )
-        self.create_subscription(
-            EncoderCount,
-            "atlas/encoder_count",
-            self.encoder_callback,
+        self.odometry_subscriber = self.create_subscription(
+            Odometry,
+            "atlas/odometry",
+            self.odometry_callback,
+            qos_profile=QoSProfile(
+                depth=10,
+                history=QoSHistoryPolicy.KEEP_LAST,
+                durability=QoSDurabilityPolicy.VOLATILE,
+                reliability=QoSReliabilityPolicy.RELIABLE
+            )
         )
-
+        self.velocity_request_subscriber = self.create_subscription(
+            Twist,
+            "atlas/velocity_request",
+            self.velocity_request_callback,
+            qos_profile=QoSProfile(
+                depth=10,
+                history=QoSHistoryPolicy.KEEP_LAST,
+                durability=QoSDurabilityPolicy.VOLATILE,
+                reliability=QoSReliabilityPolicy.RELIABLE
+            )
+        )
         self.get_logger().info("Motor Driver Initialised!")
 
 
@@ -175,41 +202,59 @@ class MotorDriver(Node):
             ),
         )
     
-    def encoder_callback(self, msg: EncoderCount) -> None:
-        """Callback function for the encoder data. Updates the PID controllers"""
+    def odometry_callback(self, msg: Odometry) -> None:
+        """Callback function for the odometry data. Updates the measured velocity"""
 
+        v = msg.twist.twist.linear.x
+        w = msg.twist.twist.angular.z
+
+        # Calculate the left and right wheel velocities
+        self.measured_velocity.left = v - w * self.wheel_base / 2
+        self.measured_velocity.right = v + w * self.wheel_base / 2
+
+
+
+    def velocity_request_callback(self, msg: Twist) -> None:
+        """Callback function for the velocity request. Updates the requested velocity"""
+        v = msg.linear.x
+        w = msg.angular.z
+
+        # Calculate the left and right wheel velocities
+        self.requested_velocity.left = v - w * self.wheel_base / 2
+        self.requested_velocity.right = v + w * self.wheel_base / 2
 
     def control_loop(self) -> None:
-        pass
+        """Control loop for the motor driver. Updates the motor speeds based on the PID controllers"""
+        dt = 1.0 / self.get_parameter("control_loop_rate").get_parameter_value().double_value
 
-    def test_callback(self) -> None:
-        self.get_logger().info("Test Callback!")
-        if self.flag:
-            self.set_motor_direction(IN1, IN2, True)
-            self.set_motor_direction(IN3, IN4, True)
-            self.set_motor_speed(self.pwm_a, 100)
-            self.set_motor_speed(self.pwm_b, 100)
+        self.pid_left.setpoint = self.requested_velocity.left
+        self.pid_right.setpoint = self.requested_velocity.right
+
+        left_output = self.pid_left(self.measured_velocity.left, dt=dt)
+        right_output = self.pid_right(self.measured_velocity.right, dt=dt)
+
+        self.set_motor_speed(left=True, speed=left_output)
+        self.set_motor_speed(left=False, speed=right_output)
+
+    def set_motor_speed(self, left: bool, speed: float):
+        """Set motor speed and direction based on side (left/right) and speed."""
+        if left:
+            pwm = self.pwm_a
+            in1, in2 = self.IN1, self.IN2
         else:
-            self.set_motor_direction(IN1, IN2, False)
-            self.set_motor_direction(IN3, IN4, False)
-            self.set_motor_speed(self.pwm_a, 75)
-            self.set_motor_speed(self.pwm_b, 75)
+            pwm = self.pwm_b
+            in1, in2 = self.IN3, self.IN4
 
-        self.flag = not self.flag
+        # Determine direction based on the sign of speed
+        if speed >= 0:
+            GPIO.output(in1, GPIO.HIGH)
+            GPIO.output(in2, GPIO.LOW)
+        else:
+            GPIO.output(in1, GPIO.LOW)
+            GPIO.output(in2, GPIO.HIGH)
 
-
-    # @staticmethod
-    # def set_motor_speed(pwm: GPIO.PWM, speed: float):
-    #     pwm.ChangeDutyCycle(speed)
-
-    # def set_motor_direction(self, in1: int, in2: int, forward: bool):
-    #     self.get_logger().info("forward" if forward else "backward")
-    #     if forward:
-    #         GPIO.output(in1, GPIO.HIGH)
-    #         GPIO.output(in2, GPIO.LOW)
-    #     else:
-    #         GPIO.output(in1, GPIO.LOW)
-    #         GPIO.output(in2, GPIO.HIGH)
+        # Set the PWM duty cycle
+        pwm.ChangeDutyCycle(abs(speed))
 
     def cleanup(self):
         self.get_logger().info("Cleaning up GPIO and stopping PWM...")
@@ -220,17 +265,16 @@ class MotorDriver(Node):
 def main(args: dict = None):
     rclpy.init(args=args)
     
-    actuation = ActuationTest()
+    motor_driver = MotorDriver()
     try:
-        actuation.get_logger().info("Starting Actuation Test!")
-        rclpy.spin(actuation)
+        rclpy.spin(motor_driver)
     except KeyboardInterrupt:
         pass
     except rclpy.exceptions.ExternalShutdownException:
         sys.exit(1)
     finally:
-        actuation.cleanup()  # Ensure GPIO cleanup happens
-        actuation.destroy_node()
+        motor_driver.cleanup()  # Ensure GPIO cleanup happens
+        motor_driver.destroy_node()
 
     rclpy.shutdown()
 
