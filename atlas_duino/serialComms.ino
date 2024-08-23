@@ -102,7 +102,7 @@ int executeSerialCmds(){
             Serial.print(-readEncoder(LEFT));
             Serial.print(",R:");
             Serial.print(readEncoder(RIGHT));
-            Serial.print(",Timestamp (microseconds):");
+            Serial.print(",Timestamp:");
             Serial.println(micros());  // Send time delta in microseconds
             resetEncoder(LEFT);
             resetEncoder(RIGHT);
@@ -168,6 +168,7 @@ void loop(){
         if (chr == 13) {
             if (arg == 1) {
                 argv1[idx] = NULL;
+            
             }
             else if (arg == 2){
                  argv2[idx] = NULL;

@@ -72,11 +72,11 @@ class Encoder(Node):
             response = self.readEncoder_cmd()
             if (response):
                 line = self.serial.readline().decode('utf-8').strip()
-                if line.startswith("L:") and ",R:" in line and ",Timestamp (microseconds):" in line:
+                if line.startswith("L:") and ",R:" in line and ",Timestamp:" in line:
                     # Parse the serial data
                     left_count = int(line.split(",R:")[0][2:])
-                    right_count = int(line.split(",Timestamp (microseconds):")[0].split(",R:")[1])
-                    time_delta = int(line.split(",Timestamp (microseconds):")[1])
+                    right_count = int(line.split(",Timestamp:")[0].split(",R:")[1])
+                    time_delta = int(line.split(",Timestamp:")[1])
 
                     
                     # Populate the ROS message
@@ -97,12 +97,12 @@ class Encoder(Node):
 
         try:
             cmd_string += "\r"
-            self.serial.write(cmd_string.encode())
+            self.serial.write(cmd_string.encode("utf-8"))
 
             c = ''
             value = ''
             while c != "\r":
-                c = self.serial.read(1).decode()
+                c = self.serial.read(1).decode("utf-8")
                 self.get_logger().info(c)
                 if (c == ''):
                     print("Error: Serial timeout on command: " + cmd_string)
