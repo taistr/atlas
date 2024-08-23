@@ -27,7 +27,7 @@ void loop() {
     Serial.print("L:");
     Serial.print(-currentLeftPosition);
     Serial.print(",R:");
-    Serial.print(currentRightPosition);
+    Serial.println(currentRightPosition);
 
     if (Serial.available()) {
       Serial.read();
