@@ -12,7 +12,7 @@ class Encoder(Node):
     def __init__(self):
         super().__init__("encoder")
         self.initialise_parameters()
-        self.encoder_count = EncoderCount(left=0, right=0, time=0)
+        self.encoder_count = EncoderCount(left=0, right=0, time_delta=0)
 
         self.serial = serial.Serial(
             port=self.get_parameter("port").value,
@@ -48,7 +48,7 @@ class Encoder(Node):
         )
         self.declare_parameter(
             "port",
-            value="/dev/ttyUSB0",
+            value="/dev/ttyACM0",
             descriptor=ParameterDescriptor(
                 type=ParameterType.PARAMETER_STRING,
                 description="Serial port for the encoder",
