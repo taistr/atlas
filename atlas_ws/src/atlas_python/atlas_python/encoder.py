@@ -64,7 +64,7 @@ class Encoder(Node):
         resp = self.send_command(f"e")
         self.get_logger().info(resp)
         if resp:
-            return [resp]
+            return resp
         return []
 
     def timer_callback(self):
@@ -72,7 +72,7 @@ class Encoder(Node):
             # Read from the serial port
             response = self.readEncoder_cmd()
             if (response):
-                line = self.serial.readline().decode('utf-8').strip()
+                line = response.decode('utf-8').strip()
                 if line.startswith("L:") and ",R:" in line and ",Timestamp:" in line:
                     
                     # Parse the serial data
