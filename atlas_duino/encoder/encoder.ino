@@ -27,8 +27,6 @@ void loop() {
     Serial.print(-currentLeftPosition);
     Serial.print(",R:");
     Serial.print(currentRightPosition);
-    Serial.print(",DT:");
-    Serial.println(timeDelta);  // Send time delta in microseconds
 
     if (Serial.available()) {
       Serial.read();

@@ -74,9 +74,9 @@ class OdometryNode(Node):
         )
         self.declare_parameter(
             "counts_per_rev",
-            value=48,
+            value=48 * 74.8317,
             descriptor=ParameterDescriptor(
-                type=ParameterType.PARAMETER_INTEGER,
+                type=ParameterType.PARAMETER_DOUBLE,
                 description="Number of encoder counts per revolution"
             )
         )
@@ -90,7 +90,7 @@ class OdometryNode(Node):
         )
         self.declare_parameter(
             "wheel_radius",
-            value=0.05,
+            value=0.0275,
             descriptor=ParameterDescriptor(
                 type=ParameterType.PARAMETER_DOUBLE,
                 description="Radius of the wheels of the robot (m)"
@@ -99,23 +99,24 @@ class OdometryNode(Node):
 
     def update_pose(self, msg: EncoderCount) -> None:
         """Update the pose data based on the encoder data"""
-        delta_t = msg.delta_time / 1e6 # seconds
+        if msg.delta_time == 0:
+            delta_t = msg.delta_time / 1e6 # seconds
 
-        circumference = 2 * math.pi * self.wheel_radius
-        # Calculate the distance travelled by each wheel
-        delta_s_left = circumference * ((msg.left - self.prev_encoder_msg.left) / self.counts_per_rev)
-        delta_s_right = circumference * ((msg.right - self.prev_encoder_msg.right) / self.counts_per_rev)
+            circumference = 2 * math.pi * self.wheel_radius
+            # Calculate the distance travelled by each wheel
+            delta_s_left = circumference * ((msg.left - self.prev_encoder_msg.left) / self.counts_per_rev)
+            delta_s_right = circumference * ((msg.right - self.prev_encoder_msg.right) / self.counts_per_rev)
 
-        # Calculate the change in position and orientation
-        delta_s = (delta_s_left + delta_s_right) / 2
-        delta_theta = (delta_s_right - delta_s_left) / self.wheel_base
+            # Calculate the change in position and orientation
+            delta_s = (delta_s_left + delta_s_right) / 2
+            delta_theta = (delta_s_right - delta_s_left) / self.wheel_base
 
-        # Update the pose
-        self.pose.x += delta_s * math.cos(self.pose.theta + delta_theta / 2.0)
-        self.pose.y += delta_s * math.sin(self.pose.theta + delta_theta / 2.0)
-        self.pose.theta += delta_theta
-        self.pose.v = delta_s / delta_t
-        self.pose.w = delta_theta / delta_t
+            # Update the pose
+            self.pose.x += delta_s * math.cos(self.pose.theta + delta_theta / 2.0)
+            self.pose.y += delta_s * math.sin(self.pose.theta + delta_theta / 2.0)
+            self.pose.theta += delta_theta
+            self.pose.v = delta_s / delta_t
+            self.pose.w = delta_theta / delta_t
 
     def encoder_callback(self, msg: EncoderCount) -> None:
         """Callback function for the encoder data. Updates the odometry data"""

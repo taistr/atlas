@@ -5,7 +5,6 @@ from rclpy.executors import MultiThreadedExecutor
 from rcl_interfaces.msg import ParameterDescriptor, ParameterType
 from rclpy.qos import QoSProfile, QoSHistoryPolicy, QoSDurabilityPolicy, QoSReliabilityPolicy
 from atlas_msgs.msg import EncoderCount
-import time
 import serial
 
 class Encoder(Node):
@@ -19,6 +18,7 @@ class Encoder(Node):
             baudrate=115200,
             timeout=0
         )
+        self.serial.write(b'.') # Send a byte to the Arduino to reset the encoder count
 
         # Set up timer to publish encoder data
         self.encoder_publisher = self.create_publisher(
