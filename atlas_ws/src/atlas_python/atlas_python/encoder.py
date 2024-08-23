@@ -5,7 +5,10 @@ from rclpy.executors import MultiThreadedExecutor
 from rcl_interfaces.msg import ParameterDescriptor, ParameterType
 from rclpy.qos import QoSProfile, QoSHistoryPolicy, QoSDurabilityPolicy, QoSReliabilityPolicy
 from atlas_msgs.msg import EncoderCount
+import serial.tools.list_ports
 import serial
+
+ARDUINO_SEND_PERIOD = 10000 #microseconds
 
 class Encoder(Node):
     def __init__(self):
@@ -14,7 +17,7 @@ class Encoder(Node):
         self.encoder_count = EncoderCount(left=0, right=0, time_delta=0)
 
         self.serial = serial.Serial(
-            port=self.get_parameter("port").value,
+            port=self.find_arduino_port(0x2341, 0x0043),
             baudrate=115200,
             timeout=0
         )
@@ -68,12 +71,21 @@ class Encoder(Node):
                     # Populate the ROS message
                     self.encoder_count.left = left_count
                     self.encoder_count.right = right_count
+                    self.encoder_count.time_delta = ARDUINO_SEND_PERIOD
 
                     # Publish the message
                     self.encoder_publisher.publish(self.encoder_count)
 
         except Exception as e:
             self.get_logger().error(f"Error reading serial data: {e}")
+
+    @staticmethod
+    def find_arduino_port(vid, pid):
+        ports = serial.tools.list_ports.comports()
+        for port in ports:
+            if port.vid == vid and port.pid == pid:
+                return port.device
+        return None
 
     def cleanup(self):
         # Close the serial port properly
