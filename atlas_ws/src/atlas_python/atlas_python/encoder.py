@@ -101,8 +101,9 @@ class Encoder(Node):
 
             c = ''
             value = ''
-            while c != '\r':
+            while c != "\r":
                 c = self.serial.read(1).decode("utf-8")
+                self.get_logger().info(c)
                 if (c == ''):
                     print("Error: Serial timeout on command: " + cmd_string)
                     return ''
