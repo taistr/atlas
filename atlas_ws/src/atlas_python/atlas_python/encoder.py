@@ -57,14 +57,15 @@ class Encoder(Node):
 
     def timer_callback(self):
         try:
+            self.serial.write('e')
             # Read from the serial port
             if self.serial.in_waiting > 0:
                 line = self.serial.readline().decode('utf-8').strip()
                 if line.startswith("L:") and ",R:" in line and ",DT:" in line:
                     # Parse the serial data
                     left_count = int(line.split(",R:")[0][2:])
-                    right_count = int(line.split(",DT:")[0].split(",R:")[1])
-                    time_delta = int(line.split(",DT:")[1])
+                    right_count = int(line.split(",Timestamp (microseconds):")[0].split(",R:")[1])
+                    time_delta = int(line.split(",Timestamp (microseconds):")[1])
 
                     # Populate the ROS message
                     self.encoder_count.left = left_count
@@ -73,6 +74,8 @@ class Encoder(Node):
 
                     # Publish the message
                     self.encoder_publisher.publish(self.encoder_count)
+                else:
+                    self.get_logger().info(line)
 
         except Exception as e:
             self.get_logger().error(f"Error reading serial data: {e}")
