@@ -30,6 +30,7 @@ setup(
             'object_detection = atlas_python.object_detection:main',
             'encoder = atlas_python.encoder:main',
             'odometry = atlas_python.odometry:main',
+            'odometry_anh = atlas_python.odometry_anh:main',
             'motor_driver = atlas_python.motor_driver:main',
             'viewer = atlas_python.viewer:main',
         ],
