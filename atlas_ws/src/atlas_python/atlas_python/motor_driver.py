@@ -1,283 +1,271 @@
+#!/usr/bin/env python
+#Source: https://github.com/joshnewans/serial_motor_demo/blob/main/serial_motor_demo/serial_motor_demo/driver.py
+
+# ROS 2 Set ups
+import sys
 import rclpy
 from rclpy.node import Node
-from rclpy.executors import MultiThreadedExecutor
-from rcl_interfaces.msg import ParameterDescriptor, ParameterType
-from rclpy.qos import QoSProfile, QoSHistoryPolicy, QoSDurabilityPolicy, QoSReliabilityPolicy
-from geometry_msgs.msg import Twist
-from nav_msgs.msg import Odometry
 
-import sys
-from simple_pid.pid import PID
-from dataclasses import dataclass
 try:
-    import RPi.GPIO as GPIO
-except RuntimeError:  # RPi.GPIO throws errors when not on RPi
-    from unittest.mock import MagicMock
-    GPIO = MagicMock()
+    import lgpio as GPIO
+except RuntimeError: # RPi.GPIO throws errors when not on RPi
+    from unittest.mock import MagicMock as GPIO
 
-@dataclass
-class WheelVelocity:
-    left: float
-    right: float
+import time
+import os
+import signal
+import subprocess
+import sys
+import threading
+from math import sin, cos, pi
+
+from tf2_ros import TransformBroadcaster
+from std_msgs.msg import Float32MultiArray
+from std_msgs.msg import Int16
+from atlas_msgs.msg import DiffDriveMotorVelocities
+from atlas_msgs.msg import DiffDriveEncoderReadings
+from atlas_msgs.msg import DiffDriveMotorPWMCommand
+
+
+NS_TO_SEC= 1000000000
+
+# Raspberry Pi GPIO settings
+#Left Motor Encoder inputs
+GPIO_LA = 2
+GPIO_LB = 3
+#Left Moto PWM outputs
+IN1 = 14
+IN2 = 15
+ENL = 18  # PWM pin for left motor 
+
+#Right Motor Encoder inputs
+GPIO_RA = 4
+GPIO_RB = 5
+# Define pins for motor B
+IN3 = 27
+IN4 = 22
+ENR = 17  # PWM pin for right motor 
+
+# Define Tick Rate for motor drives - Anh
+TICK_RATE = 100 #100Hz
+
+# Robot Params
+WHEEL_OD = 56/1000 #meters
+MOTOR_GEAR_MULTIPLIER = 74.8317
+ENCODER_PPR = 48
 
 class MotorDriver(Node):
     def __init__(self):
-        super().__init__("motor_driver")
-        self.initialise_parameters()
+        super().__init__('motor_driver')
 
-        self.measured_velocity = WheelVelocity(left=0.0, right=0.0)
-        self.requested_velocity = WheelVelocity(left=0.0, right=0.0)
-
-        # Set up variables
-        self.wheel_base = self.get_parameter("wheel_base").get_parameter_value().double_value
-        self.wheel_radius = self.get_parameter("wheel_radius").get_parameter_value().double_value
-        self.motor_driver_frequency = self.get_parameter("motor_driver_frequency").get_parameter_value().integer_value
-
-        # Set up GPIO
-        self.IN1 = self.get_parameter("in_1").get_parameter_value().integer_value
-        self.IN2 = self.get_parameter("in_2").get_parameter_value().integer_value
-        self.IN3 = self.get_parameter("in_3").get_parameter_value().integer_value
-        self.IN4 = self.get_parameter("in_4").get_parameter_value().integer_value
-        self.ENA = self.get_parameter("en_a").get_parameter_value().integer_value
-        self.ENB = self.get_parameter("en_b").get_parameter_value().integer_value
-
-        GPIO.setmode(GPIO.BCM)
-        GPIO.setup(self.IN1, GPIO.OUT)
-        GPIO.setup(self.IN2, GPIO.OUT)
-        GPIO.setup(self.ENA, GPIO.OUT)
-        GPIO.setup(self.IN3, GPIO.OUT)
-        GPIO.setup(self.IN4, GPIO.OUT)
-        GPIO.setup(self.ENB, GPIO.OUT)
-
-        self.pwm_a = GPIO.PWM(self.ENA, self.motor_driver_frequency) 
-        self.pwm_b = GPIO.PWM(self.ENB, self.motor_driver_frequency)  
-
-        self.pwm_b.start(0)  # Start PWM with 0% duty cycle
-        self.pwm_a.start(0)  # Start PWM with 0% duty cycle
-
-        # Set up PID controllers
-        kp = self.get_parameter("kp").get_parameter_value().double_value
-        ki = self.get_parameter("ki").get_parameter_value().double_value
-        kd = self.get_parameter("kd").get_parameter_value().double_value
-
-        self.pid_left: PID = PID(kp, ki, kd, setpoint=0, sample_time=None)
-        self.pid_right: PID = PID(kp, ki, kd, setpoint=0, sample_time=None)
-
-        self.pid_left.output_limits = (0, 100) # Set output limits (assuming PWM range of 0-100)
-        self.pid_right.output_limits = (0, 100)
+        self.name = "motor_driver"
+        self.get_logger().info("Motor Driver Interface Online!")
         
-        # Create ROS interfaces
-        self.control_loop_timer = self.create_timer(
-            1.0 / self.get_parameter("control_loop_rate").get_parameter_value().double_value,
-            self.control_loop
-        )
-        self.odometry_subscriber = self.create_subscription(
-            Odometry,
-            "atlas/odometry",
-            self.odometry_callback,
-            qos_profile=QoSProfile(
-                depth=10,
-                history=QoSHistoryPolicy.KEEP_LAST,
-                durability=QoSDurabilityPolicy.VOLATILE,
-                reliability=QoSReliabilityPolicy.RELIABLE
-            )
-        )
-        self.velocity_request_subscriber = self.create_subscription(
-            Twist,
-            "atlas/velocity_request",
-            self.velocity_request_callback,
-            qos_profile=QoSProfile(
-                depth=10,
-                history=QoSHistoryPolicy.KEEP_LAST,
-                durability=QoSDurabilityPolicy.VOLATILE,
-                reliability=QoSReliabilityPolicy.RELIABLE
-            )
-        )
-        self.get_logger().info("Motor Driver Initialised!")
+        # GPIO Set Up
+        #Encoders
+        GPIO.setmode(GPIO.BCM)
 
+        self.levLA = 0
+        self.levLB = 0
+        self.levRA = 0
+        self.levRB = 0
 
-    def initialise_parameters(self) -> None:
-        """Declare parameters for the motor driver node"""
-        self.declare_parameter(
-            "control_loop_rate",
-            value=100,
-            descriptor=ParameterDescriptor(
-                type=ParameterType.PARAMETER_DOUBLE,
-                description="Rate at which the control loop runs (Hz)"
-            )
-        )
-        self.declare_parameter(
-            "motor_driver_frequency",
-            value=100,
-            descriptor=ParameterDescriptor(
-                type=ParameterType.PARAMETER_INTEGER,
-                description="Frequency of the PWM signal for the motor driver (Hz)"
-            )
-        )
-        self.declare_parameter(
-            "wheel_radius",
-            value=0.03,
-            descriptor=ParameterDescriptor(
-                type=ParameterType.PARAMETER_DOUBLE,
-                description="Radius of the wheel (m)"
-            )
-        )
-        self.declare_parameter(
-            "wheel_base",
-            value=0.1,
-            descriptor=ParameterDescriptor(
-                type=ParameterType.PARAMETER_DOUBLE,
-                description="Distance between the two wheels of the robot (m)"
-            )
-        )
-        self.declare_parameter(
-            "kp",
-            value=0.1,
-            descriptor=ParameterDescriptor(
-                type=ParameterType.PARAMETER_DOUBLE,
-                description="Proportional gain for the PID controller"
-            )
-        )
-        self.declare_parameter(
-            "ki",
-            value=0.01,
-            descriptor=ParameterDescriptor(
-                type=ParameterType.PARAMETER_DOUBLE,
-                description="Integral gain for the PID controller"
-            )
-        )
-        self.declare_parameter(
-            "kd",
-            value=0.05,
-            descriptor=ParameterDescriptor(
-                type=ParameterType.PARAMETER_DOUBLE,
-                description="Derivative gain for the PID controller"
-            )
-        )
-        self.declare_parameter(
-            "in_1",
-            value=9,
-            descriptor=ParameterDescriptor(
-                type=ParameterType.PARAMETER_INTEGER,
-                description="GPIO pin for IN1"
-            ),
-        )
-        self.declare_parameter(
-            "in_2",
-            value=11,
-            descriptor=ParameterDescriptor(
-                type=ParameterType.PARAMETER_INTEGER,
-                description="GPIO pin for IN2"
-            ),
-        )
-        self.declare_parameter(
-            "in_3",
-            value=15,
-            descriptor=ParameterDescriptor(
-                type=ParameterType.PARAMETER_INTEGER,
-                description="GPIO pin for IN3"
-            ),
-        )
-        self.declare_parameter(
-            "in_4",
-            value=14,
-            descriptor=ParameterDescriptor(
-                type=ParameterType.PARAMETER_INTEGER,
-                description="GPIO pin for IN4"
-            ),
-        )
-        self.declare_parameter(
-            "en_a",
-            value=13,
-            descriptor=ParameterDescriptor(
-                type=ParameterType.PARAMETER_INTEGER,
-                description="GPIO pin for ENA"
-            ),
-        )
-        self.declare_parameter(
-            "en_b",
-            value=12,
-            descriptor=ParameterDescriptor(
-                type=ParameterType.PARAMETER_INTEGER,
-                description="GPIO pin for ENB"
-            ),
-        )
+        self.lastGpio = None
+        self.gpioLA = GPIO_LA
+        self.gpioLB = GPIO_LB
+        self.gpioRA = GPIO_RA
+        self.gpioRB = GPIO_RB
+
+        GPIO.setup(self.gpioLA, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+        GPIO.setup(self.gpioLB, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+        GPIO.setup(self.gpioRA, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+        GPIO.setup(self.gpioRB, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+
+        GPIO.add_event_detect(self.gpioLA, GPIO.BOTH, self.Lencoder_callback)
+        GPIO.add_event_detect(self.gpioLB, GPIO.BOTH, self.Lencoder_callback)
+        GPIO.add_event_detect(self.gpioRA, GPIO.BOTH, self.Rencoder_callback)
+        GPIO.add_event_detect(self.gpioRB, GPIO.BOTH, self.Rencoder_callback)
+
+        #Motor PWM
+        # Set up pins for left motor
+        GPIO.setup(ENL, GPIO.OUT)
+        GPIO.setup(IN1, GPIO.OUT)
+        GPIO.setup(IN2, GPIO.OUT)
+        self.leftMotorDirectionPins = {'forward': IN1, 'reverse':IN2}
+        # Set up pins for right motor 
+        GPIO.setup(ENR, GPIO.OUT)
+        GPIO.setup(IN3, GPIO.OUT)
+        GPIO.setup(IN4, GPIO.OUT)
+        self.rightMotorDirectionPins = {'forward': IN3, 'reverse':IN4}
+        # Set up PWM for left motor 
+        self.pwm_L = GPIO.PWM(ENL, TICK_RATE)  # PWM frequency set to 100 Hz
+        self.pwm_L.start(0)  # Start PWM with 0% duty cycle
+        # Set up PWM for right motor
+        self.pwm_R = GPIO.PWM(ENR, TICK_RATE)  # PWM frequency set to 100 Hz
+        self.pwm_R.start(0)  # Start PWM with 0% duty cycle
+
+        # Encoder decoder set up
+        self.Lcounter = 0
+        self.Rcounter = 0
+        self.Llast_counter = 0
+        self.Rlast_counter = 0
+        self.last_publish_time = 0
+        
+        # Subscription set up
+        self.subscription = self.create_subscription(DiffDriveMotorPWMCommand,'motor_command',self.motor_command_callback,10)
+
+        # Publisher set up
+        self.velPublisher = self.create_publisher(DiffDriveMotorVelocities, "Motor Velocities", queue_size = 10)
+        self.encPublisher = self.create_publisher(DiffDriveEncoderReadings, "encoderReads_pertick", queue_size = 10)
     
-    def odometry_callback(self, msg: Odometry) -> None:
-        """Callback function for the odometry data. Updates the measured velocity"""
+        # Publishing Timer -UNUSED
+        #self.timer = self.create_timer(1/TICK_RATE, self.periodicPublisher)
 
-        v = msg.twist.twist.linear.x
-        w = msg.twist.twist.angular.z
-
-        # Calculate the left and right wheel velocities
-        self.measured_velocity.left = v - w * self.wheel_base / 2
-        self.measured_velocity.right = v + w * self.wheel_base / 2
-
-
-
-    def velocity_request_callback(self, msg: Twist) -> None:
-        """Callback function for the velocity request. Updates the requested velocity"""
-        v = msg.linear.x
-        w = msg.angular.z
-
-        # Calculate the left and right wheel velocities
-        self.requested_velocity.left = v - w * self.wheel_base / 2
-        self.requested_velocity.right = v + w * self.wheel_base / 2
-
-    def control_loop(self) -> None:
-        """Control loop for the motor driver. Updates the motor speeds based on the PID controllers"""
-        dt = 1.0 / self.get_parameter("control_loop_rate").get_parameter_value().double_value
-
-        self.pid_left.setpoint = self.requested_velocity.left
-        self.pid_right.setpoint = self.requested_velocity.right
-
-        left_output = self.pid_left(self.measured_velocity.left, dt=dt)
-        right_output = self.pid_right(self.measured_velocity.right, dt=dt)
-
-        self.set_motor_speed(left=True, speed=left_output)
-        self.set_motor_speed(left=False, speed=right_output)
-
-    def set_motor_speed(self, left: bool, speed: float):
-        """Set motor speed and direction based on side (left/right) and speed."""
-        if left:
-            pwm = self.pwm_a
-            in1, in2 = self.IN1, self.IN2
+    def Lencoder_callback(self, channel):
+        # Checking the most recent pin set to "high"
+        Llevel = GPIO.input(channel)
+        if channel == self.gpioLA:
+            self.levLA = Llevel
         else:
-            pwm = self.pwm_b
-            in1, in2 = self.IN3, self.IN4
+            self.levLB = Llevel
+    
+        # Debounce
+        if channel == self.lastGpio:
+            return
+    
+        # When both inputs are at 1, we'll fire a callback. If A was the most
+        # recent pin set high, it'll be forward, and if B was the most recent pin
+        # set high, it'll be reverse.
+        self.lastGpio = channel
+        if channel == self.gpioLA and Llevel == 1:    #Forward
+            if self.levLB == 1:
+                self.Lcounter += 1
+        elif channel == self.gpioLB and Llevel == 1:  #Reverse
+            if self.levLA == 1:
+                self.Lcounter -= 1
 
-        # Determine direction based on the sign of speed
-        if speed >= 0:
+
+    def Rencoder_callback(self, channel):
+        # Checking the most recent pin set to "high"
+        Rlevel = GPIO.input(channel)
+        if channel == self.gpioRA:
+            self.levRA = Rlevel
+        else:
+            self.levRB = Rlevel
+    
+        # Debounce
+        if channel == self.lastGpio:
+            return
+    
+        # When both inputs are at 1, we'll fire a callback. If A was the most
+        # recent pin set high, it'll be forward, and if B was the most recent pin
+        # set high, it'll be reverse.
+        self.lastGpio = channel
+        if channel == self.gpioRA and Rlevel == 1:    #Forward
+            if self.levRB == 1:
+                self.Rcounter += 1
+        elif channel == self.gpioRB and Rlevel == 1:  #Reverse
+            if self.levRA == 1:
+                self.Rcounter -= 1
+
+
+    def periodicPublisher(self):
+        # Calculate elapsed time
+        current_time = self.get_clock().now()
+        time_elapsed = current_time - self.last_publish_time
+        time_elapsed = time_elapsed.nanoseconds / NS_TO_SEC
+        ticks_elapsed = time_elapsed/(1/TICK_RATE)
+
+        # Calculate counts per tick
+        if time_elapsed > 0:
+            Lcounts_perTick = (self.Lcounter - self.Llast_counter)
+            Rcounts_perTick = (self.Rcounter - self.Rlast_counter)
+        else:
+            print("Motor Driver: Time period = 0")
+
+        # Convert counts/tick to degrees/second
+        Lw = Lcounts_perTick * (360/ENCODER_PPR) * (1/MOTOR_GEAR_MULTIPLIER) / time_elapsed       #Counts/Tick * Angle/Count * Exact Gear Ratio / Time Elapsed = (Degrees/Second)
+        Rw = Rcounts_perTick * (360/ENCODER_PPR) * (1/MOTOR_GEAR_MULTIPLIER) / time_elapsed      #Counts/Tick * Angle/Count * Exact Gear Ratio / Time Elapsed = (Degrees/Second)
+        
+        vel_msg = DiffDriveMotorVelocities()
+        vel_msg.l_motor_w = Lw
+        vel_msg.r_motor_w = Rw
+        self.velPublisher.publish(vel_msg)
+
+        enc_msg = DiffDriveEncoderReadings()
+        enc_msg.l_motor_encoder_val = Lcounts_perTick
+        enc_msg.r_motor_encoder_val = Rcounts_perTick
+        self.encPublisher.publish(enc_msg)
+        
+        #Reset counter values
+        self.Llast_counter = self.Lcounter
+        self.Rlast_counter = self.Rcounter
+        self.last_publish_time = current_time    
+
+
+    def set_motor_speed(self, pwm, speed):
+        pwm.ChangeDutyCycle(speed)
+
+
+    def set_motor_direction(self, in1, in2, direction):
+        if direction == "forward":
             GPIO.output(in1, GPIO.HIGH)
             GPIO.output(in2, GPIO.LOW)
-        else:
+        elif direction == "reverse":
             GPIO.output(in1, GPIO.LOW)
             GPIO.output(in2, GPIO.HIGH)
+        else:
+            return
 
-        # Set the PWM duty cycle
-        pwm.ChangeDutyCycle(abs(speed))
 
-    def cleanup(self):
-        self.get_logger().info("Cleaning up GPIO and stopping PWM...")
-        self.pwm_a.stop()
-        self.pwm_b.stop()
+    def motor_command_callback(self, motor_command):
+        if (motor_command.is_pwm):
+            # Left motor
+            if (motor_command.l_motor_forward):
+                self.set_motor_direction(self.leftMotorDirectionPins['forward'],self.leftMotorDirectionPins['reverse'], "forward")
+                self.set_motor_speed(self.pwm_L, motor_command.l_motor_duty_cycle)
+            elif (~motor_command.l_motor_forward):
+                self.set_motor_direction(self.leftMotorDirectionPins['forward'],self.leftMotorDirectionPins['reverse'], "reverse")
+                self.set_motor_speed(self.pwm_L, motor_command.l_motor_duty_cycle)
+
+            # Right motor
+            if (motor_command.r_motor_forward):
+                self.set_motor_direction(self.rightMotorDirectionPins['forward'],self.rightMotorDirectionPins['reverse'], "forward")
+                self.set_motor_speed(self.pwm_R, motor_command.r_motor_duty_cycle)
+            elif (~motor_command.r_motor_forward):
+                self.set_motor_direction(self.rightMotorDirectionPins['forward'],self.rightMotorDirectionPins['reverse'], "reverse")
+                self.set_motor_speed(self.pwm_R, motor_command.r_motor_duty_cycle)
+        else:
+            print("Motor command is not PWM.")
+            pass
+    
+    def motorCleanUp(self):
+        # Cleanup
+        self.pwm_L.stop()
+        self.pwm_R.stop()
+        GPIO.remove_event_detect(self.gpioLA)
+        GPIO.remove_event_detect(self.gpioLB)
+        GPIO.remove_event_detect(self.gpioRA)
+        GPIO.remove_event_detect(self.gpioRB)
+        GPIO.cleanup()
         GPIO.cleanup()
 
-def main(args: dict = None):
-    rclpy.init(args=args)
-    
-    motor_driver = MotorDriver()
-    try:
-        rclpy.spin(motor_driver, MultiThreadedExecutor())
-    except KeyboardInterrupt:
-        pass
-    except rclpy.exceptions.ExternalShutdownException:
-        sys.exit(1)
-    finally:
-        motor_driver.cleanup()  # Ensure GPIO cleanup happens
-        motor_driver.destroy_node()
 
+def main(args = None):
+    rclpy.init(args=args)
+
+    motor_driver = MotorDriver()
+
+    rate = motor_driver.create_rate(TICK_RATE)
+    while rclpy.ok():
+        rclpy.spin_once(motor_driver)
+        motor_driver.periodicPublisher
+
+    motor_driver.motorCleanUp()
+    motor_driver.destroy_node()
     rclpy.shutdown()
+
+
 
 if __name__ == "__main__":
     main()
