@@ -99,7 +99,7 @@ class OdometryNode(Node):
 
     def update_pose(self, msg: EncoderCount) -> None:
         """Update the pose data based on the encoder data"""
-        delta_t = (msg.time - self.prev_encoder_msg.time) / 1e9 # seconds
+        delta_t = msg.delta_time / 1e6 # seconds
 
         circumference = 2 * math.pi * self.wheel_radius
         # Calculate the distance travelled by each wheel
