@@ -13,7 +13,7 @@ class Encoder(Node):
     def __init__(self):
         super().__init__("encoder")
         self.initialise_parameters()
-        self.encoder_count = EncoderCount(left=0, right=0, time_delta=0)
+        self.encoder_count = EncoderCount(left=0, right=0, timestamp=0) # Count, count, microseconds since last reset
 
         self.serial = serial.Serial(
             port=self.get_parameter("port").value,
@@ -78,13 +78,13 @@ class Encoder(Node):
                     # Parse the serial data
                     left_count = int(line.split(",R:")[0][2:])
                     right_count = int(line.split(",Timestamp:")[0].split(",R:")[1])
-                    time_delta = int(line.split(",Timestamp:")[1])
+                    timestamp = int(line.split(",Timestamp:")[1])
 
                     
                     # Populate the ROS message
                     self.encoder_count.left = left_count
                     self.encoder_count.right = right_count
-                    self.encoder_count.time_delta = time_delta
+                    self.encoder_count.timestamp = timestamp
 
                     # Publish the message
                     self.encoder_publisher.publish(self.encoder_count)
