@@ -63,7 +63,7 @@ class Encoder(Node):
         #Send command to read encoder
         resp = self.send_command(f"e")
         if resp:
-            return [int(raw_enc) for raw_enc in resp.split()]
+            return resp
         return []
 
     def timer_callback(self):
@@ -104,7 +104,6 @@ class Encoder(Node):
             value = ''
             while c != "\r":
                 c = self.serial.read(1).decode("utf-8")
-                self.get_logger().info(c)
                 if (c == ''):
                     print("Error: Serial timeout on command: " + cmd_string)
                     return ''
