@@ -61,13 +61,14 @@ class Encoder(Node):
             # Read from the serial port
             if self.serial.in_waiting > 0:
                 line = self.serial.readline().decode('utf-8').strip()
+                self.get_logger().info(line)
                 if line.startswith("L:") and ",R:" in line and ",DT:" in line:
                     # Parse the serial data
                     left_count = int(line.split(",R:")[0][2:])
                     right_count = int(line.split(",Timestamp (microseconds):")[0].split(",R:")[1])
                     time_delta = int(line.split(",Timestamp (microseconds):")[1])
 
-                    self.get_logger().info(left_count)
+                    
 
                     # Populate the ROS message
                     self.encoder_count.left = left_count
