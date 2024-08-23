@@ -173,6 +173,8 @@ void loop(){
             else if (arg == 2){
                  argv2[idx] = NULL;
             }
+            executeSerialCmd();
+            resetCmd();
         }
         // Use spaces to delimit parts of the command
         else if (chr == ' ') {
