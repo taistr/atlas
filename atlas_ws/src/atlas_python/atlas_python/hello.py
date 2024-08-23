@@ -1,6 +1,7 @@
 import sys
 import rclpy
 from rclpy.node import Node
+from rclpy.executors import ExternalShutdownException
 from std_msgs.msg import String
 
 try:
@@ -22,7 +23,7 @@ def main(args: dict = None):
         rclpy.spin(hello)
     except KeyboardInterrupt:
         pass
-    except rclpy.exceptions.ExternalShutdownException:
+    except ExternalShutdownException:
         sys.exit(1)
     hello.destroy_node()
 

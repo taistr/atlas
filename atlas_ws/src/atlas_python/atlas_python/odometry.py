@@ -4,7 +4,7 @@ import math
 
 import rclpy
 from rclpy.node import Node
-from rclpy.executors import MultiThreadedExecutor
+from rclpy.executors import MultiThreadedExecutor, ExternalShutdownException
 from rcl_interfaces.msg import ParameterDescriptor, ParameterType
 from rclpy.qos import QoSProfile, QoSHistoryPolicy, QoSDurabilityPolicy, QoSReliabilityPolicy
 from std_msgs.msg import String
@@ -30,13 +30,13 @@ class OdometryNode(Node):
 
         # Set up variables
         self.pose = Pose()
-        self.wheel_radius = self.get_parameter("wheel_radius").get_parameter_value().double_value
-        self.wheel_base = self.get_parameter("wheel_base").get_parameter_value().double_value
-        self.counts_per_rev = self.get_parameter("counts_per_rev").get_parameter_value().integer_value
+        self.wheel_radius = self.get_parameter("wheel_radius").value
+        self.wheel_base = self.get_parameter("wheel_base").value
+        self.counts_per_rev = self.get_parameter("counts_per_rev").value
         self.prev_encoder_msg: EncoderCount | None = None
 
         # Set up ROS 2 interfaces
-        odometry_publish_rate = 1.0/self.get_parameter("publish_rate").get_parameter_value().double_value
+        odometry_publish_rate = 1.0/self.get_parameter("publish_rate").value
         self.odometry_update_timer = self.create_timer(odometry_publish_rate, self.odometry_callback)
         self.encoder_subcriber = self.create_subscription(
             EncoderCount, 
@@ -99,8 +99,8 @@ class OdometryNode(Node):
 
     def update_pose(self, msg: EncoderCount) -> None:
         """Update the pose data based on the encoder data"""
-        if msg.delta_time == 0:
-            delta_t = msg.delta_time / 1e6 # seconds
+        if msg.time_delta != 0:
+            delta_t = msg.time_delta / 1e6 # seconds
 
             circumference = 2 * math.pi * self.wheel_radius
             # Calculate the distance travelled by each wheel
@@ -116,6 +116,7 @@ class OdometryNode(Node):
             self.pose.y += delta_s * math.sin(self.pose.theta + delta_theta / 2.0)
             self.pose.theta += delta_theta
             self.pose.v = delta_s / delta_t
+
             self.pose.w = delta_theta / delta_t
 
     def encoder_callback(self, msg: EncoderCount) -> None:
@@ -141,7 +142,10 @@ class OdometryNode(Node):
 
         # Set the orientation (quaternion)
         quaternion = quaternion_from_euler(0, 0, self.pose.theta)
-        msg.pose.pose.orientation = Quaternion(*quaternion)
+        msg.pose.pose.orientation.x = quaternion[0]
+        msg.pose.pose.orientation.y = quaternion[1]
+        msg.pose.pose.orientation.z = quaternion[2]
+        msg.pose.pose.orientation.w = quaternion[3]
 
         # Set the velocity
         msg.twist.twist.linear.x = self.pose.v
@@ -168,10 +172,9 @@ def main(args: dict = None):
         rclpy.spin(odometry, MultiThreadedExecutor())
     except KeyboardInterrupt:
         pass
-    except rclpy.exceptions.ExternalShutdownException:
+    except ExternalShutdownException:
         sys.exit(1)
     finally:
-        odometry.cleanup()  # Ensure GPIO cleanup happens
         odometry.destroy_node()
 
     rclpy.shutdown()

@@ -1,7 +1,7 @@
 import sys
 import rclpy
 from rclpy.node import Node
-from rclpy.executors import MultiThreadedExecutor
+from rclpy.executors import MultiThreadedExecutor, ExternalShutdownException
 from rcl_interfaces.msg import ParameterDescriptor, ParameterType
 from rclpy.qos import QoSProfile, QoSHistoryPolicy, QoSDurabilityPolicy, QoSReliabilityPolicy
 from atlas_msgs.msg import EncoderCount
@@ -101,7 +101,7 @@ def main(args: dict = None):
         rclpy.spin(encoder, MultiThreadedExecutor())
     except KeyboardInterrupt:
         pass
-    except rclpy.exceptions.ExternalShutdownException:
+    except ExternalShutdownException:
         sys.exit(1)
     finally:
         encoder.cleanup()  # Ensure GPIO cleanup happens
