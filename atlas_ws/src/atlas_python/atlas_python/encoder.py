@@ -67,6 +67,8 @@ class Encoder(Node):
                     right_count = int(line.split(",Timestamp (microseconds):")[0].split(",R:")[1])
                     time_delta = int(line.split(",Timestamp (microseconds):")[1])
 
+                    self.get_logger().info(left_count)
+
                     # Populate the ROS message
                     self.encoder_count.left = left_count
                     self.encoder_count.right = right_count
@@ -78,7 +80,6 @@ class Encoder(Node):
                     self.get_logger().info(line)
             else:
                 self.serial.write(str.encode('e'))
-                self.get_logger().info("Requesting Encoder")
 
         except Exception as e:
             self.get_logger().error(f"Error reading serial data: {e}")
