@@ -1,11 +1,12 @@
 #include "duino_cmds.h"
+#include "encoder_interface.h"
 #include <Servo.h>
 
 /* Maximum PWM signal */
 #define MAX_PWM        255
 
 // Serial
-#define BAUD_RATE = 115200
+#define BAUD_RATE 115200
 
 // Encoder
 #define ENC_TIME_DELTA_THRESHOLD 100000
@@ -49,7 +50,7 @@ void resetCmd(){
     memset(argv2, 0, sizeof(argv1));
     arg1 = 0;
     arg2 = 0;
-    arg = 0
+    arg = 0;
     idx = 0;
 }
 
@@ -75,8 +76,9 @@ int executeSerialCmds(){
             Serial.println(digitalRead(arg1));
             break;
         case ANALOG_WRITE:
+            char data [16];
             analogWrite(arg1, arg2);
-            String data = String("Analog write to pin " + arg1 + " with value " + arg2);
+            sprintf(data, "Analog write to pin %3d with value %3d ",arg1, arg2);
             Serial.println(data);
             break;
         case PIN_MODE:
@@ -85,66 +87,63 @@ int executeSerialCmds(){
             Serial.println("OK");
             break;
         case PING:
-            Serial.println(Ping(arg1));
+            //Serial.println(Ping(arg1));
             break;
         case SERVO_WRITE:
-            servos[arg1].setTargetPosition(arg2);
-            Serial.println("OK");
+            // servos[arg1].setTargetPosition(arg2);
+            // Serial.println("OK");
             break;
         case SERVO_READ:
-            Serial.println(servos[arg1].getServo().read());
+            // Serial.println(servos[arg1].getServo().read());
             break;
         case READ_ENCODERS:
             // Send the counts and timestamp (microseconds) over serial
             Serial.print("L:");
-            Serial.print(-currentLeftPosition);
+            Serial.print(-readEncoder(LEFT));
             Serial.print(",R:");
-            Serial.print(currentRightPosition);
+            Serial.print(readEncoder(RIGHT));
             Serial.print(",Timestamp (microseconds):");
             Serial.println(micros());  // Send time delta in microseconds
-
-    if (Serial.available()) {
-      Serial.read();
-      leftWheel.write(0);
-      rightWheel.write(0);
-    }
+            resetEncoder(LEFT);
+            resetEncoder(RIGHT);
             break;
         case RESET_ENCODERS:
-            resetEncoders();
-            resetPID();
-            Serial.println("OK");
+            resetEncoder(LEFT);
+            resetEncoder(RIGHT);
+            //resetPID();
+            Serial.println("Encoders & PID Reset");
             break;
         case MOTOR_SPEEDS:
             /* Reset the auto stop timer */
-            lastMotorCommand = micros();
-            if (arg1 == 0 && arg2 == 0) {
-            setMotorSpeeds(0, 0);
-            resetPID();
-            moving = 0;
-            }
-            else moving = 1;
-            leftPID.TargetTicksPerFrame = arg1;
-            rightPID.TargetTicksPerFrame = arg2;
-            Serial.println("OK"); 
+            // lastMotorCommand = micros();
+            // if (arg1 == 0 && arg2 == 0) {
+            // setMotorSpeeds(0, 0);
+            // resetPID();
+            // moving = 0;
+            // }
+            // else moving = 1;
+            // leftPID.TargetTicksPerFrame = arg1;
+            // rightPID.TargetTicksPerFrame = arg2;
+            // Serial.println("OK"); 
             break;
         case MOTOR_RAW_PWM:
             /* Reset the auto stop timer */
-            lastMotorCommand = micros();
-            resetPID();
-            moving = 0; // Sneaky way to temporarily disable the PID
-            setMotorSpeeds(arg1, arg2);
-            Serial.println("OK"); 
+            // lastMotorCommand = micros();
+            // resetPID();
+            // moving = 0; // Sneaky way to temporarily disable the PID
+            // setMotorSpeeds(arg1, arg2);
+            // Serial.println("OK"); 
             break;
         case UPDATE_PID:
-            while ((str = strtok_r(p, ":", &p)) != '\0') {
-            pid_args[i] = atoi(str);
-            i++;
-            }
-            Kp = pid_args[0];
-            Kd = pid_args[1];
-            Ki = pid_args[2];
-            Ko = pid_args[3];
-            Serial.println("OK");
+            // while ((str = strtok_r(p, ":", &p)) != '\0') {
+            // pid_args[i] = atoi(str);
+            // i++;
+            // }
+            // Kp = pid_args[0];
+            // Kd = pid_args[1];
+            // Ki = pid_args[2];
+            // Ko = pid_args[3];
+            // Serial.println("OK");
             break;
         default:
             Serial.println("Invalid Command");
@@ -156,7 +155,7 @@ int executeSerialCmds(){
 
 /* Setup function--runs once at startup. */
 void setup() {
-    Serial.begin(BAUDRATE);
+    Serial.begin(BAUD_RATE);
 }
 
 void loop(){
@@ -179,9 +178,9 @@ void loop(){
             // Step through the arguments
             if (arg == 0) arg = 1;
             else if (arg == 1)  {
-                argv1[index] = NULL;
+                argv1[idx] = NULL;
                 arg = 2;
-                index = 0;
+                idx = 0;
             }
             continue;
         }
@@ -203,20 +202,20 @@ void loop(){
     }
   
     // run a PID calculation at the appropriate intervals
-    if (micros();() > nextPID) {
-        updatePID();
-        nextPID += PID_INTERVAL;
-    }
+    //if (micros() > nextPID) {
+    //    updatePID();
+    //    nextPID += PID_INTERVAL;
+    //}
     
     // Check to see if we have exceeded the auto-stop interval
-    if ((micros();() - lastMotorCommand) > AUTO_STOP_INTERVAL) {;
-        setMotorSpeeds(0, 0);
-        moving = 0;
-    }
+    //if ((micros() - lastMotorCommand) > AUTO_STOP_INTERVAL) {;
+    //    setMotorSpeeds(0, 0);
+    //    moving = 0;
+    //}
 
 
-    int i;
-    for (i = 0; i < N_SERVOS; i++) {
-        servos[i].doSweep();
-    }
+    //int i;
+    //for (i = 0; i < N_SERVOS; i++) {
+    //    servos[i].doSweep();
+    //}
 }

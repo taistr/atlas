@@ -8,3 +8,6 @@
 
 // Encoder
 #define ENC_TIME_DELTA_THRESHOLD 100000
+
+long readEncoder(int i);
+void resetEncoder(int i);
