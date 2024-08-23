@@ -63,7 +63,7 @@ class Encoder(Node):
         #Send command to read encoder
         resp = self.send_command(f"e")
         if resp:
-            return resp
+            return [resp]
         return []
 
     def timer_callback(self):
