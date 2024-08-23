@@ -24,10 +24,16 @@ void loop() {
 
     // Send the counts and timeDelta over serial
     Serial.print("L:");
-    Serial.print(currentLeftPosition);
+    Serial.print(-currentLeftPosition);
     Serial.print(",R:");
     Serial.print(currentRightPosition);
     Serial.print(",DT:");
     Serial.println(timeDelta);  // Send time delta in microseconds
+
+    if (Serial.available()) {
+      Serial.read();
+      leftWheel.write(0);
+      rightWheel.write(0);
+    }
   }
 }
