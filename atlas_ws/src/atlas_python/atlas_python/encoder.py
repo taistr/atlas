@@ -62,6 +62,7 @@ class Encoder(Node):
     def readEncoder_cmd(self):
         #Send command to read encoder
         resp = self.send_command(f"e")
+        self.get_logger().info(resp)
         if resp:
             return [resp]
         return []
@@ -72,7 +73,6 @@ class Encoder(Node):
             response = self.readEncoder_cmd()
             if (response):
                 line = self.serial.readline().decode('utf-8').strip()
-                self.get_logger().info(line)
                 if line.startswith("L:") and ",R:" in line and ",Timestamp:" in line:
                     
                     # Parse the serial data
