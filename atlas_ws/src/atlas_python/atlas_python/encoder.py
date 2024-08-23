@@ -7,6 +7,7 @@ from rclpy.qos import QoSProfile, QoSHistoryPolicy, QoSDurabilityPolicy, QoSReli
 from atlas_msgs.msg import EncoderCount
 import time
 import serial
+from threading import Lock
 
 class Encoder(Node):
     def __init__(self):
@@ -34,6 +35,8 @@ class Encoder(Node):
         serial_check_period = 1.0 / self.get_parameter("serial_rate").value
         self.encoder_publish_timer = self.create_timer(serial_check_period, self.timer_callback)
 
+        self.mutex = Lock()
+
         self.get_logger().info("Encoder Node Online!")
 
     def initialise_parameters(self) -> None:
@@ -55,10 +58,19 @@ class Encoder(Node):
             ),
         )
 
+
+    def readEncoder_cmd(self):
+        #Send command to read encoder
+        resp = self.send_command(f"e")
+        if resp:
+            return [int(raw_enc) for raw_enc in resp.split()]
+        return []
+
     def timer_callback(self):
         try:
             # Read from the serial port
-            if self.serial.in_waiting > 0:
+            response = self.readEncoder_cmd()
+            if (response):
                 line = self.serial.readline().decode('utf-8').strip()
                 if line.startswith("L:") and ",R:" in line and ",Timestamp (microseconds):" in line:
                     # Parse the serial data
@@ -76,13 +88,34 @@ class Encoder(Node):
                     self.encoder_publisher.publish(self.encoder_count)
                 else:
                     self.get_logger().info(line)
-            else:
-                #pass
-                self.serial.write(str.encode('e'))
-
         except Exception as e:
             self.get_logger().error(f"Error reading serial data: {e}")
 
+    
+    def send_command(self, cmd_string):
+        self.mutex.acquire()
+
+        try:
+            cmd_string += "\r"
+            self.serial.write(cmd_string.encode("utf-8"))
+
+            c = ''
+            value = ''
+            while c != '\r':
+                c = self.serial.read(1).decode("utf-8")
+                if (c == ''):
+                    print("Error: Serial timeout on command: " + cmd_string)
+                    return ''
+                value += c
+            
+            value = value.strip('\r')
+
+            return value
+        finally:
+            self.mutex.release()
+
+
+    
     def cleanup(self):
         # Close the serial port properly
         if self.serial.is_open:
