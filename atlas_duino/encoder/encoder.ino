@@ -1,4 +1,5 @@
 #include <Encoder.h>
+#define ARDUINO_SEND_PERIOD 10000
 
 // Pin definitions for the encoders
 Encoder leftWheel(2, 4);
@@ -15,7 +16,7 @@ void loop() {
   unsigned long timeDelta = currentMicros - previousMicros;
 
   // Check if the time interval has passed
-  if (timeDelta >= 100000) {  // Example threshold: 0.1 seconds
+  if (timeDelta >= 10000) {  // Example threshold: 0.1 seconds
     previousMicros = currentMicros;
 
     // Get the current encoder positions
