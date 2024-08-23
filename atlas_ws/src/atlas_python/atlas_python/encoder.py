@@ -57,7 +57,7 @@ class Encoder(Node):
 
     def timer_callback(self):
         try:
-            self.serial.write('e')
+            self.serial.write(str.encode('e'))
             # Read from the serial port
             if self.serial.in_waiting > 0:
                 line = self.serial.readline().decode('utf-8').strip()
