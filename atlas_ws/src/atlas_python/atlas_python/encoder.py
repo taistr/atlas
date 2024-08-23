@@ -57,8 +57,7 @@ class Encoder(Node):
 
     def timer_callback(self):
         try:
-            self.serial.write(str.encode('e'))
-            self.get_logger().info("Requesting Encoder")
+            
             # Read from the serial port
             if self.serial.in_waiting > 0:
                 line = self.serial.readline().decode('utf-8').strip()
@@ -77,6 +76,9 @@ class Encoder(Node):
                     self.encoder_publisher.publish(self.encoder_count)
                 else:
                     self.get_logger().info(line)
+            else:
+                self.serial.write(str.encode('e'))
+                self.get_logger().info("Requesting Encoder")
 
         except Exception as e:
             self.get_logger().error(f"Error reading serial data: {e}")
