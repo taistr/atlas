@@ -72,8 +72,9 @@ class Encoder(Node):
             response = self.readEncoder_cmd()
             if (response):
                 line = self.serial.readline().decode('utf-8').strip()
+                self.get_logger().info("I got here")
                 if line.startswith("L:") and ",R:" in line and ",Timestamp:" in line:
-                    self.get_logger().info("I got here")
+                    
                     # Parse the serial data
                     left_count = int(line.split(",R:")[0][2:])
                     right_count = int(line.split(",Timestamp:")[0].split(",R:")[1])
