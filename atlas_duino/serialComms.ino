@@ -54,7 +54,7 @@ void resetCmd(){
     idx = 0;
 }
 
-int executeSerialCmds(){
+int executeSerialCmd(){
     int i = 0;
     char *p = argv1;
     char *str;
