@@ -72,7 +72,7 @@ class Encoder(Node):
             response = self.readEncoder_cmd()
             if (response):
                 line = self.serial.readline().decode('utf-8').strip()
-                self.get_logger().info("I got here")
+                self.get_logger().info(line)
                 if line.startswith("L:") and ",R:" in line and ",Timestamp:" in line:
                     
                     # Parse the serial data
