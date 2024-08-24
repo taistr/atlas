@@ -21,44 +21,17 @@ const long int PID_INTERVAL = 1000L*1000L / PID_RATE;
 #include "encoder_interface.h"
 #include "motor_driver.h"
 #include "diffbot_motionController.h"
-=======
-#include "duino_cmds.h"
-#include "encoder_interface.h"
-#include <Servo.h>
-
-/* Maximum PWM signal */
-#define MAX_PWM        255
-
-// Serial
-#define BAUD_RATE 115200
-
-// Encoder
-#define ENC_TIME_DELTA_THRESHOLD 100000
-
-/* Run the PID loop at 30 times per second */
-#define PID_RATE    30     // Hz
-
-/* Convert the rate into an interval */
-const int PID_INTERVAL = 1000*1000 / PID_RATE;
->>>>>>> 83d976e4ebe29affc36ee7b1983ac1ff0a4bfa73
 
 /* Track the next time we make a PID calculation */
 unsigned long nextPID = PID_INTERVAL;
 
 /* Stop the robot if it hasn't received a movement command
 in this number of microseconds */
-<<<<<<< HEAD
 #define AUTO_STOP_INTERVAL 5000000
 long lastMotorCommand = AUTO_STOP_INTERVAL;
 
 //    Initialising variables
 // Serial ---------------------------------------------------
-=======
-#define AUTO_STOP_INTERVAL 2000000
-long lastMotorCommand = AUTO_STOP_INTERVAL;
-
-// Initialising variables
->>>>>>> 83d976e4ebe29affc36ee7b1983ac1ff0a4bfa73
 //Variables to help parse serial commands
 int arg = 0;
 int idx = 0;
@@ -69,7 +42,6 @@ char cmd;
 //Variable to hold serial data
 char chr;
 
-<<<<<<< HEAD
 //Variables to hold serial command arguments
 char argv1[16];
 char argv2[16];
@@ -88,16 +60,6 @@ double WHEEL_RADIUS = 56.0/1000;
 //---------------------------------------------------------
 
 
-=======
-//Variables to hold arguments
-char argv1[16];
-char argv2[16];
-
-//Variables to hold arguments integer codes
-long arg1;
-long arg2;
-
->>>>>>> 83d976e4ebe29affc36ee7b1983ac1ff0a4bfa73
 void resetCmd(){
     cmd = NULL;
     memset(argv1, 0, sizeof(argv1));
@@ -113,7 +75,6 @@ int executeSerialCmd(){
     char *p = argv1;
     char *str;
     int pid_args[4];
-<<<<<<< HEAD
 
     arg1d = atof(argv1);
     arg2d = atof(argv2);
@@ -138,12 +99,6 @@ int executeSerialCmd(){
             Serial.print("OK. SPINDLE_TO_ENCODER_GEAR_RATIO set to: ");
             Serial.println(SPINDLE_TO_ENCODER_GEAR_RATIO);
             break;
-=======
-    arg1 = atoi(argv1);
-    arg2 = atoi(argv2);
-    
-    switch(cmd){
->>>>>>> 83d976e4ebe29affc36ee7b1983ac1ff0a4bfa73
         case GET_BAUD_RATE:
             Serial.println(BAUD_RATE);
             break;
@@ -159,11 +114,7 @@ int executeSerialCmd(){
         case ANALOG_WRITE:
             char data [16];
             analogWrite(arg1, arg2);
-<<<<<<< HEAD
             sprintf(data, "OK. Analog write to pin %3d with value %3d ",arg1, arg2);
-=======
-            sprintf(data, "Analog write to pin %3d with value %3d ",arg1, arg2);
->>>>>>> 83d976e4ebe29affc36ee7b1983ac1ff0a4bfa73
             Serial.println(data);
             break;
         case PIN_MODE:
@@ -182,10 +133,7 @@ int executeSerialCmd(){
             // Serial.println(servos[arg1].getServo().read());
             break;
         case READ_ENCODERS:
-<<<<<<< HEAD
             // Serial command: e
-=======
->>>>>>> 83d976e4ebe29affc36ee7b1983ac1ff0a4bfa73
             // Send the counts and timestamp (microseconds) over serial
             Serial.print("L:");
             Serial.print(-readEncoder(LEFT));
@@ -199,7 +147,6 @@ int executeSerialCmd(){
         case RESET_ENCODERS:
             resetEncoder(LEFT);
             resetEncoder(RIGHT);
-<<<<<<< HEAD
             resetPID();
             Serial.println("Encoders & PID Reset");
             break;
@@ -251,42 +198,6 @@ int executeSerialCmd(){
             Ki = pid_args[2];
             Ko = pid_args[3];
             Serial.println("OK");
-=======
-            //resetPID();
-            Serial.println("Encoders & PID Reset");
-            break;
-        case MOTOR_SPEEDS:
-            /* Reset the auto stop timer */
-            // lastMotorCommand = micros();
-            // if (arg1 == 0 && arg2 == 0) {
-            // setMotorSpeeds(0, 0);
-            // resetPID();
-            // moving = 0;
-            // }
-            // else moving = 1;
-            // leftPID.TargetTicksPerFrame = arg1;
-            // rightPID.TargetTicksPerFrame = arg2;
-            // Serial.println("OK"); 
-            break;
-        case MOTOR_RAW_PWM:
-            /* Reset the auto stop timer */
-            // lastMotorCommand = micros();
-            // resetPID();
-            // moving = 0; // Sneaky way to temporarily disable the PID
-            // setMotorSpeeds(arg1, arg2);
-            // Serial.println("OK"); 
-            break;
-        case UPDATE_PID:
-            // while ((str = strtok_r(p, ":", &p)) != '\0') {
-            // pid_args[i] = atoi(str);
-            // i++;
-            // }
-            // Kp = pid_args[0];
-            // Kd = pid_args[1];
-            // Ki = pid_args[2];
-            // Ko = pid_args[3];
-            // Serial.println("OK");
->>>>>>> 83d976e4ebe29affc36ee7b1983ac1ff0a4bfa73
             break;
         default:
             Serial.println("Invalid Command");
@@ -299,10 +210,7 @@ int executeSerialCmd(){
 /* Setup function--runs once at startup. */
 void setup() {
     Serial.begin(BAUD_RATE);
-<<<<<<< HEAD
     resetPID();
-=======
->>>>>>> 83d976e4ebe29affc36ee7b1983ac1ff0a4bfa73
 }
 
 void loop(){
@@ -352,7 +260,6 @@ void loop(){
     }
   
     // run a PID calculation at the appropriate intervals
-<<<<<<< HEAD
     if (micros() > nextPID) {
         updatePID();
         nextPID += PID_INTERVAL;
@@ -363,18 +270,6 @@ void loop(){
         setMotorSpeeds(0, 0);
         moving = 0;
     }
-=======
-    //if (micros() > nextPID) {
-    //    updatePID();
-    //    nextPID += PID_INTERVAL;
-    //}
-    
-    // Check to see if we have exceeded the auto-stop interval
-    //if ((micros() - lastMotorCommand) > AUTO_STOP_INTERVAL) {;
-    //    setMotorSpeeds(0, 0);
-    //    moving = 0;
-    //}
->>>>>>> 83d976e4ebe29affc36ee7b1983ac1ff0a4bfa73
 
 
     //int i;

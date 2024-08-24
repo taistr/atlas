@@ -1,8 +1,3 @@
-<<<<<<< HEAD
-=======
-
-
->>>>>>> 83d976e4ebe29affc36ee7b1983ac1ff0a4bfa73
 // Pin Assignments
 #define LEFT_WHEEL_ENC_A  2
 #define LEFT_WHEEL_ENC_B  4
