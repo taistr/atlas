@@ -36,7 +36,7 @@ class OdometryNode(Node):
         self.lastDuinoOdomUpdateStamp = 0
 
         # Set up ROS 2 interfaces
-        odometry_publish_rate = 1.0/self.get_parameter("publish_rate").get_parameter_value().double_value
+        odometry_publish_rate = 1.0/self.get_parameter("publish_rate").value
         self.odometry_update_timer = self.create_timer(odometry_publish_rate, self.odometry_callback)
         self.encoder_subcriber = self.create_subscription(
             EncoderCount, 

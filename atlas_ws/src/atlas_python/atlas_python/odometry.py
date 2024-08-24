@@ -30,13 +30,13 @@ class OdometryNode(Node):
 
         # Set up variables
         self.pose = Pose()
-        self.wheel_radius = self.get_parameter("wheel_radius").get_parameter_value().double_value
-        self.wheel_base = self.get_parameter("wheel_base").get_parameter_value().double_value
-        self.counts_per_rev = self.get_parameter("counts_per_rev").get_parameter_value().integer_value
+        self.wheel_radius = self.get_parameter("wheel_radius").value
+        self.wheel_base = self.get_parameter("wheel_base").value
+        self.counts_per_rev = self.get_parameter("counts_per_rev").value
         self.prev_encoder_msg: EncoderCount | None = None
 
         # Set up ROS 2 interfaces
-        odometry_publish_rate = 1.0/self.get_parameter("publish_rate").get_parameter_value().double_value
+        odometry_publish_rate = 1.0/self.get_parameter("publish_rate").value
         self.odometry_update_timer = self.create_timer(odometry_publish_rate, self.odometry_callback)
         self.encoder_subcriber = self.create_subscription(
             EncoderCount, 
