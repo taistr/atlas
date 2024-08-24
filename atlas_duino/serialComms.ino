@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 //SOURCE (for this code and other attached scripts): https://github.com/joshnewans/ros_arduino_bridge/tree/main
 
 #include <Servo.h>
@@ -22,44 +21,17 @@ const long int PID_INTERVAL = 1000L*1000L / PID_RATE;
 #include "encoder_interface.h"
 #include "motor_driver.h"
 #include "diffbot_motionController.h"
-=======
-#include "duino_cmds.h"
-#include "encoder_interface.h"
-#include <Servo.h>
-
-/* Maximum PWM signal */
-#define MAX_PWM        255
-
-// Serial
-#define BAUD_RATE 115200
-
-// Encoder
-#define ENC_TIME_DELTA_THRESHOLD 100000
-
-/* Run the PID loop at 30 times per second */
-#define PID_RATE    30     // Hz
-
-/* Convert the rate into an interval */
-const int PID_INTERVAL = 1000*1000 / PID_RATE;
->>>>>>> 83d976e4ebe29affc36ee7b1983ac1ff0a4bfa73
 
 /* Track the next time we make a PID calculation */
 unsigned long nextPID = PID_INTERVAL;
 
 /* Stop the robot if it hasn't received a movement command
 in this number of microseconds */
-<<<<<<< HEAD
 #define AUTO_STOP_INTERVAL 5000000
 long lastMotorCommand = AUTO_STOP_INTERVAL;
 
 //    Initialising variables
 // Serial ---------------------------------------------------
-=======
-#define AUTO_STOP_INTERVAL 2000000
-long lastMotorCommand = AUTO_STOP_INTERVAL;
-
-// Initialising variables
->>>>>>> 83d976e4ebe29affc36ee7b1983ac1ff0a4bfa73
 //Variables to help parse serial commands
 int arg = 0;
 int idx = 0;
@@ -70,7 +42,6 @@ char cmd;
 //Variable to hold serial data
 char chr;
 
-<<<<<<< HEAD
 //Variables to hold serial command arguments
 char argv1[16];
 char argv2[16];
@@ -89,16 +60,6 @@ double WHEEL_RADIUS = 56.0/1000;
 //---------------------------------------------------------
 
 
-=======
-//Variables to hold arguments
-char argv1[16];
-char argv2[16];
-
-//Variables to hold arguments integer codes
-long arg1;
-long arg2;
-
->>>>>>> 83d976e4ebe29affc36ee7b1983ac1ff0a4bfa73
 void resetCmd(){
     cmd = NULL;
     memset(argv1, 0, sizeof(argv1));
@@ -114,7 +75,6 @@ int executeSerialCmd(){
     char *p = argv1;
     char *str;
     int pid_args[4];
-<<<<<<< HEAD
 
     arg1d = atof(argv1);
     arg2d = atof(argv2);
@@ -139,12 +99,6 @@ int executeSerialCmd(){
             Serial.print("OK. SPINDLE_TO_ENCODER_GEAR_RATIO set to: ");
             Serial.println(SPINDLE_TO_ENCODER_GEAR_RATIO);
             break;
-=======
-    arg1 = atoi(argv1);
-    arg2 = atoi(argv2);
-    
-    switch(cmd){
->>>>>>> 83d976e4ebe29affc36ee7b1983ac1ff0a4bfa73
         case GET_BAUD_RATE:
             Serial.println(BAUD_RATE);
             break;
@@ -160,11 +114,7 @@ int executeSerialCmd(){
         case ANALOG_WRITE:
             char data [16];
             analogWrite(arg1, arg2);
-<<<<<<< HEAD
             sprintf(data, "OK. Analog write to pin %3d with value %3d ",arg1, arg2);
-=======
-            sprintf(data, "Analog write to pin %3d with value %3d ",arg1, arg2);
->>>>>>> 83d976e4ebe29affc36ee7b1983ac1ff0a4bfa73
             Serial.println(data);
             break;
         case PIN_MODE:
