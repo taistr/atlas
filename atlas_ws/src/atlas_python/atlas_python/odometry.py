@@ -170,7 +170,6 @@ def main(args: dict = None):
     except rclpy.exceptions.ExternalShutdownException:
         sys.exit(1)
     finally:
-        odometry.cleanup()  # Ensure GPIO cleanup happens
         odometry.destroy_node()
 
     rclpy.shutdown()

@@ -7,10 +7,10 @@ from rclpy.node import Node
 from rclpy.executors import MultiThreadedExecutor
 from rcl_interfaces.msg import ParameterDescriptor, ParameterType
 from rclpy.qos import QoSProfile, QoSHistoryPolicy, QoSDurabilityPolicy, QoSReliabilityPolicy
-from std_msgs.msg import String
 from nav_msgs.msg import Odometry
 from atlas_msgs.msg import EncoderCount
-from geometry_msgs.msg import Quaternion
+from geometry_msgs.msg import TransformStamped, Quaternion
+from tf2_ros import TransformBroadcaster
 from tf_transformations import quaternion_from_euler
 
 
@@ -26,6 +26,8 @@ class OdometryNode(Node):
         self.prev_encoder_msg: EncoderCount | None = None
 
         # Odometry data set up
+        self.LprevCount = 0
+        self.RprevCount = 0
         self.x = 0.0  # position in xy plane
         self.y = 0.0
         self.th = 0.0
@@ -36,6 +38,7 @@ class OdometryNode(Node):
         self.lastDuinoOdomUpdateStamp = 0
 
         # Set up ROS 2 interfaces
+        self.tf_broadcaster = TransformBroadcaster(self)
         odometry_publish_rate = 1.0/self.get_parameter("publish_rate").value
         self.odometry_update_timer = self.create_timer(odometry_publish_rate, self.odometry_callback)
         self.encoder_subcriber = self.create_subscription(
@@ -51,7 +54,7 @@ class OdometryNode(Node):
         )
         self.odometry_publisher = self.create_publisher(
             Odometry, 
-            "atlas/odometry", 
+            "atlas/odom", 
             qos_profile=QoSProfile(
                 depth=10,
                 history=QoSHistoryPolicy.KEEP_LAST,
@@ -107,9 +110,9 @@ class OdometryNode(Node):
         R_counts = msg.right
 
         # Convert counts/tick to m/tick
-        Lw = L_counts * (360/48) * (1/74.8317)       #Counts/Tick * Angle/Count * Exact Gear Ratio = Angle/Tick * Exact Gear Ratio (Degrees/Tick)
+        Lw = (L_counts-self.LprevCount) * (360/48) * (1/74.8317)       #Counts/Tick * Angle/Count * Exact Gear Ratio = Angle/Tick * Exact Gear Ratio (Degrees/Tick)
         Lv = (Lw/360) * (math.pi*2*self.wheel_radius)      # meter/tick
-        Rw = R_counts * (360/48) * (1/74.8317)       #Counts/Tick * Angle/Count * Exact Gear Ratio = Angle/Tick * Exact Gear Ratio (Degrees/Tick)
+        Rw = (R_counts-self.RprevCount) * (360/48) * (1/74.8317)       #Counts/Tick * Angle/Count * Exact Gear Ratio = Angle/Tick * Exact Gear Ratio (Degrees/Tick)
         Rv = (Rw/360) * (math.pi*2*self.wheel_radius)      # meter/tick
 
         # Displacement/Tick
@@ -134,17 +137,19 @@ class OdometryNode(Node):
             w represents the "amount" of rotation:
              w = cos(theta/2)
         """
-        quaternion = Quaternion()
-        quaternion.x = 0.0
-        quaternion.y = 0.0
-        quaternion.z = math.sin(self.th/2)
-        quaternion.w = math.cos(self.th/2)
+        # quaternion = Quaternion()
+        # quaternion.x = 0.0
+        # quaternion.y = 0.0
+        # quaternion.z = math.sin(self.th/2)
+        # quaternion.w = math.cos(self.th/2)
 
         # Velocities 
         self.dx = d_perTick / time_elapsed   #meter/second
         self.dr = th_perTick / time_elapsed  #degrees/second
 
         self.lastDuinoOdomUpdateStamp = current_time
+        self.LprevCount = L_counts
+        self.RprevCount = R_counts
 
 
     def encoder_callback(self, msg: EncoderCount) -> None:
@@ -169,8 +174,16 @@ class OdometryNode(Node):
         msg.pose.pose.position.z = 0.0
 
         # Set the orientation (quaternion)
-        quaternion = quaternion_from_euler(0, 0, self.th)
-        msg.pose.pose.orientation = Quaternion(*quaternion)
+        quaternion = Quaternion()
+        quaternion.x = 0.0
+        quaternion.y = 0.0
+        quaternion.z = math.sin(self.th / 2)
+        quaternion.w = math.cos(self.th / 2)
+        msg.pose.pose.orientation = quaternion
+        # msg.pose.pose.orientation.x = quaternion[0]
+        # msg.pose.pose.orientation.y = quaternion[1]
+        # msg.pose.pose.orientation.z = quaternion[2]
+        # msg.pose.pose.orientation.w = quaternion[3]
 
         # Set the velocity
         msg.twist.twist.linear.x = self.dx
@@ -180,6 +193,29 @@ class OdometryNode(Node):
         msg.twist.twist.angular.y = 0.0
         msg.twist.twist.angular.z = self.dr
 
+        # Set child frame
+        msg.child_frame_id = self.base_frame_id
+
+        self.get_logger().info("X: " + str(self.x) + ", Y: " + str(self.y) + ", th: " + str(self.th))
+
+        return msg
+    
+    def get_transform(self) -> TransformStamped:
+        msg = TransformStamped()
+        msg.header.stamp = self.get_clock().now().to_msg()
+        msg.header.frame_id= "odom"
+        msg.child_frame_id = "base_link"
+
+        msg.transform.translation.x = self.x
+        msg.transform.translation.y = self.y
+        msg.transform.translation.z = 0.0
+
+        quaternion = quaternion_from_euler(0, 0, self.th)
+        msg.transform.rotation.x = quaternion[0]
+        msg.transform.rotation.y = quaternion[1]
+        msg.transform.rotation.z = quaternion[2]
+        msg.transform.rotation.w = quaternion[3]
+
         return msg
 
     def odometry_callback(self) -> None:
@@ -187,6 +223,9 @@ class OdometryNode(Node):
         # Publish the odometry message
         odom_msg = self.get_odometry()
         self.odometry_publisher.publish(odom_msg)
+
+        tf_msg = self.get_transform()
+        self.tf_broadcaster.sendTransform(tf_msg)
 
 def main(args: dict = None):
     rclpy.init(args=args)
@@ -199,7 +238,6 @@ def main(args: dict = None):
     except rclpy.exceptions.ExternalShutdownException:
         sys.exit(1)
     finally:
-        odometry.cleanup()  # Ensure GPIO cleanup happens
         odometry.destroy_node()
 
     rclpy.shutdown()
