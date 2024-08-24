@@ -1,3 +1,10 @@
+"""
+This script is a ROS 2 node responsible for:
+1. Sending read encoder commands to the Arduino Uno hardware interface, over serial
+2. Capturing LEFT and RIGHT encoder counts & Arduino timestamp from serial
+3. Publishing raw encoder counts & Arduino timestamp
+"""
+
 import sys
 import rclpy
 from rclpy.node import Node
