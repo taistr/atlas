@@ -7,7 +7,7 @@ import rclpy
 from rclpy.node import Node
 
 try:
-    import RPi.GPIO as GPIO
+    import lgpio as GPIO
 except RuntimeError: # RPi.GPIO throws errors when not on RPi
     from unittest.mock import MagicMock as GPIO
 
@@ -59,7 +59,7 @@ class MotorDriver(Node):
         super().__init__('motor_driver')
 
         self.name = "motor_driver"
-        self.get_logger().info("Motor Driver Interface Online!")\
+        self.get_logger().info("Motor Driver Interface Online!")
         
         # GPIO Set Up
         #Encoders
@@ -181,7 +181,7 @@ class MotorDriver(Node):
             Lcounts_perTick = (self.Lcounter - self.Llast_counter)
             Rcounts_perTick = (self.Rcounter - self.Rlast_counter)
         else:
-            print("Time period = 0")
+            print("Motor Driver: Time period = 0")
 
         # Convert counts/tick to degrees/second
         Lw = Lcounts_perTick * (360/ENCODER_PPR) * (1/MOTOR_GEAR_MULTIPLIER) / time_elapsed       #Counts/Tick * Angle/Count * Exact Gear Ratio / Time Elapsed = (Degrees/Second)

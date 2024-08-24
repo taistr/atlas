@@ -8,27 +8,23 @@ try:
 except RuntimeError: # RPi.GPIO throws errors when not on RPi
     from unittest.mock import MagicMock as GPIO
 
-class Actuation(Node):
+class Hello(Node):
     def __init__(self):
-        super().__init__("actuation")
-        self.get_logger().info("Actuation Online!")
+        super().__init__("hello")
+        self.get_logger().info("Hello World!")
 
 def main(args: dict = None):
     rclpy.init(args=args)
     
-    actuation = Actuation()
-    rclpy.spin(actuation)
-    actuation.destroy_node()
-
-    actuation = Actuation()
+    hello = Hello()
     try:
-        actuation.get_logger().info("Starting actuation node, shut down with CTRL-C")
-        rclpy.spin(actuation)
+        hello.get_logger().info("Starting Hello World!")
+        rclpy.spin(hello)
     except KeyboardInterrupt:
         pass
     except rclpy.exceptions.ExternalShutdownException:
         sys.exit(1)
-    actuation.destroy_node()
+    hello.destroy_node()
 
     rclpy.shutdown()
 

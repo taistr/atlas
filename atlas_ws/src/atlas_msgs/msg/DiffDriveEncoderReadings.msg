@@ -1,2 +1,0 @@
-int32 l_motor_encoder_val
-int32 r_motor_encoder_val

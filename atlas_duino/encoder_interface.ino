@@ -1,5 +1,9 @@
 #include <Encoder.h>
+<<<<<<< HEAD
 #include "encoder_interface.h"
+=======
+
+>>>>>>> 83d976e4ebe29affc36ee7b1983ac1ff0a4bfa73
 
 // // Pin Assignments
 // #define LEFT_WHEEL_ENC_A  2
@@ -24,6 +28,7 @@ long currentRightPosition = 0;
 // Wrapper to read encoder values
 long readEncoder(int i){
   unsigned long currentMicros = micros();
+<<<<<<< HEAD
 
     // Get the current encoder positions
   if (i == LEFT){
@@ -35,10 +40,29 @@ long readEncoder(int i){
     return currentRightPosition;
   }
 
+=======
+  unsigned long timeDelta = currentMicros - previousMicros;
+
+  // Check if the time interval has passed
+  if (timeDelta >= ENC_TIME_DELTA_THRESHOLD) {  // Example threshold: 0.1 seconds
+    previousMicros = currentMicros;
+  
+    // Get the current encoder positions
+    if (i == LEFT){
+      currentLeftPosition = leftWheel.read();
+      return currentLeftPosition;
+    }
+    else if (i == RIGHT){
+      currentRightPosition = rightWheel.read();
+      return currentRightPosition;
+    }    
+  }
+>>>>>>> 83d976e4ebe29affc36ee7b1983ac1ff0a4bfa73
   
 }
 
 // Reset encoder positions
+<<<<<<< HEAD
 void resetEncoder(int i) {
   if (i == LEFT){
     currentLeftPosition=0L;
@@ -48,6 +72,15 @@ void resetEncoder(int i) {
   else if (i = RIGHT) { 
     currentRightPosition=0L;
     rightWheel.write(0);
+=======
+void resetEncoders(int i) {
+  if (i == LEFT){
+    currentLeftPosition=0L;
+    return;
+  } 
+  else if (int i = RIGHT) { 
+    currentRightPosition=0L;
+>>>>>>> 83d976e4ebe29affc36ee7b1983ac1ff0a4bfa73
     return;
   }
 }
