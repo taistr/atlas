@@ -48,7 +48,7 @@ class ObjectDetection(Node):
         """Declare parameters for the camera node"""
         self.declare_parameter(
             "model_name",
-            value="best_ncnn_model",
+            value="best.pt",
             descriptor=ParameterDescriptor(
                 type=ParameterType.PARAMETER_STRING,
                 description="Name of the model to use for object detection"
