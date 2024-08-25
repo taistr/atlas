@@ -7,9 +7,10 @@
 
 /* PID setpoint info For a Motor */
 typedef struct {
-  long CountsToTarget;    // target counts to target
+  long Straight_CountsToTarget;    // Straight line counts to target
+  long Turning_CountsToTarget;    //  Counts to desired heading
   long Encoder;                // encoder count
-  long PrevEnc;                  // last encoder count
+  int motor;
 
   /*
   * Using previous input (PrevInput) instead of PrevError to avoid derivative kick,
@@ -24,7 +25,7 @@ typedef struct {
   * see http://brettbeauregard.com/blog/2011/04/improving-the-beginner%E2%80%99s-pid-tuning-changes/
   */
   //int Ierror;
-  int ITerm;                    //integrated term
+  double ITerm;                    //integrated term
 
   long output;                    // last motor setting
 }
@@ -32,13 +33,16 @@ SetPointInfo;
 
 SetPointInfo leftPID, rightPID;
 
+
 /* PID Parameters */
-int Kp = 1;
-int Ki = 0.5;
-int Kd = 20;
-int Ko = 50;
+double Kp = 2;
+double Ki = 1;
+double Kd = 0;
+double Ko = 100;
 
 unsigned char moving = 0; // is the base in motion?
+unsigned char turning = 1; // is the base turning?
+
 
 /*
 * Initialize PID variables to zero to prevent startup spikes
@@ -49,33 +53,94 @@ unsigned char moving = 0; // is the base in motion?
 * when going from stop to moving, that's why we can init everything on zero.
 */
 void resetPID(){
-   leftPID.CountsToTarget = 0.0;
-   leftPID.Encoder = readEncoder(LEFT);
-   leftPID.PrevEnc = leftPID.Encoder;
-   leftPID.output = 0;
-   leftPID.PrevErr = 0;
-   leftPID.ITerm = 0;
+  leftPID.Straight_CountsToTarget = 0.0;
+  leftPID.Turning_CountsToTarget = 0.0;
+  leftPID.Encoder = readEncoder(LEFT);
+  leftPID.output = 0;
+  leftPID.PrevErr = 0;
+  leftPID.ITerm = 0;
 
-   rightPID.CountsToTarget = 0.0;
-   rightPID.Encoder = readEncoder(RIGHT);
-   rightPID.PrevEnc = rightPID.Encoder;
-   rightPID.output = 0;
-   rightPID.PrevErr = 0;
-   rightPID.ITerm = 0;
+  rightPID.Straight_CountsToTarget = 0.0;
+  rightPID.Turning_CountsToTarget = 0.0;
+  rightPID.Encoder = readEncoder(RIGHT);
+  rightPID.output = 0;
+  rightPID.PrevErr = 0;
+  rightPID.ITerm = 0;
+  
+  moving = 0;
 
-   resetEncoder(LEFT);
-   resetEncoder(RIGHT);
+  leftPID.motor = LEFT;
+  rightPID.motor = RIGHT;
+
+  resetEncoder(LEFT);
+  resetEncoder(RIGHT);
+
+  //Serial.println("PID Reset.");
 }
 
 /* PID routine to compute the next motor commands */
 void doPID(SetPointInfo * p) {
   long Perror;
   long output;
-  //int input;
 
-  //Perror = p->TargetTicksPerFrame - (p->Encoder - p->PrevEnc);
-  //input = p->Encoder - p->PrevEnc;
-  Perror = p->CountsToTarget;
+  if (!turning){  // Select set point based on mode
+    Perror = p->Straight_CountsToTarget;
+  }
+  else{
+    Perror = p->Turning_CountsToTarget;
+    //Serial.println("Turning");
+  }
+
+  if (abs(Perror) < 100){
+    p->PrevErr = 0;
+
+    if (turning){  // Deactivate turning mode after passing threshold
+      turning = 0;
+      //Serial.println("Turning Complete.");
+      if (p->motor == RIGHT){
+        p->output = 0;
+        rightPID.Turning_CountsToTarget = 0;
+        rightPID.PrevErr = 0;
+        resetEncoder(RIGHT);
+      }
+      else{
+        p->output = 0;        
+        leftPID.Turning_CountsToTarget = 0;
+        leftPID.PrevErr = 0;
+        resetEncoder(LEFT);
+      }
+      delay(100);
+    }
+    else{
+      if (p->motor == RIGHT){
+        p->output = 0;        
+        rightPID.Straight_CountsToTarget = 0;
+        rightPID.PrevErr = 0;
+        resetEncoder(RIGHT);
+      }
+      else{
+        p->output = 0;        
+        leftPID.Straight_CountsToTarget = 0;
+        leftPID.PrevErr = 0;
+        resetEncoder(LEFT);
+      }
+      delay(100);
+      //Serial.println("Straight Line Complete.");
+      //resetPID();
+    }
+    Serial.print("Fixed:");
+    Serial.print(50000);
+    Serial.print(",L:");
+    Serial.print(leftPID.PrevErr);
+    Serial.print(",R:");
+    Serial.print(rightPID.PrevErr);
+    Serial.print(",L_e:");
+    Serial.print(leftPID.output*10);
+    Serial.print(",R_e:");
+    Serial.println(rightPID.output*10);
+    return;
+  }
+
   /*
   * Avoid derivative kick and allow tuning changes,
   * see http://brettbeauregard.com/blog/2011/04/improving-the-beginner%E2%80%99s-pid-derivative-kick/
@@ -100,14 +165,31 @@ void doPID(SetPointInfo * p) {
     p->ITerm += Ki * Perror;
 
   p->output = output;
-  //p->PrevInput = input;
+  Serial.print("Fixed:");
+  Serial.print(50000);
+  Serial.print(",L:");
+  Serial.print(leftPID.PrevErr);
+  Serial.print(",R:");
+  Serial.print(rightPID.PrevErr);
+  Serial.print(",L_e:");
+  Serial.print(leftPID.output*10);
+  Serial.print(",R_e:");
+  Serial.println(rightPID.output*10);
 }
 
 /* Read the encoder values and call the PID routine */
 void updatePID() {
+
   /* Read the encoders */
-  leftPID.CountsToTarget = leftPID.CountsToTarget + readEncoder(LEFT);
-  rightPID.CountsToTarget = rightPID.CountsToTarget - readEncoder(RIGHT);
+  if (!turning){
+    leftPID.Straight_CountsToTarget = leftPID.Straight_CountsToTarget + readEncoder(LEFT);
+    rightPID.Straight_CountsToTarget = rightPID.Straight_CountsToTarget - readEncoder(RIGHT);
+  }
+  else{
+    leftPID.Turning_CountsToTarget = leftPID.Turning_CountsToTarget + readEncoder(LEFT);
+    rightPID.Turning_CountsToTarget = rightPID.Turning_CountsToTarget - readEncoder(RIGHT);
+  }
+
   resetEncoder(LEFT);
   resetEncoder(RIGHT);
   
@@ -128,13 +210,5 @@ void updatePID() {
   doPID(&leftPID);
 
   /* Set the motor speeds accordingly */
-  //Serial.print("PID Left: ");
-  //Serial.print(leftPID.output);
-  //Serial.print(", ");
-  //Serial.print(leftPID.ITerm);
-  //Serial.print(", PID Right: ");
-  //Serial.print(rightPID.output);
-  //Serial.print(", ");
-  //Serial.println(rightPID.ITerm);
   setMotorSpeeds(leftPID.output, rightPID.output);
 }

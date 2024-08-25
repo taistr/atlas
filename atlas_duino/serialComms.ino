@@ -27,7 +27,8 @@ unsigned long nextPID = PID_INTERVAL;
 
 /* Stop the robot if it hasn't received a movement command
 in this number of microseconds */
-#define AUTO_STOP_INTERVAL 5000000
+//#define AUTO_STOP_INTERVAL 5000000
+#define AUTO_STOP_INTERVAL 10000000
 long lastMotorCommand = AUTO_STOP_INTERVAL;
 
 //    Initialising variables
@@ -45,27 +46,38 @@ char chr;
 //Variables to hold serial command arguments
 char argv1[16];
 char argv2[16];
+char argv3[16];
+char argv4[16];
 
 //Variables to hold serial command arguments integer codes
 long arg1;
 long arg2;
+long arg3;
+long arg4;
 
 //Variables to hold serial command arguments' doubles
 double arg1d;
 double arg2d;
+double arg3d;
+double arg4d;
 //---------------------------------------------------------
 // Differential Drive--------------------------------------
 double SPINDLE_TO_ENCODER_GEAR_RATIO = 74.8317;
-double WHEEL_RADIUS = 56.0/1000;
+double WHEEL_RADIUS = 56.0/(1000*2);
+double WHEEL_BASE = 25.5/1000;
 //---------------------------------------------------------
 
 
 void resetCmd(){
     cmd = NULL;
     memset(argv1, 0, sizeof(argv1));
-    memset(argv2, 0, sizeof(argv1));
+    memset(argv2, 0, sizeof(argv2));
+    memset(argv3, 0, sizeof(argv3));
+    memset(argv4, 0, sizeof(argv4));
     arg1 = 0;
     arg2 = 0;
+    arg3 = 0;
+    arg4 = 0;
     arg = 0;
     idx = 0;
 }
@@ -78,6 +90,9 @@ int executeSerialCmd(){
 
     arg1d = atof(argv1);
     arg2d = atof(argv2);
+    arg3d = atof(argv3);
+    arg4d = atof(argv4);
+    
 
     if ((arg1d - floor(arg1d))==0){
       arg1 = atoi(argv1);
@@ -85,6 +100,14 @@ int executeSerialCmd(){
 
     if ((arg2d - floor(arg2d))==0){
       arg2 = atoi(argv2);
+    } 
+
+    if ((arg3d - floor(arg3d))==0){
+      arg3 = atoi(argv3);
+    } 
+
+    if ((arg4d - floor(arg4d))==0){
+      arg4 = atoi(argv4);
     } 
 
     
@@ -150,32 +173,47 @@ int executeSerialCmd(){
             resetPID();
             Serial.println("Encoders & PID Reset");
             break;
-        case MOTOR_DIST:
+        case MOTOR_CONTROL:
             // Serial command: m <spdL> <spdR>
             // Sets motors' closed-loop speeds, in m/s
             /* Reset the auto stop timer */
             lastMotorCommand = micros();
-            if (arg1 == 0 && arg2 == 0) {
+            if (arg1d == 0 && arg2d == 0) {
               setMotorSpeeds(0, 0);
               resetPID();
               moving = 0;
+              turning = 1;
             }
-            else moving = 1;
+            else {
+              moving = 1;
+              turning = 1;
+            }
 
-            //arg1d = (((arg1/WHEEL_RADIUS) * SPINDLE_TO_ENCODER_GEAR_RATIO) / (2* PI))*48 /PID_RATE; //Convert L wheel speed cmd from m/s to ticks/frame
-            //arg2d = (((arg2/WHEEL_RADIUS) * SPINDLE_TO_ENCODER_GEAR_RATIO) / (2* PI))*48 /PID_RATE; //Convert L wheel speed cmd from m/s to ticks/frame
-            arg1d = (arg1d/(2*PI*WHEEL_RADIUS)) * 48 * SPINDLE_TO_ENCODER_GEAR_RATIO;
-            arg2d = (arg2d/(2*PI*WHEEL_RADIUS)) * 48 * SPINDLE_TO_ENCODER_GEAR_RATIO;
+
+            //arg1d = (arg1d/(2*PI*WHEEL_RADIUS)) * 48 * SPINDLE_TO_ENCODER_GEAR_RATIO;
+            //arg2d = (arg2d/(2*PI*WHEEL_RADIUS)) * 48 * SPINDLE_TO_ENCODER_GEAR_RATIO;
+
+            arg1d = (arg1d/(2*PI*WHEEL_RADIUS)) * 48 * SPINDLE_TO_ENCODER_GEAR_RATIO;  // Distance in m
+            arg2d = (((arg2d/360) * (2*PI*WHEEL_BASE))/(2*PI*WHEEL_RADIUS)) * 48 * SPINDLE_TO_ENCODER_GEAR_RATIO;  // Angle in degrees
 
             //leftPID.TargetTicksPerFrame = arg1d;
             //rightPID.TargetTicksPerFrame = arg2d;
-            leftPID.CountsToTarget = floor(arg1d);
-            rightPID.CountsToTarget = floor(arg2d);
-            Serial.print("OK. Left motor: "); 
-            Serial.print(leftPID.CountsToTarget);
-            Serial.print(" Counts, Right motor: ");
-            Serial.print(rightPID.CountsToTarget);
-            Serial.println(" Counts");
+            leftPID.Straight_CountsToTarget = floor(arg1d);
+            rightPID.Straight_CountsToTarget = floor(arg1d);
+            leftPID.Turning_CountsToTarget = floor(arg2d);
+            rightPID.Turning_CountsToTarget = floor(-arg2d);
+
+            //Serial.print("OK. Turning mode. Left motor: "); 
+            //Serial.print(leftPID.Turning_CountsToTarget);
+            //Serial.print(" Counts, Right motor: ");
+            //Serial.print(rightPID.Turning_CountsToTarget);
+            //Serial.println(" Counts");
+            
+            //Serial.print("OK. Straight line mode. Left motor: "); 
+            //Serial.print(leftPID.Straight_CountsToTarget);
+            //Serial.print(" Counts, Right motor: ");
+            //Serial.print(rightPID.Straight_CountsToTarget);
+            //Serial.println(" Counts");
             break;
         case MOTOR_RAW_PWM:
             /* Reset the auto stop timer */
@@ -189,15 +227,28 @@ int executeSerialCmd(){
             Serial.println(arg2); 
             break; 
         case UPDATE_PID:
-            while ((str = strtok_r(p, ":", &p)) != '\0') {
-              pid_args[i] = atoi(str);
-              i++;
-            }
-            Kp = pid_args[0];
-            Kd = pid_args[1];
-            Ki = pid_args[2];
-            Ko = pid_args[3];
-            Serial.println("OK");
+            Kp = arg1d;
+            Ki = arg2d;
+            Kd = arg3d;
+            Ko = arg4d;
+            Serial.print("OK. PID UPDATED. P: ");
+            Serial.print(Kp);
+            Serial.print(", I: ");
+            Serial.print(Ki);
+            Serial.print(", D: ");
+            Serial.print(Kd);
+            Serial.print(", A: ");
+            Serial.println(Ko);
+            break;
+          case GET_PID:
+            Serial.print("OK. P: ");
+            Serial.print(Kp);
+            Serial.print(", I: ");
+            Serial.print(Ki);
+            Serial.print(", D: ");
+            Serial.print(Kd);
+            Serial.print(", A: ");
+            Serial.println(Ko);
             break;
         default:
             Serial.println("Invalid Command");
@@ -210,6 +261,7 @@ int executeSerialCmd(){
 /* Setup function--runs once at startup. */
 void setup() {
     Serial.begin(BAUD_RATE);
+    initMotorController();
     resetPID();
 }
 
@@ -228,6 +280,12 @@ void loop(){
             else if (arg == 2){
                  argv2[idx] = NULL;
             }
+            else if (arg == 3){
+                 argv3[idx] = NULL;
+            }
+            else if (arg == 4){
+                 argv4[idx] = NULL;
+            }
             executeSerialCmd();
             resetCmd();
         }
@@ -238,6 +296,16 @@ void loop(){
             else if (arg == 1)  {
                 argv1[idx] = NULL;
                 arg = 2;
+                idx = 0;
+            }
+            else if (arg == 2)  {
+                argv2[idx] = NULL;
+                arg = 3;
+                idx = 0;
+            }
+            else if (arg == 3)  {
+                argv3[idx] = NULL;
+                arg = 4;
                 idx = 0;
             }
             continue;
@@ -256,6 +324,14 @@ void loop(){
                 argv2[idx] = chr;
                 idx++;
             }
+            else if (arg == 3) {
+                argv3[idx] = chr;
+                idx++;
+            }
+            else if (arg == 4) {
+                argv4[idx] = chr;
+                idx++;
+            }
         }
     }
   
@@ -266,10 +342,11 @@ void loop(){
     }
     
     // Check to see if we have exceeded the auto-stop interval
-    if ((micros() - lastMotorCommand) > AUTO_STOP_INTERVAL) {
-        setMotorSpeeds(0, 0);
-        moving = 0;
-    }
+    //if (!moving && ((micros() - lastMotorCommand) > AUTO_STOP_INTERVAL)) {
+        //Serial.println("AUTOSTOPPPED");
+    //    setMotorSpeeds(0, 0);
+    //    moving = 0;
+    //}
 
 
     //int i;

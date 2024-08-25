@@ -1,6 +1,12 @@
 #include "motor_driver.h"
 
 void initMotorController() {
+  digitalWrite(LEFT_MOTOR_EN, LOW);
+  digitalWrite(LEFT_MOTOR_IN1, LOW); 
+  digitalWrite(LEFT_MOTOR_IN2, LOW);
+  digitalWrite(RIGHT_MOTOR_EN, LOW);
+  digitalWrite(RIGHT_MOTOR_IN3, LOW); 
+  digitalWrite(RIGHT_MOTOR_IN4, LOW);
 }
 
 void setMotorSpeed(int i, int spd) {
@@ -26,7 +32,7 @@ void setMotorSpeed(int i, int spd) {
       digitalWrite(LEFT_MOTOR_IN2, HIGH);
       }
     else if (spd == 0){
-      analogWrite(LEFT_MOTOR_EN, 0);
+      digitalWrite(LEFT_MOTOR_EN, HIGH);
       digitalWrite(LEFT_MOTOR_IN1, LOW); 
       digitalWrite(LEFT_MOTOR_IN2, LOW);
     }
@@ -43,7 +49,7 @@ void setMotorSpeed(int i, int spd) {
       digitalWrite(RIGHT_MOTOR_IN4, LOW);  
       }
     else if (spd == 0){
-      analogWrite(RIGHT_MOTOR_EN, 0);
+      digitalWrite(RIGHT_MOTOR_EN, HIGH);
       digitalWrite(RIGHT_MOTOR_IN3, LOW); 
       digitalWrite(RIGHT_MOTOR_IN4, LOW);
     }
