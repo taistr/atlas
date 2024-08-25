@@ -27,12 +27,7 @@ class Camera(Node):
         self.capture_publisher = self.create_publisher(
             Image,
             "atlas/capture",
-            QoSProfile(
-                history=QoSHistoryPolicy.KEEP_LAST,
-                depth=1,
-                durability=QoSDurabilityPolicy.VOLATILE,
-                reliability=QoSReliabilityPolicy.BEST_EFFORT
-            )
+            5,
         )
 
         self.get_logger().info("Camera Online!")
@@ -56,7 +51,7 @@ class Camera(Node):
             self.get_logger().error("Failed to capture image")
             return
         
-        image_message = CvBridge().cv2_to_imgmsg(image)
+        image_message = CvBridge().cv2_to_imgmsg(image, encoding="bgr8")
         self.capture_publisher.publish(image_message)
 
 
