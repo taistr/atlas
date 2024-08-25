@@ -9,6 +9,7 @@ from cv_bridge import CvBridge
 from ultralytics import YOLO
 from ament_index_python.packages import get_package_share_directory
 import pathlib
+import cv2
 
 class ObjectDetection(Node):
     def __init__(self):
@@ -30,6 +31,16 @@ class ObjectDetection(Node):
                 reliability=QoSReliabilityPolicy.BEST_EFFORT
             )
         )
+        self.detection_publisher = self.create_publisher(
+            Image,
+            "atlas/detection",
+            QoSProfile(
+                depth=1,
+                history=QoSHistoryPolicy.KEEP_LAST,
+                durability=QoSDurabilityPolicy.VOLATILE,
+                reliability=QoSReliabilityPolicy.BEST_EFFORT
+            )
+        )
 
         self.get_logger().info("Object Detection Online!")
 
@@ -37,7 +48,7 @@ class ObjectDetection(Node):
         """Declare parameters for the camera node"""
         self.declare_parameter(
             "model_name",
-            value="best.pt",
+            value="best_ncnn_model",
             descriptor=ParameterDescriptor(
                 type=ParameterType.PARAMETER_STRING,
                 description="Name of the model to use for object detection"
@@ -48,7 +59,9 @@ class ObjectDetection(Node):
         """Detect objects in the received image"""
         frame = self.bridge.imgmsg_to_cv2(image)
         results = self.model(frame, conf=0.5)
-        pass # TODO: Implement object detection logic
+        det_annotated = results[0].plot()
+        image_message = CvBridge().cv2_to_imgmsg(det_annotated)
+        self.detection_publisher.publish(image_message)
 
 def main(args: dict = None):
     rclpy.init(args=args)
