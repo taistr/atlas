@@ -6,6 +6,7 @@ from rclpy.executors import ExternalShutdownException, MultiThreadedExecutor
 from rcl_interfaces.msg import ParameterType, ParameterDescriptor
 from sensor_msgs.msg import Image
 from cv_bridge import CvBridge
+import pyudev
 import cv2
 
 class Camera(Node):
@@ -13,10 +14,11 @@ class Camera(Node):
         super().__init__("camera")
         self.initialise_parameters()
         
-        self.cap = cv2.VideoCapture(0)
+        self.cap = cv2.VideoCapture(self.get_parameter("camera_number").value)
         self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, self.get_parameter("camera_width").value)
         self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, self.get_parameter("camera_height").value)
         self.cap.set(cv2.CAP_PROP_FPS, self.get_parameter("camera_fps").value)
+
         self.get_logger().info(
             f"Camera Parameters: {self.cap.get(cv2.CAP_PROP_FRAME_WIDTH)}x{self.cap.get(cv2.CAP_PROP_FRAME_HEIGHT)} @ {self.cap.get(cv2.CAP_PROP_FPS)} FPS"
         )
@@ -35,20 +37,12 @@ class Camera(Node):
 
     def initialise_parameters(self) -> None:
         """Declare parameters for the camera node"""
-        self.declare_parameter(
-            "camera_fps",
-            30,
+        self.declare_parameter( #MAKE SURE THIS IS SET TO PI CAMERA
+            "camera_number",
+            0,
             ParameterDescriptor(
                 type=ParameterType.PARAMETER_INTEGER,
-                description="Frames per second of the camera",
-            ),
-        )
-        self.declare_parameter(
-            "camera_width",
-            320,
-            ParameterDescriptor(
-                type=ParameterType.PARAMETER_INTEGER,
-                description="Width of the camera frame",
+                description="Camera number to use for capturing images",
             ),
         )
         self.declare_parameter(
@@ -56,7 +50,23 @@ class Camera(Node):
             240,
             ParameterDescriptor(
                 type=ParameterType.PARAMETER_INTEGER,
-                description="Height of the camera frame",
+                description="Height of the camera image",
+            ),
+        )
+        self.declare_parameter(
+            "camera_width",
+            320,
+            ParameterDescriptor(
+                type=ParameterType.PARAMETER_INTEGER,
+                description="Width of the camera image",
+            ),
+        )
+        self.declare_parameter(
+            "camera_fps",
+            30,
+            ParameterDescriptor(
+                type=ParameterType.PARAMETER_INTEGER,
+                description="Frames per second of the camera",
             ),
         )
         self.declare_parameter(
@@ -95,9 +105,6 @@ def main(args: dict = None):
     except ExternalShutdownException:
         sys.exit(1)
     camera.destroy_node()
-
-
-    rclpy.shutdown()
 
 if __name__ == "__main__":
     main()
