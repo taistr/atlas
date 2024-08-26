@@ -8,28 +8,34 @@ from dataclasses import dataclass
 import time
 import serial
 from threading import Lock
-
-# Service file
-from MotorCommand.srv import MotorCommands
+from std_msgs.msg import String  # or a custom message type
+from atlas_msgs.srv import MotorCommand
 
 class MotorDriver(Node):
     def __init__(self):
         super().__init__("motor_driver")
         self.initialise_parameters()
 
-        # Serial Interface
-        #self.
+        # Service set up
+        self.srv = self.create_service(MotorCommand, 'motor_command', self.motorCommands_callback)
 
-        
-        # Create ROS interfaces
-        self.control_loop_timer = self.create_timer(
-            1.0 / self.get_parameter("control_loop_rate").get_parameter_value().double_value,
-            self.control_loop
-        )
-        self.odometry_subscriber = self.create_subscription(
-            Odometry,
-            "atlas/odometry",
-            self.odometry_callback,
+        # Serial Subscriber
+        # self.serial_subscription = self.create_subscription(
+        #     String,
+        #     'duino_serial_resp',
+        #     self.serialResp_callback,
+        #     qos_profile=QoSProfile(
+        #         depth=10,
+        #         history=QoSHistoryPolicy.KEEP_LAST,
+        #         durability=QoSDurabilityPolicy.VOLATILE,
+        #         reliability=QoSReliabilityPolicy.RELIABLE
+        #     )
+        # )
+
+        # Serial Publisher
+        self.serial_publisher = self.create_publisher(
+            String, 
+            "duino_serial_cmd", 
             qos_profile=QoSProfile(
                 depth=10,
                 history=QoSHistoryPolicy.KEEP_LAST,
@@ -37,38 +43,14 @@ class MotorDriver(Node):
                 reliability=QoSReliabilityPolicy.RELIABLE
             )
         )
-        self.velocity_request_subscriber = self.create_subscription(
-            Twist,
-            "atlas/velocity_request",
-            self.velocity_request_callback,
-            qos_profile=QoSProfile(
-                depth=10,
-                history=QoSHistoryPolicy.KEEP_LAST,
-                durability=QoSDurabilityPolicy.VOLATILE,
-                reliability=QoSReliabilityPolicy.RELIABLE
-            )
-        )
+
         self.get_logger().info("Motor Driver Initialised!")
 
 
     def initialise_parameters(self) -> None:
-        """Declare parameters for the motor driver node"""
-        self.declare_parameter(
-            "control_loop_rate",
-            value=100,
-            descriptor=ParameterDescriptor(
-                type=ParameterType.PARAMETER_DOUBLE,
-                description="Rate at which the control loop runs (Hz)"
-            )
-        )
-        self.declare_parameter(
-            "motor_driver_frequency",
-            value=100,
-            descriptor=ParameterDescriptor(
-                type=ParameterType.PARAMETER_INTEGER,
-                description="Frequency of the PWM signal for the motor driver (Hz)"
-            )
-        )
+        """Declare parameters for the motor driver node - Arduino hardware"""
+
+        # Robot params
         self.declare_parameter(
             "wheel_radius",
             value=0.03,
@@ -85,8 +67,10 @@ class MotorDriver(Node):
                 description="Distance between the two wheels of the robot (m)"
             )
         )
+
+        # PID - Straight params
         self.declare_parameter(
-            "kp",
+            "L_kp",
             value=0.1,
             descriptor=ParameterDescriptor(
                 type=ParameterType.PARAMETER_DOUBLE,
@@ -94,129 +78,133 @@ class MotorDriver(Node):
             )
         )
         self.declare_parameter(
-            "ki",
-            value=0.01,
+            "L_ki",
+            value=0.05,
             descriptor=ParameterDescriptor(
                 type=ParameterType.PARAMETER_DOUBLE,
                 description="Integral gain for the PID controller"
             )
         )
         self.declare_parameter(
-            "kd",
-            value=0.05,
+            "L_kd",
+            value=5,
             descriptor=ParameterDescriptor(
                 type=ParameterType.PARAMETER_DOUBLE,
                 description="Derivative gain for the PID controller"
             )
         )
         self.declare_parameter(
-            "in_1",
-            value=9,
+            "L_ko",
+            value=10,
             descriptor=ParameterDescriptor(
-                type=ParameterType.PARAMETER_INTEGER,
-                description="GPIO pin for IN1"
-            ),
+                type=ParameterType.PARAMETER_DOUBLE,
+                description="Overall gain for the PID controller"
+            )
         )
         self.declare_parameter(
-            "in_2",
-            value=11,
+            "R_kp",
+            value=0.1,
             descriptor=ParameterDescriptor(
-                type=ParameterType.PARAMETER_INTEGER,
-                description="GPIO pin for IN2"
-            ),
+                type=ParameterType.PARAMETER_DOUBLE,
+                description="Proportional gain for the PID controller"
+            )
         )
         self.declare_parameter(
-            "in_3",
-            value=15,
+            "R_ki",
+            value=0.05,
             descriptor=ParameterDescriptor(
-                type=ParameterType.PARAMETER_INTEGER,
-                description="GPIO pin for IN3"
-            ),
+                type=ParameterType.PARAMETER_DOUBLE,
+                description="Integral gain for the PID controller"
+            )
         )
         self.declare_parameter(
-            "in_4",
-            value=14,
+            "R_kd",
+            value=5,
             descriptor=ParameterDescriptor(
-                type=ParameterType.PARAMETER_INTEGER,
-                description="GPIO pin for IN4"
-            ),
+                type=ParameterType.PARAMETER_DOUBLE,
+                description="Derivative gain for the PID controller"
+            )
         )
         self.declare_parameter(
-            "en_a",
-            value=13,
+            "R_ko",
+            value=10,
             descriptor=ParameterDescriptor(
-                type=ParameterType.PARAMETER_INTEGER,
-                description="GPIO pin for ENA"
-            ),
+                type=ParameterType.PARAMETER_DOUBLE,
+                description="Overall gain for the PID controller"
+            )
+        )
+
+        # PID - Turning params
+        self.declare_parameter(
+            "Lt_kp",
+            value=0.1,
+            descriptor=ParameterDescriptor(
+                type=ParameterType.PARAMETER_DOUBLE,
+                description="Proportional gain for the PID controller"
+            )
         )
         self.declare_parameter(
-            "en_b",
-            value=12,
+            "Lt_ki",
+            value=0,
             descriptor=ParameterDescriptor(
-                type=ParameterType.PARAMETER_INTEGER,
-                description="GPIO pin for ENB"
-            ),
+                type=ParameterType.PARAMETER_DOUBLE,
+                description="Integral gain for the PID controller"
+            )
+        )
+        self.declare_parameter(
+            "Lt_kd",
+            value=5,
+            descriptor=ParameterDescriptor(
+                type=ParameterType.PARAMETER_DOUBLE,
+                description="Derivative gain for the PID controller"
+            )
+        )
+        self.declare_parameter(
+            "Lt_ko",
+            value=10,
+            descriptor=ParameterDescriptor(
+                type=ParameterType.PARAMETER_DOUBLE,
+                description="Overall gain for the PID controller"
+            )
+        )
+        self.declare_parameter(
+            "Rt_kp",
+            value=0.1,
+            descriptor=ParameterDescriptor(
+                type=ParameterType.PARAMETER_DOUBLE,
+                description="Proportional gain for the PID controller"
+            )
+        )
+        self.declare_parameter(
+            "Rt_ki",
+            value=0,
+            descriptor=ParameterDescriptor(
+                type=ParameterType.PARAMETER_DOUBLE,
+                description="Integral gain for the PID controller"
+            )
+        )
+        self.declare_parameter(
+            "Rt_kd",
+            value=5,
+            descriptor=ParameterDescriptor(
+                type=ParameterType.PARAMETER_DOUBLE,
+                description="Derivative gain for the PID controller"
+            )
+        )
+        self.declare_parameter(
+            "Rt_ko",
+            value=10,
+            descriptor=ParameterDescriptor(
+                type=ParameterType.PARAMETER_DOUBLE,
+                description="Overall gain for the PID controller"
+            )
         )
     
-    def odometry_callback(self, msg: Odometry) -> None:
-        """Callback function for the odometry data. Updates the measured velocity"""
-
-        v = msg.twist.twist.linear.x
-        w = msg.twist.twist.angular.z
-
-        # Calculate the left and right wheel velocities
-        self.measured_velocity.left = v - w * self.wheel_base / 2
-        self.measured_velocity.right = v + w * self.wheel_base / 2
-
-
-
-    def velocity_request_callback(self, msg: Twist) -> None:
-        """Callback function for the velocity request. Updates the requested velocity"""
-        v = msg.linear.x
-        w = msg.angular.z
-
-        # Calculate the left and right wheel velocities
-        self.requested_velocity.left = v - w * self.wheel_base / 2
-        self.requested_velocity.right = v + w * self.wheel_base / 2
-
-    def control_loop(self) -> None:
-        """Control loop for the motor driver. Updates the motor speeds based on the PID controllers"""
-        dt = 1.0 / self.get_parameter("control_loop_rate").get_parameter_value().double_value
-
-        self.pid_left.setpoint = self.requested_velocity.left
-        self.pid_right.setpoint = self.requested_velocity.right
-
-        left_output = self.pid_left(self.measured_velocity.left, dt=dt)
-        right_output = self.pid_right(self.measured_velocity.right, dt=dt)
-
-        self.set_motor_speed(left=True, speed=left_output)
-        self.set_motor_speed(left=False, speed=right_output)
-
-    def set_motor_speed(self, left: bool, speed: float):
-        """Set motor speed and direction based on side (left/right) and speed."""
-        if left:
-            pwm = self.pwm_a
-            in1, in2 = self.IN1, self.IN2
-        else:
-            pwm = self.pwm_b
-            in1, in2 = self.IN3, self.IN4
-
-        # Determine direction based on the sign of speed
-        if speed >= 0:
-            GPIO.output(in1, GPIO.HIGH)
-            GPIO.output(in2, GPIO.LOW)
-        else:
-            GPIO.output(in1, GPIO.LOW)
-            GPIO.output(in2, GPIO.HIGH)
-
-        # Set the PWM duty cycle
-        pwm.ChangeDutyCycle(abs(speed))
-
-    def cleanup(self):
-        self.get_logger().info("Cleaning up GPIO and stopping PWM...")
-        self.pwm_a.stop()
-        self.pwm_b.stop()
-        GPIO.cleanup()
+    def motorCommands_callback(self, request, response):
+        msg = String()
+        msg.data = "m " + str(request.distance) + " " + str(request.heading)
+        self.serial_publisher.publish(msg)
+        return response
 
 def main(args: dict = None):
     rclpy.init(args=args)
@@ -229,7 +217,6 @@ def main(args: dict = None):
     except rclpy.exceptions.ExternalShutdownException:
         sys.exit(1)
     finally:
-        motor_driver.cleanup()  # Ensure GPIO cleanup happens
         motor_driver.destroy_node()
 
     rclpy.shutdown()

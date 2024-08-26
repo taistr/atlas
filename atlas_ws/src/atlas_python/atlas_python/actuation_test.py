@@ -4,6 +4,7 @@ from rclpy.node import Node
 from rclpy.executors import ExternalShutdownException
 from rclpy.qos import QoSProfile, QoSHistoryPolicy, QoSDurabilityPolicy, QoSReliabilityPolicy
 from std_msgs.msg import String
+from atlas_msgs.srv import MotorCommand
 
 # try:
 #     import RPi.GPIO as GPIO
@@ -24,61 +25,49 @@ class ActuationTest(Node):
         super().__init__("actuation_test")
         self.get_logger().info("Actuation Test Initialising!")
 
-        # Set up timer to publish serial command
-        self.serial_publisher = self.create_publisher(
-            String, 
-            "duino_serial_cmd", 
-            qos_profile=QoSProfile(
-                depth=10,
-                history=QoSHistoryPolicy.KEEP_LAST,
-                durability=QoSDurabilityPolicy.VOLATILE,
-                reliability=QoSReliabilityPolicy.RELIABLE
-            )
-        )
+        # Set up timer to request motor drive
+        self.cli = self.create_client(MotorCommand, 'motor_command')
+        while not self.cli.wait_for_service(timeout_sec=1.0):
+            self.get_logger().info('service not available, waiting again...')
+        self.req = MotorCommand.Request()
 
-        self.test_timer = self.create_timer(3, self.test_callback)
+
+        #self.test_timer = self.create_timer(3, self.test_callback)
         self.flag = False
 
+    def send_request(self, heading, distance):
+        self.req.heading = heading
+        self.req.distance = distance
+        return self.cli.call_async(self.req)
 
-
-    def test_callback(self) -> None:
-        self.get_logger().info("Test Callback!")
-        # if self.flag:
-        #     self.set_motor_direction(IN1, IN2, True)
-        #     self.set_motor_direction(IN3, IN4, True)
-        #     self.set_motor_speed(self.pwm_a, 100)
-        #     self.set_motor_speed(self.pwm_b, 100)
-        # else:
-        #     self.set_motor_direction(IN1, IN2, False)
-        #     self.set_motor_direction(IN3, IN4, False)
-        #     self.set_motor_speed(self.pwm_a, 75)
-        #     self.set_motor_speed(self.pwm_b, 75)
-
-        msg = String()
-        msg.data = "o 255 255"
-        self.serial_publisher.publish(msg)
-
-    def cleanup(self):
+    #def cleanup(self):
         # Stops the motors
-        msg = String()
-        msg.data = "o 0 0"
-        self.serial_publisher.publish(msg)
+        # msg = String()
+        # msg.data = "o 0 0"
+        # self.serial_publisher.publish(msg)
 
 def main(args: dict = None):
     rclpy.init(args=args)
     
     actuation = ActuationTest()
-    try:
-        actuation.get_logger().info("Starting Actuation Test!")
-        rclpy.spin(actuation)
-    except KeyboardInterrupt:
-        pass
-    except ExternalShutdownException:
-        sys.exit(1)
-    finally:
-        actuation.cleanup()  # Ensure GPIO cleanup happens
-        rclpy.spin(actuation)
-        actuation.destroy_node()
+
+    future = actuation.send_request(float(sys.argv[2]), float(sys.argv[1]))
+    rclpy.spin_until_future_complete(actuation, future)
+    response = future.result()
+    actuation.get_logger().info("Motor request sent")
+    #actuation.cleanup()  # Ensure cleanup happens
+    actuation.destroy_node()
+    
+    # try:
+    #     actuation.get_logger().info("Starting Actuation Test!")
+    #     rclpy.spin(actuation)
+    # except KeyboardInterrupt:
+    #     pass
+    # except ExternalShutdownException:
+    #     sys.exit(1)
+    # finally:
+    #     actuation.cleanup()  # Ensure cleanup happens
+    #     actuation.destroy_node()
 
     rclpy.shutdown()
 
