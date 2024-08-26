@@ -9,9 +9,10 @@ model = YOLO('tennisball_best.pt')
 # Initialize a list to store the results
 results_list = []
 
+# Open a connection to the camera
+cap = cv2.VideoCapture(0)
+
 while True:
-    # Open a connection to the camera
-    cap = cv2.VideoCapture(0)
 
     # Check if the camera opened successfully
     if not cap.isOpened():
@@ -88,10 +89,6 @@ while True:
     else:
         print("Error: Could not capture a frame.")
 
-    # Release the camera and close all OpenCV windows
-    cap.release()
-    cv2.destroyAllWindows()
-
     # Ask the user for the distance from the robot to the tennis ball
     distance = input("Enter the distance from the robot to the tennis ball (or type 'cancel' to exit): ")
     if distance.lower() == 'cancel':
@@ -101,6 +98,10 @@ while True:
     take_another = input("Do you want to take another picture? (y/n): ")
     if take_another.lower() == 'n' or take_another.lower() == 'cancel':
         break
+
+# Release the camera and close all OpenCV windows
+cap.release()
+cv2.destroyAllWindows()
 
 # Save the results to a table
 if results_list:
