@@ -6,7 +6,6 @@ from rclpy.executors import ExternalShutdownException, MultiThreadedExecutor
 from rcl_interfaces.msg import ParameterType, ParameterDescriptor
 from sensor_msgs.msg import Image
 from cv_bridge import CvBridge
-import pyudev
 import cv2
 
 class Camera(Node):
