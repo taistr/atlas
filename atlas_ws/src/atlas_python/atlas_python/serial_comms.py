@@ -96,7 +96,7 @@ class SerialNode(Node):
                 # Publish the message
                 self.serial_publisher.publish(msg)
             else:
-                self.get_logger().info(line)
+                raise Exception("No serial command received in duino_serial_cmd topic.")
         except Exception as e:
             self.get_logger().error(f"Error reading serial data: {e}")
 
