@@ -12,20 +12,20 @@ results_list = []
 # Open a connection to the camera
 cap = cv2.VideoCapture(0)
 
- # Check if the camera opened successfully
-    if not cap.isOpened():
-        print("Error: Could not open camera.")
-        exit()
+# Check if the camera opened successfully
+if not cap.isOpened():
+    print("Error: Could not open camera.")
+    exit()
 
-    # Set camera resolution
-    frame_width = 640
-    frame_height = 480
-    cap.set(cv2.CAP_PROP_FRAME_WIDTH, frame_width)
-    cap.set(cv2.CAP_PROP_FRAME_HEIGHT, frame_height)
+# Set camera resolution
+frame_width = 640
+frame_height = 480
+cap.set(cv2.CAP_PROP_FRAME_WIDTH, frame_width)
+cap.set(cv2.CAP_PROP_FRAME_HEIGHT, frame_height)
 
-    # Calculate the center of the camera frame
-    center_x = frame_width // 2
-    center_y = frame_height // 2
+# Calculate the center of the camera frame
+center_x = frame_width // 2
+center_y = frame_height // 2
 
 while True:
 
