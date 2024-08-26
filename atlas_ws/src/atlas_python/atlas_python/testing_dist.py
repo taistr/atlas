@@ -4,7 +4,7 @@ import numpy as np
 import pandas as pd
 
 # Load the trained YOLOv8 model
-model = YOLO('best.pt')
+model = YOLO('tennisball_best.pt')
 
 # Initialize a list to store the results
 results_list = []
