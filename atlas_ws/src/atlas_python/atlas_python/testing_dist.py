@@ -32,8 +32,8 @@ while True:
     ret, frame = cap.read()
 
     if not ret:
-        print("New frame not captured")
-
+        print("New frame not taken")
+        
     # Check if the frame was retrieved properly
     if ret:
         # Run YOLOv8 predictions on the frame
@@ -41,6 +41,17 @@ while True:
 
         # Annotate the frame with predictions
         annotated_frame = results[0].plot()
+
+
+        # Display original frame
+        cv2.imshow('Original Frame', frame)
+
+        # Annotate the frame
+        annotated_frame = results[0].plot()
+
+        # Display annotated frame
+        cv2.imshow('Annotated Frame', annotated_frame)
+
 
         # Variables to store the largest tennis ball's data
         largest_height = 0
@@ -76,32 +87,29 @@ while True:
                         (largest_ball_center_x, center_y - 10),
                         cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 2)
 
-        # Display original frame
-        cv2.imshow('Original Frame', frame)
-
-        # Display annotated frame
-        cv2.imshow('Annotated Frame', annotated_frame)
+        # Show the annotated frame
+        cv2.imshow('YOLOv8 Predictions', annotated_frame)
 
         # Wait for a key press to close the image window
         key = cv2.waitKey(1)
         if key == ord('q'):  # Press 'q' to quit the loop
             break
 
-        # Capture user input after the image is displayed
-        if key == ord('s'):  # Press 's' to save data and take input
-            distance = input("Enter the distance from the robot to the tennis ball (or type 'cancel' to exit): ")
-            if distance.lower() == 'cancel':
-                break
+        # Ask the user for the distance from the robot to the tennis ball
+        distance = input("Enter the distance from the robot to the tennis ball (or type 'cancel' to exit): ")
+        if distance.lower() == 'cancel':
+            break
 
-            try:
-                distance = float(distance)
-                results_list.append([distance, largest_height])
-            except ValueError:
-                print("Invalid distance. Please enter a numeric value.")
+        try:
+            distance = float(distance)
+            results_list.append([distance, largest_height])
+        except ValueError:
+            print("Invalid distance. Please enter a numeric value.")
 
-            take_another = input("Do you want to take another picture? (y/n): ")
-            if take_another.lower() in ['n', 'cancel']:
-                break
+        # Ask if the user wants to take another picture
+        take_another = input("Do you want to take another picture? (y/n): ")
+        if take_another.lower() in ['n', 'cancel']:
+            break
     else:
         print("Error: Could not capture a frame.")
 
