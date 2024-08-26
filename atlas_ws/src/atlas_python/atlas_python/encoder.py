@@ -87,10 +87,9 @@ class Encoder(Node):
         try:
             # Parse the incoming serial string
             if (response):
-                line = response.strip()
-                if line.startswith("OK") and "READ_ENCODERS" in line and "L" in line and "R" in line and "Timestamp" in line:
+                if response.startswith("OK") and "READ_ENCODERS" in response and "L" in response and "R" in response and "Timestamp" in response:
                     # Parse the serial data
-                    responseArr = line.split(".")
+                    responseArr = response.split(".")
                     left_count = int(responseArr[2].split(':')[1])
                     right_count = int(responseArr[3].split(':')[1])
                     timestamp = int(responseArr[4].split(':')[1])
@@ -103,7 +102,7 @@ class Encoder(Node):
                     # Publish the message
                     self.encoder_publisher.publish(self.encoder_count)
                 else:
-                    self.get_logger().info(line)
+                    self.get_logger().info(response)
         except Exception as e:
             self.get_logger().error(f"Error reading serial data: {e}")
 
