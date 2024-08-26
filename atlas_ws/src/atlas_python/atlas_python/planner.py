@@ -3,7 +3,7 @@ import rclpy
 from rclpy.node import Node
 from rclpy.executors import MultiThreadedExecutor
 from rclpy.executors import ExternalShutdownException
-from atlas_msgs.srv import Detection
+from atlas_msgs.srv import Detection, MotorCommand
 from enum import Enum
 
 class State(Enum):
@@ -11,6 +11,7 @@ class State(Enum):
     AIMING = 2
     FIRE = 3
     REVERSE = 4
+    FINISHED = 5    
 
 
 class Planner(Node):
@@ -23,6 +24,11 @@ class Planner(Node):
             Detection,
             "atlas/detect_objects",
         )
+        self.motor_client = self.create_client(
+            MotorCommand,
+            "atlas/motor_command",
+        )
+        self.last_detection = None
         
         self.get_logger().info("Waiting for object detection service...")
         self.detection_client.wait_for_service()
@@ -39,23 +45,53 @@ class Planner(Node):
 
         match self.state:
             case State.SEARCHING:
-                detection_response = self.detection_client.call(Detection.Request())
+                self.last_detection = self.detection_client.call(Detection.Request())
 
                 # If an object is detected, transition to the aiming state
-                if detection_response.detection:
+                if self.last_detection.detection:
                     self.change_state(State.AIMING)
                 else:
-                    # TODO: Turn 45 degrees to the left
-                    pass
+                    self.motor_client.call(MotorCommand.Request(heading=45)) #Turn the robot 45 degrees
             case State.AIMING:
-                # TODO: Turn the robot to face the object
-                pass
+                # Try to aim the robot at the detected object
+                self.motor_client.call(
+                    MotorCommand.Request(heading=self.last_detection.angle) #! Need to consider how controller reacts to micro adjustments
+                )
+                self.last_detection = self.detection_client.call(Detection.Request())
+
+                acceptance_angle = 5
+                if self.last_detection.detection and self.last_detection.angle < acceptance_angle: #! May not be necessary to have it lower
+                    # If the object is still detected, transition to the firing state
+                    self.change_state(State.FIRE)
+                elif self.last_detection.detection and self.last_detection.angle > acceptance_angle:
+                    # If the object is still in view, continue aiming
+                    pass
+                else:
+                    # If the object is lost, transition back to the searching state
+                    self.change_state(State.SEARCHING)
+
             case State.FIRE:
-                # TODO: Drive the robot straight and time the driving
-                pass
+                # Drive the robot straight for a set distance
+                self.firing_offset = 0.1 # 10cm
+                self.motor_client.call(
+                    MotorCommand.Request(
+                        heading=0, 
+                        distance=self.last_detection.distance + self.firing_offset,
+                    )
+                )
+                self.change_state(State.REVERSE)
+
             case State.REVERSE:
-                # TODO: Reverse the robot back for the exact same amount of time
-                pass
+                self.motor_client.call(
+                    MotorCommand.Request(
+                        heading=0,
+                        distance=-(self.last_detection.distance + self.firing_offset),
+                    )
+                )
+                self.change_state(State.FINISHED)
+            
+            case State.FINISHED:
+                self.get_logger().info("Atlas has finished")
 
 
 def main(args: dict = None):
