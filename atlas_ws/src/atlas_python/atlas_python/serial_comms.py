@@ -91,8 +91,10 @@ class SerialNode(Node):
             # Read from the serial port
             if (response):
                 line = response.strip()
+                msg = String()
+                msg.data = (line)
                 # Publish the message
-                self.serial_publisher.publish(line)
+                self.serial_publisher.publish(msg)
             else:
                 self.get_logger().info(line)
         except Exception as e:
