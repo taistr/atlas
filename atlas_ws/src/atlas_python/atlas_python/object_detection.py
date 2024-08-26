@@ -100,9 +100,6 @@ def main(args: dict = None):
         pass
     except ExternalShutdownException:
         sys.exit(1)
-    object_detection.destroy_node()
-
-    rclpy.shutdown()
 
 if __name__ == "__main__":
     main()

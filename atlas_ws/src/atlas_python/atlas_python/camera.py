@@ -103,7 +103,6 @@ def main(args: dict = None):
         pass
     except ExternalShutdownException:
         sys.exit(1)
-    camera.destroy_node()
 
 if __name__ == "__main__":
     main()
