@@ -58,10 +58,11 @@ class ActuationTest(Node):
         msg.data = "o 255 255"
         self.serial_publisher.publish(msg)
 
-    # def cleanup(self):
-    #     # Close the serial port properly
-    #     if self.serial.is_open:
-    #         self.serial.close()
+    def cleanup(self):
+        # Stops the motors
+        msg = String()
+        msg.data = "o 0 0"
+        self.serial_publisher.publish(msg)
 
 def main(args: dict = None):
     rclpy.init(args=args)
