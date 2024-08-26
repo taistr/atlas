@@ -12,9 +12,7 @@ results_list = []
 # Open a connection to the camera
 cap = cv2.VideoCapture(0)
 
-while True:
-
-    # Check if the camera opened successfully
+ # Check if the camera opened successfully
     if not cap.isOpened():
         print("Error: Could not open camera.")
         exit()
@@ -28,6 +26,8 @@ while True:
     # Calculate the center of the camera frame
     center_x = frame_width // 2
     center_y = frame_height // 2
+
+while True:
 
     # Capture a single frame
     ret, frame = cap.read()
@@ -74,15 +74,15 @@ while True:
 
             # Draw a line on the x-axis between the center of the frame and the center of the largest tennis ball
             cv2.line(annotated_frame, (center_x, center_y), (largest_ball_center_x, center_y), (0, 255, 0), 2)
-
+            print("line 77")
             # Annotate the x-axis distance on the frame
             cv2.putText(annotated_frame, f"X Distance: {x_distance:.2f}px",
                         (largest_ball_center_x, center_y - 10),
                         cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 2)
-
+            print("line 82")
         # Show the annotated frame
         cv2.imshow('YOLOv8 Predictions', annotated_frame)
-
+        print("line 85")
         # Wait for a key press to close the image window
         cv2.waitKey(0)
 
