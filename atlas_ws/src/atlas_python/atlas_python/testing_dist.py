@@ -77,13 +77,13 @@ while True:
                     largest_ball_center_x = int((x_min + x_max) / 2)
                     largest_ball_center_y = int((y_min + y_max) / 2)
 
-                print("Height" {largest_height})
+                print("Height" ,largest_height)
 
         # If a largest tennis ball was found, calculate the distance and display it
         if largest_ball_center_x is not None:
             # Calculate the x-axis distance from the center of the frame
             x_distance = largest_ball_center_x - center_x
-            print("Distance from center:" {x_distance})
+            print("Distance from center:" ,x_distance)
 
             # Draw a line on the x-axis between the center of the frame and the center of the largest tennis ball
             cv2.line(annotated_frame, (center_x, center_y), (largest_ball_center_x, center_y), (0, 255, 0), 2)
@@ -116,7 +116,7 @@ while True:
         take_another = input("Do you want to take another picture? (y/n): ")
         if take_another.lower() in ['n', 'cancel']:
             break
-            
+
         cap.release()
     else:
         print("Error: Could not capture a frame.")
