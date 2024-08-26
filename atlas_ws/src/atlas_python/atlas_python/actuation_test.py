@@ -77,6 +77,7 @@ def main(args: dict = None):
         sys.exit(1)
     finally:
         actuation.cleanup()  # Ensure GPIO cleanup happens
+        rclpy.spin(actuation)
         actuation.destroy_node()
 
     rclpy.shutdown()
