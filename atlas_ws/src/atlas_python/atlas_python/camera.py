@@ -46,7 +46,7 @@ class Camera(Node):
         )
         self.declare_parameter(
             "camera_height",
-            240,
+            480,
             ParameterDescriptor(
                 type=ParameterType.PARAMETER_INTEGER,
                 description="Height of the camera image",
@@ -54,7 +54,7 @@ class Camera(Node):
         )
         self.declare_parameter(
             "camera_width",
-            320,
+            640,
             ParameterDescriptor(
                 type=ParameterType.PARAMETER_INTEGER,
                 description="Width of the camera image",

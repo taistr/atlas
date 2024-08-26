@@ -46,6 +46,7 @@ class Planner(Node):
                     self.change_state(State.AIMING)
                 else:
                     # TODO: Turn 45 degrees to the left
+                    pass
             case State.AIMING:
                 # TODO: Turn the robot to face the object
                 pass
