@@ -84,7 +84,7 @@ while True:
         cv2.imshow('YOLOv8 Predictions', annotated_frame)
         print("line 85")
         # Wait for a key press to close the image window
-        cv2.waitKey(0)
+        #cv2.waitKey(0)
 
     else:
         print("Error: Could not capture a frame.")
