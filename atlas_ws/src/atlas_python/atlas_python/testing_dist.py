@@ -28,17 +28,13 @@ center_x = frame_width // 2
 center_y = frame_height // 2
 
 while True:
-
     # Capture a single frame
     ret, frame = cap.read()
 
     # Check if the frame was retrieved properly
     if ret:
-        # Resize the frame for faster processing (optional)
-        resized_frame = cv2.resize(frame, (frame_width, frame_height))  # Adjust resolution as needed
-
-        # Run YOLOv8 predictions on the resized frame
-        results = model(resized_frame, conf=0.5)  # Adjust confidence threshold if needed
+        # Run YOLOv8 predictions on the frame
+        results = model(frame, conf=0.5)  # Adjust confidence threshold if needed
 
         # Annotate the frame with predictions
         annotated_frame = results[0].plot()
@@ -56,7 +52,7 @@ while True:
                 x_min, y_min, x_max, y_max = detection.xyxy[0].cpu().numpy()
 
                 # Calculate the bounding box height
-                height = (y_max - y_min)
+                height = y_max - y_min
 
                 # If this is the largest height so far, update the largest ball data
                 if height > largest_height:
@@ -69,37 +65,39 @@ while True:
             # Calculate the x-axis distance from the center of the frame
             x_distance = largest_ball_center_x - center_x
 
-            # Print the distance and height in the specified format
-            print(f"Tennis Ball - Distance from Center: {x_distance:.2f} pixels, height: {largest_height:.2f} square pixels")
-
             # Draw a line on the x-axis between the center of the frame and the center of the largest tennis ball
             cv2.line(annotated_frame, (center_x, center_y), (largest_ball_center_x, center_y), (0, 255, 0), 2)
-            print("line 77")
+
             # Annotate the x-axis distance on the frame
             cv2.putText(annotated_frame, f"X Distance: {x_distance:.2f}px",
                         (largest_ball_center_x, center_y - 10),
                         cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 2)
-            print("line 82")
+
         # Show the annotated frame
         cv2.imshow('YOLOv8 Predictions', annotated_frame)
-        print("line 85")
-        # Wait for a key press to close the image window
-        #cv2.waitKey(0)
 
+        # Wait for a key press to close the image window
+        key = cv2.waitKey(1)
+        if key == ord('q'):  # Press 'q' to quit the loop
+            break
+
+        # Ask the user for the distance from the robot to the tennis ball
+        distance = input("Enter the distance from the robot to the tennis ball (or type 'cancel' to exit): ")
+        if distance.lower() == 'cancel':
+            break
+
+        try:
+            distance = float(distance)
+            results_list.append([distance, largest_height])
+        except ValueError:
+            print("Invalid distance. Please enter a numeric value.")
+
+        # Ask if the user wants to take another picture
+        take_another = input("Do you want to take another picture? (y/n): ")
+        if take_another.lower() in ['n', 'cancel']:
+            break
     else:
         print("Error: Could not capture a frame.")
-
-    # Ask the user for the distance from the robot to the tennis ball
-    distance = input("Enter the distance from the robot to the tennis ball (or type 'cancel' to exit): ")
-    if distance.lower() == 'cancel':
-        break
-
-    results_list.append([float(distance), largest_height])
-    
-    # Ask if the user wants to take another picture
-    take_another = input("Do you want to take another picture? (y/n): ")
-    if take_another.lower() == 'n' or take_another.lower() == 'cancel':
-        break
 
 # Release the camera and close all OpenCV windows
 cap.release()
