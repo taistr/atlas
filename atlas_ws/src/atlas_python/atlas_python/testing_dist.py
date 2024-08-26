@@ -94,6 +94,8 @@ while True:
     if distance.lower() == 'cancel':
         break
 
+    results_list.append([float(distance), largest_height])
+    
     # Ask if the user wants to take another picture
     take_another = input("Do you want to take another picture? (y/n): ")
     if take_another.lower() == 'n' or take_another.lower() == 'cancel':
