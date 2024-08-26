@@ -48,8 +48,8 @@ class SerialNode(Node):
         
         self.mutex = Lock()
 
-        serial_publisher_period = 1.0 / self.get_parameter("serial_rate").value
-        self.serial_publish_timer = self.create_timer(serial_publisher_period, self.serialPublisher_callback)
+        #serial_publisher_period = 1.0 / self.get_parameter("serial_rate").value
+        #self.serial_publish_timer = self.create_timer(serial_publisher_period, self.serialPublisher_callback)
 
         self.get_logger().info("Serial Node Online!")
 
