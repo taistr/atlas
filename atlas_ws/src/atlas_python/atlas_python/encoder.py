@@ -93,9 +93,8 @@ class Encoder(Node):
                     responseArr = line.split(".")
                     left_count = int(responseArr[2].split(':')[1])
                     right_count = int(responseArr[3].split(':')[1])
-                    timestamp = int(responseArr[3].split(':')[1])
+                    timestamp = int(responseArr[4].split(':')[1])
 
-                    
                     # Populate the ROS message
                     self.encoder_count.left = left_count
                     self.encoder_count.right = right_count
@@ -133,10 +132,10 @@ class Encoder(Node):
 
 
     
-    def cleanup(self):
-        # Close the serial port properly
-        if self.serial.is_open:
-            self.serial.close()
+    # def cleanup(self):
+    #     # Close the serial port properly
+    #     if self.serial.is_open:
+    #         self.serial.close()
 
 
 def main(args: dict = None):
