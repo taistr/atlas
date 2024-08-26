@@ -113,17 +113,17 @@ void doPID(SetPointInfo * p) {
     //Serial.println("Turning");
   }
 
-  if (abs(Perror) < PID_COUNT_MARGIN){
+  if (abs(Perror) < PID_ERROR_MARGIN){
     //p->PrevErr = 0;
 
     if (turning){  // Deactivate turning mode after passing threshold
       switch(p->motor){
         case RIGHT:
-          Serial.print("Right wheel. Turning Complete.");
-          Serial.print(",R:");
-          Serial.print(rightPID.PrevErr);
-          Serial.print(",R_e:");
-          Serial.println(rightPID.output*10);
+          //Serial.print("Right wheel. Turning Complete.");
+          //Serial.print(",R:");
+          //Serial.print(rightPID.PrevErr);
+          //Serial.print(",R_e:");
+          //Serial.println(rightPID.output*10);
           p->output = 0;
           rightPID.Turning_CountsToTarget = 0.0;
           rightPID.Encoder = readEncoder(RIGHT);
@@ -133,11 +133,11 @@ void doPID(SetPointInfo * p) {
           resetEncoder(RIGHT);        
         
         case LEFT:
-          Serial.print("Left wheel. Turning Complete.");
-          Serial.print(",L:");
-          Serial.print(leftPID.PrevErr);
-          Serial.print(",L_e:");
-          Serial.println(leftPID.output*10);
+          //Serial.print("Left wheel. Turning Complete.");
+          //Serial.print(",L:");
+          //Serial.print(leftPID.PrevErr);
+          //Serial.print(",L_e:");
+          //Serial.println(leftPID.output*10);
           p->output = 0;  
           leftPID.Turning_CountsToTarget = 0.0;
           leftPID.Encoder = readEncoder(LEFT);
@@ -149,25 +149,25 @@ void doPID(SetPointInfo * p) {
       if (leftPID.Turning_CountsToTarget == 0 && rightPID.Turning_CountsToTarget == 0){
         turning = 0;
         delay(100);
-        Serial.println("Turning Complete.");
+        Serial.println("OK.MOTION_CONTROLLER.Turning Complete");
       }
     }
     else{
       switch(p->motor){
         case RIGHT:
-          Serial.print("Right wheel. Straight Complete.");
-          Serial.print(",R:");
-          Serial.print(rightPID.PrevErr);
-          Serial.print(",R_e:");
-          Serial.println(rightPID.output*10);
+          //Serial.print("Right wheel. Straight Complete.");
+          //Serial.print(",R:");
+          //Serial.print(rightPID.PrevErr);
+          //Serial.print(",R_e:");
+          //Serial.println(rightPID.output*10);
           p->output = 0;        
           resetPID(RIGHT);
         case LEFT:
-          Serial.print("Left wheel. Straight Complete.");
-          Serial.print(",L:");
-          Serial.print(leftPID.PrevErr);
-          Serial.print(",L_e:");
-          Serial.println(leftPID.output*10);
+          //Serial.print("Left wheel. Straight Complete.");
+          //Serial.print(",L:");
+          //Serial.print(leftPID.PrevErr);
+          //Serial.print(",L_e:");
+          //Serial.println(leftPID.output*10);
           p->output = 0;  
           resetPID(LEFT);  
       }
@@ -187,6 +187,7 @@ void doPID(SetPointInfo * p) {
       
       if (leftPID.Straight_CountsToTarget == 0 && rightPID.Straight_CountsToTarget == 0){
         moving = 0;
+        Serial.println("OK.MOTION_CONTROLLER.Straight Complete");
       }
     }
     return;
@@ -248,23 +249,21 @@ void doPID(SetPointInfo * p) {
     output = -MIN_PWM-40 ;
   else if (turning && output <= MIN_PWM && output > 0)
     output = MIN_PWM+40 ;
-  else 
-  /*
-  * allow turning changes, see http://brettbeauregard.com/blog/2011/04/improving-the-beginner%E2%80%99s-pid-tuning-changes/
-  */
-    p->ITerm += Ki * Perror;
+  else p->ITerm += Ki * Perror;
 
   p->output = output;
-  Serial.print("Fixed:");
-  Serial.print(50000);
-  Serial.print(",L:");
-  Serial.print(leftPID.PrevErr);
-  Serial.print(",R:");
-  Serial.print(rightPID.PrevErr);
-  Serial.print(",L_e:");
-  Serial.print(leftPID.output*10);
-  Serial.print(",R_e:");
-  Serial.println(rightPID.output*10);
+
+  /* Serial Plotter */
+  //Serial.print("Fixed:");
+  //Serial.print(50000);
+  //Serial.print(",L:");
+  //Serial.print(leftPID.PrevErr);
+  //Serial.print(",R:");
+  //Serial.print(rightPID.PrevErr);
+  //Serial.print(",L_e:");
+  //Serial.print(leftPID.output*10);
+  //Serial.print(",R_e:");
+  //Serial.println(rightPID.output*10);
 }
 
 /* Read the encoder values and call the PID routine */

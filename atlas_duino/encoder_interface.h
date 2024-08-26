@@ -5,7 +5,7 @@
 #define RIGHT_WHEEL_ENC_B 5
 
 // Encoder
-#define ENC_TIME_DELTA_THRESHOLD 100000
+//#define ENC_TIME_DELTA_THRESHOLD 100000
 
 long readEncoder(int i);
 void resetEncoder(int i);

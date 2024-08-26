@@ -40,7 +40,7 @@ class SerialNode(Node):
         )
 
         # Serial
-        self.serial_port = serial.Serial(
+        self.serial = serial.Serial(
             port=self.get_parameter("port").value, 
             baudrate=115200, 
             timeout=1
@@ -51,8 +51,10 @@ class SerialNode(Node):
         serial_publisher_period = 1.0 / self.get_parameter("serial_rate").value
         self.serial_publish_timer = self.create_timer(serial_publisher_period, self.serialPublisher_callback)
 
+        self.get_logger().info("Serial Node Online!")
+
     def initialise_parameters(self) -> None:
-        """Declare parameters for the encoder node"""
+        """Declare parameters for the serial node"""
         self.declare_parameter(
             "serial_rate",
             value=200,
@@ -90,7 +92,7 @@ class SerialNode(Node):
             if (response):
                 line = response.strip()
                 # Publish the message
-                self.erial_publisher.publish(line)
+                self.serial_publisher.publish(line)
             else:
                 self.get_logger().info(line)
         except Exception as e:

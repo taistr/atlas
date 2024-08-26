@@ -1,18 +1,6 @@
 #include <Encoder.h>
 #include "encoder_interface.h"
 
-// // Pin Assignments
-// #define LEFT_WHEEL_ENC_A  2
-// #define LEFT_WHEEL_ENC_B  4
-// #define RIGHT_WHEEL_ENC_A 3
-// #define RIGHT_WHEEL_ENC_B 5
-
-// // Serial
-// #define BAUD_RATE = 115200
-
-// // Encoder
-// #define ENC_TIME_DELTA_THRESHOLD 100000
-
 // Create Encoder Objects
 Encoder leftWheel(LEFT_WHEEL_ENC_A, LEFT_WHEEL_ENC_B);
 Encoder rightWheel(RIGHT_WHEEL_ENC_A, RIGHT_WHEEL_ENC_B);
