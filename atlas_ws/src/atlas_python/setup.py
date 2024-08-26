@@ -27,6 +27,7 @@ setup(
             'encoder_test = atlas_python.encoder_test:main',
             'hello = atlas_python.hello:main',
             'camera = atlas_python.camera:main',
+            'image_sender = atlas_python.image_sender:main',
             'object_detection = atlas_python.object_detection:main',
             'encoder = atlas_python.encoder:main',
             'odometry = atlas_python.odometry:main',

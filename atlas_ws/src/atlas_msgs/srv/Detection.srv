@@ -1,0 +1,4 @@
+---
+bool detection
+int32 x_offset
+int32 distance
