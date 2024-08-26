@@ -1,27 +1,32 @@
+"""
+This script is a ROS 2 node responsible for:
+1. Sending read encoder commands to the Arduino Uno hardware interface, over serial
+2. Capturing LEFT and RIGHT encoder counts & Arduino timestamp from serial
+3. Publishing raw encoder counts & Arduino timestamp
+"""
+
 import sys
 import rclpy
 from rclpy.node import Node
-from rclpy.executors import MultiThreadedExecutor, ExternalShutdownException
+from rclpy.executors import MultiThreadedExecutor
 from rcl_interfaces.msg import ParameterDescriptor, ParameterType
 from rclpy.qos import QoSProfile, QoSHistoryPolicy, QoSDurabilityPolicy, QoSReliabilityPolicy
 from atlas_msgs.msg import EncoderCount
-import serial.tools.list_ports
+import time
 import serial
-
-ARDUINO_SEND_PERIOD = 10000 #microseconds
+from threading import Lock
 
 class Encoder(Node):
     def __init__(self):
         super().__init__("encoder")
         self.initialise_parameters()
-        self.encoder_count = EncoderCount(left=0, right=0, time_delta=0)
+        self.encoder_count = EncoderCount(left=0, right=0, timestamp=0) # Count, count, microseconds since last reset
 
         self.serial = serial.Serial(
-            port=self.find_arduino_port(0x2341, 0x0043),
+            port=self.get_parameter("port").value,
             baudrate=115200,
             timeout=0
         )
-        self.serial.write(b'.') # Send a byte to the Arduino to reset the encoder count
 
         # Set up timer to publish encoder data
         self.encoder_publisher = self.create_publisher(
@@ -36,6 +41,8 @@ class Encoder(Node):
         )
         serial_check_period = 1.0 / self.get_parameter("serial_rate").value
         self.encoder_publish_timer = self.create_timer(serial_check_period, self.timer_callback)
+
+        self.mutex = Lock()
 
         self.get_logger().info("Encoder Node Online!")
 
@@ -58,35 +65,66 @@ class Encoder(Node):
             ),
         )
 
+
+    def readEncoder_cmd(self):
+        #Send command to read encoder
+        resp = self.send_command(f"e")
+        self.get_logger().info(resp)
+        if resp:
+            return resp
+        return []
+
     def timer_callback(self):
         try:
             # Read from the serial port
-            if self.serial.in_waiting > 0:
-                line = self.serial.readline().decode('utf-8').strip()
-                if line.startswith("L:") and ",R:" in line:
+            response = self.readEncoder_cmd()
+            if (response):
+                line = response.strip()
+                if line.startswith("L:") and ",R:" in line and ",Timestamp:" in line:
+                    
                     # Parse the serial data
                     left_count = int(line.split(",R:")[0][2:])
-                    right_count = int(line.split(",R:")[1])
+                    right_count = int(line.split(",Timestamp:")[0].split(",R:")[1])
+                    timestamp = int(line.split(",Timestamp:")[1])
 
+                    
                     # Populate the ROS message
                     self.encoder_count.left = left_count
                     self.encoder_count.right = right_count
-                    self.encoder_count.time_delta = ARDUINO_SEND_PERIOD
+                    self.encoder_count.timestamp = timestamp
 
                     # Publish the message
                     self.encoder_publisher.publish(self.encoder_count)
-
+                else:
+                    self.get_logger().info(line)
         except Exception as e:
             self.get_logger().error(f"Error reading serial data: {e}")
 
-    @staticmethod
-    def find_arduino_port(vid, pid):
-        ports = serial.tools.list_ports.comports()
-        for port in ports:
-            if port.vid == vid and port.pid == pid:
-                return port.device
-        return None
+    
+    def send_command(self, cmd_string):
+        self.mutex.acquire()
 
+        try:
+            cmd_string += "\r"
+            self.serial.write(cmd_string.encode("utf-8"))
+
+            c = ''
+            value = ''
+            while c != "\r":
+                c = self.serial.read(1).decode("utf-8")
+                if (c == ''):
+                    print("Error: Serial timeout on command: " + cmd_string)
+                    return ''
+                value += c
+            
+            value = value.strip('\r')
+
+            return value
+        finally:
+            self.mutex.release()
+
+
+    
     def cleanup(self):
         # Close the serial port properly
         if self.serial.is_open:
@@ -101,7 +139,7 @@ def main(args: dict = None):
         rclpy.spin(encoder, MultiThreadedExecutor())
     except KeyboardInterrupt:
         pass
-    except ExternalShutdownException:
+    except rclpy.exceptions.ExternalShutdownException:
         sys.exit(1)
     finally:
         encoder.cleanup()  # Ensure GPIO cleanup happens
