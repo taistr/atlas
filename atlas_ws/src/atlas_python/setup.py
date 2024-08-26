@@ -30,6 +30,7 @@ setup(
             'encoder = atlas_python.encoder:main',
             'odometry = atlas_python.odometry:main',
             'motor_driver = atlas_python.motor_driver:main',
+            'serial_comms = atlas_python.serial_comms:main',
         ],
     },
 )

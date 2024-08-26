@@ -12,6 +12,7 @@ from rclpy.executors import MultiThreadedExecutor
 from rcl_interfaces.msg import ParameterDescriptor, ParameterType
 from rclpy.qos import QoSProfile, QoSHistoryPolicy, QoSDurabilityPolicy, QoSReliabilityPolicy
 from atlas_msgs.msg import EncoderCount
+from std_msgs.msg import String  # or a custom message type
 import time
 import serial
 from threading import Lock
@@ -21,12 +22,6 @@ class Encoder(Node):
         super().__init__("encoder")
         self.initialise_parameters()
         self.encoder_count = EncoderCount(left=0, right=0, timestamp=0) # Count, count, microseconds since last reset
-
-        self.serial = serial.Serial(
-            port=self.get_parameter("port").value,
-            baudrate=115200,
-            timeout=0
-        )
 
         # Set up timer to publish encoder data
         self.encoder_publisher = self.create_publisher(
@@ -39,53 +34,66 @@ class Encoder(Node):
                 reliability=QoSReliabilityPolicy.RELIABLE
             )
         )
-        serial_check_period = 1.0 / self.get_parameter("serial_rate").value
-        self.encoder_publish_timer = self.create_timer(serial_check_period, self.timer_callback)
 
-        self.mutex = Lock()
+        # Set up timer to publish serial command
+        self.serial_publisher = self.create_publisher(
+            String, 
+            "duino_serial_cmd", 
+            qos_profile=QoSProfile(
+                depth=10,
+                history=QoSHistoryPolicy.KEEP_LAST,
+                durability=QoSDurabilityPolicy.VOLATILE,
+                reliability=QoSReliabilityPolicy.RELIABLE
+            )
+        )
+
+        # Subscriber
+        self.subscription = self.create_subscription(
+            String,
+            'duino_serial_resp',
+            self.serialResp_callback,
+            qos_profile=QoSProfile(
+                depth=10,
+                history=QoSHistoryPolicy.KEEP_LAST,
+                durability=QoSDurabilityPolicy.VOLATILE,
+                reliability=QoSReliabilityPolicy.RELIABLE
+            )
+        )
+
+        # Encoder check timer
+        encoder_check_period = 1.0 / self.get_parameter("encoder_rate").value
+        self.encoder_publish_timer = self.create_timer(encoder_check_period, self.encoderCheck_callback)
 
         self.get_logger().info("Encoder Node Online!")
 
     def initialise_parameters(self) -> None:
         """Declare parameters for the encoder node"""
         self.declare_parameter(
-            "serial_rate",
-            value=200,
+            "encoder_rate",
+            value=100,
             descriptor=ParameterDescriptor(
                 type=ParameterType.PARAMETER_DOUBLE,
                 description="Rate at which encoder data is published (Hz)",
             ),
         )
-        self.declare_parameter(
-            "port",
-            value="/dev/ttyACM0",
-            descriptor=ParameterDescriptor(
-                type=ParameterType.PARAMETER_STRING,
-                description="Serial port for the encoder",
-            ),
-        )
 
-
-    def readEncoder_cmd(self):
+    def encoderCheck_callback(self):
         #Send command to read encoder
-        resp = self.send_command(f"e")
-        self.get_logger().info(resp)
-        if resp:
-            return resp
-        return []
-
-    def timer_callback(self):
+        msg = String()
+        msg.data = "e"
+        self.serial_publisher.publish(msg)
+        
+    def serialResp_callback(self, response: String):
         try:
-            # Read from the serial port
-            response = self.readEncoder_cmd()
+            # Parse the incoming serial string
             if (response):
                 line = response.strip()
-                if line.startswith("L:") and ",R:" in line and ",Timestamp:" in line:
-                    
+                if line.startswith("OK") and "READ_ENCODERS" in line and "L" in line and "R" in line and "Timestamp" in line:
                     # Parse the serial data
-                    left_count = int(line.split(",R:")[0][2:])
-                    right_count = int(line.split(",Timestamp:")[0].split(",R:")[1])
-                    timestamp = int(line.split(",Timestamp:")[1])
+                    responseArr = line.split(".")
+                    left_count = int(responseArr[2].split(':')[1])
+                    right_count = int(responseArr[3].split(':')[1])
+                    timestamp = int(responseArr[3].split(':')[1])
 
                     
                     # Populate the ROS message

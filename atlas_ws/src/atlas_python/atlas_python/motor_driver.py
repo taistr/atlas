@@ -3,68 +3,23 @@ from rclpy.node import Node
 from rclpy.executors import MultiThreadedExecutor
 from rcl_interfaces.msg import ParameterDescriptor, ParameterType
 from rclpy.qos import QoSProfile, QoSHistoryPolicy, QoSDurabilityPolicy, QoSReliabilityPolicy
-from geometry_msgs.msg import Twist
-from nav_msgs.msg import Odometry
-
 import sys
-from simple_pid.pid import PID
 from dataclasses import dataclass
-try:
-    import RPi.GPIO as GPIO
-except RuntimeError:  # RPi.GPIO throws errors when not on RPi
-    from unittest.mock import MagicMock
-    GPIO = MagicMock()
+import time
+import serial
+from threading import Lock
 
-@dataclass
-class WheelVelocity:
-    left: float
-    right: float
+# Service file
+from MotorCommand.srv import MotorCommands
 
 class MotorDriver(Node):
     def __init__(self):
         super().__init__("motor_driver")
         self.initialise_parameters()
 
-        self.measured_velocity = WheelVelocity(left=0.0, right=0.0)
-        self.requested_velocity = WheelVelocity(left=0.0, right=0.0)
+        # Serial Interface
+        #self.
 
-        # Set up variables
-        self.wheel_base = self.get_parameter("wheel_base").get_parameter_value().double_value
-        self.wheel_radius = self.get_parameter("wheel_radius").get_parameter_value().double_value
-        self.motor_driver_frequency = self.get_parameter("motor_driver_frequency").get_parameter_value().integer_value
-
-        # Set up GPIO
-        self.IN1 = self.get_parameter("in_1").get_parameter_value().integer_value
-        self.IN2 = self.get_parameter("in_2").get_parameter_value().integer_value
-        self.IN3 = self.get_parameter("in_3").get_parameter_value().integer_value
-        self.IN4 = self.get_parameter("in_4").get_parameter_value().integer_value
-        self.ENA = self.get_parameter("en_a").get_parameter_value().integer_value
-        self.ENB = self.get_parameter("en_b").get_parameter_value().integer_value
-
-        GPIO.setmode(GPIO.BCM)
-        GPIO.setup(self.IN1, GPIO.OUT)
-        GPIO.setup(self.IN2, GPIO.OUT)
-        GPIO.setup(self.ENA, GPIO.OUT)
-        GPIO.setup(self.IN3, GPIO.OUT)
-        GPIO.setup(self.IN4, GPIO.OUT)
-        GPIO.setup(self.ENB, GPIO.OUT)
-
-        self.pwm_a = GPIO.PWM(self.ENA, self.motor_driver_frequency) 
-        self.pwm_b = GPIO.PWM(self.ENB, self.motor_driver_frequency)  
-
-        self.pwm_b.start(0)  # Start PWM with 0% duty cycle
-        self.pwm_a.start(0)  # Start PWM with 0% duty cycle
-
-        # Set up PID controllers
-        kp = self.get_parameter("kp").get_parameter_value().double_value
-        ki = self.get_parameter("ki").get_parameter_value().double_value
-        kd = self.get_parameter("kd").get_parameter_value().double_value
-
-        self.pid_left: PID = PID(kp, ki, kd, setpoint=0, sample_time=None)
-        self.pid_right: PID = PID(kp, ki, kd, setpoint=0, sample_time=None)
-
-        self.pid_left.output_limits = (0, 100) # Set output limits (assuming PWM range of 0-100)
-        self.pid_right.output_limits = (0, 100)
         
         # Create ROS interfaces
         self.control_loop_timer = self.create_timer(
