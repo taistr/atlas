@@ -86,6 +86,7 @@ class Encoder(Node):
     def serialResp_callback(self, response: String):
         try:
             # Parse the incoming serial string
+            response = str(response.data).strip()
             if (response):
                 if response.startswith("OK") and "READ_ENCODERS" in response and "L" in response and "R" in response and "Timestamp" in response:
                     # Parse the serial data
