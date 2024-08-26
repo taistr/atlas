@@ -9,31 +9,34 @@ model = YOLO('tennisball_best.pt')
 # Initialize a list to store the results
 results_list = []
 
-# Open a connection to the camera
-cap = cv2.VideoCapture(0)
-
-# Check if the camera opened successfully
-if not cap.isOpened():
-    print("Error: Could not open camera.")
-    exit()
-
-# Set camera resolution
-frame_width = 640
-frame_height = 480
-cap.set(cv2.CAP_PROP_FRAME_WIDTH, frame_width)
-cap.set(cv2.CAP_PROP_FRAME_HEIGHT, frame_height)
-
-# Calculate the center of the camera frame
-center_x = frame_width // 2
-center_y = frame_height // 2
 
 while True:
+
+    # Open a connection to the camera
+    cap = cv2.VideoCapture(0)
+
+    # Check if the camera opened successfully
+    if not cap.isOpened():
+        print("Error: Could not open camera.")
+        exit()
+
+    # Set camera resolution
+    frame_width = 640
+    frame_height = 480
+    cap.set(cv2.CAP_PROP_FRAME_WIDTH, frame_width)
+    cap.set(cv2.CAP_PROP_FRAME_HEIGHT, frame_height)
+
+    # Calculate the center of the camera frame
+    center_x = frame_width // 2
+    center_y = frame_height // 2
+
+
     # Capture a single frame
     ret, frame = cap.read()
 
     if not ret:
         print("New frame not taken")
-        
+
     # Check if the frame was retrieved properly
     if ret:
         # Run YOLOv8 predictions on the frame
@@ -74,10 +77,13 @@ while True:
                     largest_ball_center_x = int((x_min + x_max) / 2)
                     largest_ball_center_y = int((y_min + y_max) / 2)
 
+                print("Height" {largest_height})
+
         # If a largest tennis ball was found, calculate the distance and display it
         if largest_ball_center_x is not None:
             # Calculate the x-axis distance from the center of the frame
             x_distance = largest_ball_center_x - center_x
+            print("Distance from center:" {x_distance})
 
             # Draw a line on the x-axis between the center of the frame and the center of the largest tennis ball
             cv2.line(annotated_frame, (center_x, center_y), (largest_ball_center_x, center_y), (0, 255, 0), 2)
@@ -110,8 +116,11 @@ while True:
         take_another = input("Do you want to take another picture? (y/n): ")
         if take_another.lower() in ['n', 'cancel']:
             break
+            
+        cap.release()
     else:
         print("Error: Could not capture a frame.")
+
 
 # Release the camera and close all OpenCV windows
 cap.release()
