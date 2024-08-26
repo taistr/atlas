@@ -31,6 +31,7 @@ while True:
     # Capture a single frame
     ret, frame = cap.read()
 
+
     # Check if the frame was retrieved properly
     if ret:
         # Run YOLOv8 predictions on the frame
@@ -38,6 +39,17 @@ while True:
 
         # Annotate the frame with predictions
         annotated_frame = results[0].plot()
+
+
+        # Display original frame
+        cv2.imshow('Original Frame', frame)
+
+        # Annotate the frame
+        annotated_frame = results[0].plot()
+
+        # Display annotated frame
+        cv2.imshow('Annotated Frame', annotated_frame)
+
 
         # Variables to store the largest tennis ball's data
         largest_height = 0
