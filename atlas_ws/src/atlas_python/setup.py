@@ -24,7 +24,6 @@ setup(
     entry_points={
         'console_scripts': [
             'actuation_test = atlas_python.actuation_test:main',
-            'encoder_test = atlas_python.encoder_test:main',
             'hello = atlas_python.hello:main',
             'camera = atlas_python.camera:main',
             'object_detection = atlas_python.object_detection:main',
@@ -32,6 +31,7 @@ setup(
             'odometry = atlas_python.odometry:main',
             'motor_driver = atlas_python.motor_driver:main',
             'planner = atlas_python.planner:main',
+            'serial_comms = atlas_python.serial_comms:main',
         ],
     },
 )

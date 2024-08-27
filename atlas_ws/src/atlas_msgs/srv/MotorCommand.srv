@@ -1,3 +1,7 @@
 float32 heading
 float32 distance
+<<<<<<< HEAD
 ---
+=======
+---
+>>>>>>> feature/arduino_motorControl
