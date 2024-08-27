@@ -21,7 +21,7 @@ class SerialNode(Node):
             qos_profile=QoSProfile(
                 depth=10,
                 history=QoSHistoryPolicy.KEEP_LAST,
-                durability=QoSDurabilityPolicy.VOLATILE,
+                durability=QoSDurabilityPolicy.TRANSIENT_LOCAL,
                 reliability=QoSReliabilityPolicy.RELIABLE
             )
         )
@@ -65,7 +65,7 @@ class SerialNode(Node):
         )
         self.declare_parameter(
             "serial_port",
-            "/dev/ttyACM0",
+            "/dev/ttyS0",
             descriptor=ParameterDescriptor(
                 type=ParameterType.PARAMETER_STRING,
                 description="Serial port for the arduino",
@@ -74,12 +74,12 @@ class SerialNode(Node):
 
     def serialSend_callback(self, msg: String):
         resp = self.send_command(msg.data)
-        self.get_logger().info(resp)
+        #self.get_logger().info(resp)
         if resp:
-            self.serialPublisher_callback(resp)
+            self.serialPublisher(resp)
         return []
 
-    def serialPublisher_callback(self, response):
+    def serialPublisher(self, response):
         # if self.serial_port.in_waiting:
         #     line = self.serial_port.readline().decode('utf-8').rstrip()
         #     # Process line and publish
@@ -95,9 +95,18 @@ class SerialNode(Node):
                 msg.data = (line)
                 # Publish the message
                 self.serial_publisher.publish(msg)
+
+                # Send Serial free msg on "duino_serial_resp"
+                msg = String()
+                msg.data = ("SERIAL:FREE")
+                self.serial_publisher.publish(msg)
             else:
                 raise Exception("No serial command received in duino_serial_cmd topic.")
         except Exception as e:
+            # Send Serial free msg on "duino_serial_resp"
+            msg = String()
+            msg.data = ("SERIAL:FREE")
+            self.serial_publisher.publish(msg)
             self.get_logger().error(f"Error reading serial data: {e}")
 
 
@@ -106,6 +115,12 @@ class SerialNode(Node):
         self.mutex.acquire()
         try:
             cmd_string += "\r"
+            
+            # Send serial busy message on "duino_serial_resp"
+            msg = String()
+            msg.data = ("SERIAL:BUSY")
+            self.serial_publisher.publish(msg)
+
             self.serial.write(cmd_string.encode("utf-8"))
             c = ''
             value = ''
