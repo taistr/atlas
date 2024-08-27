@@ -1,6 +1,6 @@
 import rclpy
 from rclpy.node import Node
-from rclpy.executors import MultiThreadedExecutor
+from rclpy.executors import MultiThreadedExecutor, ExternalShutdownException
 from rcl_interfaces.msg import ParameterDescriptor, ParameterType
 from rclpy.qos import QoSProfile, QoSHistoryPolicy, QoSDurabilityPolicy, QoSReliabilityPolicy
 import sys
@@ -17,7 +17,11 @@ class MotorDriver(Node):
         self.initialise_parameters()
 
         # Service set up
-        self.srv = self.create_service(MotorCommand, 'motor_command', self.motorCommands_callback)
+        self.srv = self.create_service(
+            MotorCommand, 
+            'atlas/motor_command', 
+            self.motorCommands_callback,
+        )
 
         # Serial Subscriber
         # self.serial_subscription = self.create_subscription(
@@ -214,7 +218,7 @@ def main(args: dict = None):
         rclpy.spin(motor_driver, MultiThreadedExecutor())
     except KeyboardInterrupt:
         pass
-    except rclpy.exceptions.ExternalShutdownException:
+    except ExternalShutdownException:
         sys.exit(1)
     finally:
         motor_driver.destroy_node()

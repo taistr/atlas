@@ -89,6 +89,10 @@ class Camera(Node):
         self.capture_publisher.publish(image_message)
         self.executor.create_task(self.capture_image)
 
+    def cleanup(self) -> None:
+        """Clean up the rest of the resources"""
+        self.cap.release()
+
 
 def main(args: dict = None):
     rclpy.init(args=args)
@@ -103,6 +107,8 @@ def main(args: dict = None):
         pass
     except ExternalShutdownException:
         sys.exit(1)
+    finally:
+        camera.cleanup()
 
 if __name__ == "__main__":
     main()

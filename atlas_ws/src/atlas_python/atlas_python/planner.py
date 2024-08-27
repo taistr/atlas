@@ -82,6 +82,7 @@ class Planner(Node):
         self.get_logger().info("Running object detection...")
         msg = self.detection_client.call(Detection.Request())
         self.get_logger().info(f"Detection result: {msg.detection}")
+        return msg
 
     def run(self) -> None:
         """Main loop for the planner node"""
@@ -102,6 +103,7 @@ class Planner(Node):
                         )
                     )
                     self.wait(5)
+                    pass
                     
             case State.AIMING:
                 # Try to aim the robot at the detected object

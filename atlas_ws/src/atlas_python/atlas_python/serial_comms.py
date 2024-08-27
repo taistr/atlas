@@ -1,7 +1,7 @@
 import sys
 import rclpy
 from rclpy.node import Node
-from rclpy.executors import MultiThreadedExecutor
+from rclpy.executors import ExternalShutdownException, MultiThreadedExecutor
 from rcl_interfaces.msg import ParameterDescriptor, ParameterType
 from rclpy.qos import QoSProfile, QoSHistoryPolicy, QoSDurabilityPolicy, QoSReliabilityPolicy
 import time
@@ -41,7 +41,7 @@ class SerialNode(Node):
 
         # Serial
         self.serial = serial.Serial(
-            port=self.find_arduino_port(0x2341, 0x0043), 
+            port=self.get_parameter("serial_port").value, 
             baudrate=115200, 
             timeout=1
         )
@@ -61,6 +61,14 @@ class SerialNode(Node):
             descriptor=ParameterDescriptor(
                 type=ParameterType.PARAMETER_DOUBLE,
                 description="Rate at which serial data is published (Hz)",
+            ),
+        )
+        self.declare_parameter(
+            "serial_port",
+            "/dev/ttyACM0",
+            descriptor=ParameterDescriptor(
+                type=ParameterType.PARAMETER_STRING,
+                description="Serial port for the arduino",
             ),
         )
 
@@ -117,13 +125,6 @@ class SerialNode(Node):
         if self.serial.is_open:
             self.serial.close()
 
-    @staticmethod
-    def find_arduino_port(vid, pid):
-        ports = serial.tools.list_ports.comports()
-        for port in ports:
-            if port.vid == vid and port.pid == pid:
-                return port.device
-        return None
 
 
 def main(args: dict = None):
@@ -134,7 +135,7 @@ def main(args: dict = None):
         rclpy.spin(serialComms, MultiThreadedExecutor())
     except KeyboardInterrupt:
         pass
-    except rclpy.exceptions.ExternalShutdownException:
+    except ExternalShutdownException:
         sys.exit(1)
     finally:
         serialComms.cleanup()  # Ensure GPIO cleanup happens
