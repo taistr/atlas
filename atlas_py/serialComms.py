@@ -3,6 +3,9 @@ import time
 import serial
 from threading import Lock
 
+# Callbacks
+from motor_driver import motorComplete_callback
+
 #UART
 UART_PORT = "/dev/ttyS0"
 BAUD_RATE = 115200
@@ -20,9 +23,11 @@ class SerialComms():
         self.mutex_serial = Lock()
 
         self.cmd_string = ""
+
+        print("serialComms.py:Serial Node Online mthfkers")
         
     # Handles sending and returning of serial commands
-    def serialSend(self, cmd_string):
+    def serial_comms(self, cmd_string):
         resp = self.send_command(cmd_string)
         #self.get_logger().info(resp)
         if resp:
@@ -41,7 +46,7 @@ class SerialComms():
             while c != "\r":
                 c = serial.read(1).decode("utf-8")
                 if (c == ''):
-                    print("Error: Serial timeout on command: " + cmd_string)
+                    print("serialComms.py:Error_Serial timeout on command: " + cmd_string)
                     return ''
                 value += c
             value = value.strip('\r')
@@ -86,8 +91,11 @@ class SerialComms():
             self.serial.close()
 
 
-def serial_comms(command):
+def serial_send(source, command):
     SerialNode = SerialComms()
 
     # Initiates serial comms process
-    SerialNode.serialSend(command)
+    response = SerialNode.serialSend(command)
+
+    while response:
+        return response

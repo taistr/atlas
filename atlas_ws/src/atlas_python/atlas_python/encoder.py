@@ -55,7 +55,7 @@ class Encoder(Node):
             qos_profile=QoSProfile(
                 depth=10,
                 history=QoSHistoryPolicy.KEEP_LAST,
-                durability=QoSDurabilityPolicy.VOLATILE,
+                durability=QoSDurabilityPolicy.TRANSIENT_LOCAL,
                 reliability=QoSReliabilityPolicy.RELIABLE
             )
         )
