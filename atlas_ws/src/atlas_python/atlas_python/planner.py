@@ -6,6 +6,7 @@ from rclpy.executors import MultiThreadedExecutor
 from rclpy.executors import ExternalShutdownException
 from atlas_msgs.srv import Detection, MotorCommand
 from enum import Enum
+import time
 
 class State(Enum):
     SEARCHING = 1
@@ -31,7 +32,8 @@ class Planner(Node):
         )
         self.last_detection = None
         
-        self.get_logger().info("Waiting for object detection service...")
+        self.get_logger().info("Waiting for services...")
+        self.motor_client.wait_for_service()
         self.detection_client.wait_for_service()
 
         self.get_logger().info("Planner Online!")
@@ -69,12 +71,24 @@ class Planner(Node):
         self.get_logger().info(f"Transitioning to {state} state.")
         self.state = state
 
+    def wait(self, duration: float) -> None:
+        """Wait for a set duration"""
+        self.get_logger().info(f"Waiting for {duration} seconds...")
+        time.sleep(duration)
+        self.get_logger().info("Wait complete.")
+
+    def run_detection(self) -> Detection.Response:
+        """Run the object detection service"""
+        self.get_logger().info("Running object detection...")
+        msg = self.detection_client.call(Detection.Request())
+        self.get_logger().info(f"Detection result: {msg.detection}")
+
     def run(self) -> None:
         """Main loop for the planner node"""
 
         match self.state:
             case State.SEARCHING:
-                self.last_detection = self.detection_client.call(Detection.Request())
+                self.last_detection = self.run_detection()
 
                 # If an object is detected, transition to the aiming state
                 if self.last_detection.detection:
@@ -87,6 +101,8 @@ class Planner(Node):
                             distance=0,
                         )
                     )
+                    self.wait(5)
+                    
             case State.AIMING:
                 # Try to aim the robot at the detected object
                 self.motor_client.call(
@@ -95,7 +111,8 @@ class Planner(Node):
                         distance=0,
                     ) #! Need to consider how controller reacts to micro adjustments
                 )
-                self.last_detection = self.detection_client.call(Detection.Request())
+                self.wait(5)
+                self.last_detection = self.run_detection()
 
                 acceptance_angle = self.get_parameter("acceptance_angle").value
                 if self.last_detection.detection and self.last_detection.angle < acceptance_angle: #! May not be necessary to have it lower
@@ -117,6 +134,7 @@ class Planner(Node):
                         distance=self.last_detection.distance + self.firing_offset,
                     )
                 )
+                self.wait(15) #! There should be a better way to do this
                 self.change_state(State.REVERSE)
 
             case State.REVERSE:
@@ -126,6 +144,7 @@ class Planner(Node):
                         distance=-(self.last_detection.distance + self.firing_offset),
                     )
                 )
+                self.wait(15)
                 self.change_state(State.FINISHED)
             
             case State.FINISHED:

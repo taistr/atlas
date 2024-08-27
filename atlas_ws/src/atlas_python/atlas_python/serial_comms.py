@@ -41,7 +41,7 @@ class SerialNode(Node):
 
         # Serial
         self.serial = serial.Serial(
-            port=self.get_parameter("port").value, 
+            port=self.find_arduino_port(0x2341, 0x0043), 
             baudrate=115200, 
             timeout=1
         )
@@ -61,14 +61,6 @@ class SerialNode(Node):
             descriptor=ParameterDescriptor(
                 type=ParameterType.PARAMETER_DOUBLE,
                 description="Rate at which serial data is published (Hz)",
-            ),
-        )
-        self.declare_parameter(
-            "port",
-            value="/dev/ttyACM0",
-            descriptor=ParameterDescriptor(
-                type=ParameterType.PARAMETER_STRING,
-                description="Serial port for the encoder",
             ),
         )
 
@@ -124,6 +116,14 @@ class SerialNode(Node):
         # Close the serial port properly
         if self.serial.is_open:
             self.serial.close()
+
+    @staticmethod
+    def find_arduino_port(vid, pid):
+        ports = serial.tools.list_ports.comports()
+        for port in ports:
+            if port.vid == vid and port.pid == pid:
+                return port.device
+        return None
 
 
 def main(args: dict = None):
