@@ -59,18 +59,18 @@ class Planner():
         self.moves = []
         self.last_detection_result = DetectionResult(False, 0, 0)
 
-        self.logger("Planner is f****** initialised!")
+        self.logger.info("Planner is f****** initialised!")
 
     def change_state(self, state: State) -> None:
         """Change the state of the planner"""
-        self.logger(f"Transitioning to {state} state.")
+        self.logger.info(f"Transitioning to {state} state.")
         self.state = state
 
     def wait(self, duration: float) -> None:
         """Wait for a set duration"""
-        self.logger(f"Waiting for {duration} seconds...")
+        self.logger.info(f"Waiting for {duration} seconds...")
         time.sleep(duration)
-        self.logger("Wait complete.")
+        self.logger.info("Wait complete.")
 
     def run(self) -> None:
         """Main loop for the planner node"""
@@ -83,7 +83,7 @@ class Planner():
                     if self.last_detection_result.detection:
                         self.change_state(State.AIMING)
                     else:
-                        self.logger("Attempting to turn")
+                        self.logger.info("Attempting to turn")
                         move = Move(angle=SEARCH_ANGLE, distance=0)
                         self.serial_comms.start_motion( #TODO: Get this to block until done
                             heading=move.angle,
@@ -144,7 +144,7 @@ class Planner():
                     self.change_state(State.FINISHED)
                 
                 case State.FINISHED:
-                    self.logger("Atlas has finished")
+                    self.logger.info("Atlas has finished")
                     break
 
 def main(args: dict = None):

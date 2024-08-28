@@ -30,7 +30,7 @@ class Camera():
         if not self.cap.isOpened():
             raise RuntimeError("Could not open camera")
         
-        self.logger("Camera initialised")
+        self.logger.info("Camera initialised")
 
     def capture_image(self):
         """Capture an image from the camera and return it"""
@@ -51,7 +51,7 @@ class Camera():
 #     try:
 #         ret, image = camera.capture_image()
 #     except:
-#         self.logger("camera.py:Camera failed")
+#         self.logger.info("camera.py:Camera failed")
 #         camera.cleanup()
 #         sys.exit(1)
 #     finally:

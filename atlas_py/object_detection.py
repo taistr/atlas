@@ -35,7 +35,7 @@ class ObjectDetection():
             distance=float(0)
         )
 
-        self.logger("ObjectDetection initialised!")
+        self.logger.info("ObjectDetection initialised!")
     
     def cleanup(self) -> None:
         """Clean up the rest of the resources"""

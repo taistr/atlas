@@ -21,7 +21,7 @@ class SerialComms():
 
         self.cmd_string = ""
 
-        self.logger("SerialComms initialised")
+        self.logger.info("SerialComms initialised")
 
     # Handles UART communications
     def send_command(self, cmd_string):
@@ -36,7 +36,7 @@ class SerialComms():
             while c != "\r":
                 c = serial.read(1).decode("utf-8")
                 if (c == ''):
-                    self.logger("Error_Serial timeout on command: " + cmd_string)
+                    self.logger.info("Error_Serial timeout on command: " + cmd_string)
                     return ''
                 value += c
             value = value.strip('\r')
