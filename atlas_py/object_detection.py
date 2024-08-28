@@ -45,7 +45,7 @@ class ObjectDetection():
         frame_center_x = FRAME_WIDTH // 2
 
         self.latest_image = self.camera.capture_image()
-        results = self.model(self.latest_image, conf=0.7)
+        results = self.model(self.latest_image, conf=0.5)
 
         # Populate response with detected objects
         boxes = results[0].boxes
@@ -63,7 +63,8 @@ class ObjectDetection():
             x_distance = x_centre - frame_center_x
 
             # Calculate the distance to the object (hint: use a dictionary)
-            slope_distance=50.924376407217764
+            #slope_distance=50.924376407217764
+            slope_distance=50.924376407217764*1.015
             intercept_distance=0.1332096544887631
 
             return DetectionResult(

@@ -11,8 +11,8 @@ from object_detection import ObjectDetection, DetectionResult
 
 # Planner prams
 SEARCH_ANGLE = 17
-ACCEPTANCE_ANGLE = 5
-FIRING_OFFSET = 0.5
+ACCEPTANCE_ANGLE = 2
+FIRING_OFFSET = 0.35
 
 # Flags
 ATLAS_FINISHED = False
@@ -88,17 +88,17 @@ class Planner():
                             distance=move.distance
                         )
                         list.append(self.moves, move)
-                        self.wait(5)
+                        self.wait(2)
                         
                 case State.AIMING:
                     # Try to aim the robot at the detected object
                     move = Move(angle=self.last_detection_result.angle, distance=0)
                     self.serial_comms.start_motion(
-                        heading=move.angle,
+                        heading=-move.angle,
                         distance=move.distance
                     )
                     self.moves.append(move)
-                    self.wait(5)
+                    self.wait(2)
                     self.last_detection_result = self.object_detector.detect_object()
 
                     if self.last_detection_result.detection and self.last_detection_result.angle < ACCEPTANCE_ANGLE: #! May not be necessary to have it lower
