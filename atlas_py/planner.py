@@ -88,7 +88,7 @@ class Planner():
                             distance=move.distance
                         )
                         list.append(self.moves, move)
-                        self.wait(2)
+                        self.wait(0.5)
                         
                 case State.AIMING:
                     # Try to aim the robot at the detected object
@@ -98,7 +98,7 @@ class Planner():
                         distance=move.distance
                     )
                     self.moves.append(move)
-                    self.wait(2)
+                    self.wait(0.5)
                     self.last_detection_result = self.object_detector.detect_object()
 
                     if self.last_detection_result.detection and self.last_detection_result.angle < ACCEPTANCE_ANGLE: #! May not be necessary to have it lower
