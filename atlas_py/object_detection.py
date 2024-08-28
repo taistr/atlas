@@ -22,7 +22,7 @@ class DetectionResult:
     distance: float
 
 class ObjectDetection():
-    def __init__(self, model_path="/home/atlas/Desktop/atlas/atlas_py/models/28_08_640px_w_null.pt"):        
+    def __init__(self, model_path="/home/atlas/Desktop/atlas/atlas_py/models/29_08_640px.pt"):        
         self.model = YOLO(model_path)
         self.logger = logging.getLogger(__name__)
 
