@@ -8,7 +8,6 @@ from dataclasses import dataclass
 from atlas_camera import Camera
 from serial_comms import SerialComms
 from object_detection import ObjectDetection, DetectionResult
-from motor_driver import MotorDriver
 
 # Planner prams
 SEARCH_ANGLE = 30

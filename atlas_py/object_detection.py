@@ -1,5 +1,4 @@
 import sys
-#from cv_bridge import CvBridge
 from ultralytics import YOLO
 import pathlib
 import torch
