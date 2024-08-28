@@ -127,7 +127,6 @@ class Planner():
                     self.change_state(State.REVERSE)
 
                 case State.REVERSE:
-                    move = np.array(0, -(self.last_detection["distance"]+FIRING_OFFSET))
                     move = Move(
                         distance=-(self.last_detection_result.distance + FIRING_OFFSET), 
                         angle=0
