@@ -3,7 +3,7 @@ from ultralytics import YOLO
 
 def main():
     # Load the YOLO model
-    model = YOLO("/home/atlas/Desktop/atlas/atlas_py/models/26_08_640px.pt")
+    model = YOLO("/home/atlas/Desktop/atlas/atlas_py/models/29_08_640px.pt")
 
     while True:
         # Initialize the webcam
