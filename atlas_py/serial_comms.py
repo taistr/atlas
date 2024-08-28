@@ -30,11 +30,11 @@ class SerialComms():
         try:
             cmd_string += "\r"
 
-            serial.write(cmd_string.encode("utf-8"))
+            self.serial.write(cmd_string.encode("utf-8"))
             c = ''
             value = ''
             while c != "\r":
-                c = serial.read(1).decode("utf-8")
+                c = self.serial.read(1).decode("utf-8")
                 if (c == ''):
                     self.logger.info("Error_Serial timeout on command: " + cmd_string)
                     return ''

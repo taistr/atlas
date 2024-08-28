@@ -43,7 +43,6 @@ class Planner():
     state: State
     serial_comms: SerialComms
     object_detector: ObjectDetection
-    motor_driver: MotorDriver
     moves: list[Move]
     last_detection_result = DetectionResult
 
