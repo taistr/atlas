@@ -2,19 +2,17 @@ import cv2
 from ultralytics import YOLO
 
 def main():
-    # Initialize the webcam
-    cap = cv2.VideoCapture(0)
-
     # Load the YOLO model
-    model = YOLO("/home/tyson/atlas/atlas_py/models/26_08_640px.pt")
-
-    if not cap.isOpened():
-        print("Error: Could not open webcam.")
-        return
+    model = YOLO("/home/atlas/Desktop/atlas/atlas_py/models/26_08_640px.pt")
 
     while True:
-        # Capture a frame from the webcam
+        # Initialize the webcam
+        cap = cv2.VideoCapture(0)
+        if not cap.isOpened():
+            print("Error: Could not open webcam.")
+            continue
         ret, frame = cap.read()
+        cap.release()
 
         if not ret:
             print("Error: Failed to capture image.")
