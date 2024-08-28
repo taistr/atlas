@@ -4,9 +4,6 @@ import logging
 
 # Camera params
 CAMERA_NUMBER = 0
-CAMERA_HEIGHT = 480
-CAMERA_WIDTH = 640
-CAMERA_FPS = 30
 
 # Configure logging
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -18,14 +15,13 @@ class Camera():
             camera_number: int = 0,
             camera_width: int = 640,
             camera_height: int = 480,
-            camera_fps: int = 30
             ): 
         self.logger = logging.getLogger(__name__)
+        
+        self.camera_width = camera_width
+        self.camera_height = camera_height
 
         self.cap = cv2.VideoCapture(camera_number)
-        self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, camera_width)
-        self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, camera_height)
-        self.cap.set(cv2.CAP_PROP_FPS, camera_fps)
 
         if not self.cap.isOpened():
             raise RuntimeError("Could not open camera")
@@ -39,8 +35,7 @@ class Camera():
         if not ret:
             raise RuntimeError("Could not capture an image from the camera")
         
-
-        return image
+        return cv2.resize(image, (self.camera_width, self.camera_height))
 
     def cleanup(self) -> None:
         """Clean up the rest of the resources"""

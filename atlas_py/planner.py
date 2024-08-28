@@ -83,33 +83,34 @@ class Planner():
                     else:
                         self.logger.info("Attempting to turn")
                         move = Move(angle=SEARCH_ANGLE, distance=0)
-                        self.serial_comms.start_motion( #TODO: Get this to block until done
+                        response = self.serial_comms.start_motion( #Get this to block until done
                             heading=move.angle,
                             distance=move.distance
                         )
                         list.append(self.moves, move)
-                        self.wait(5)
+                        #self.wait(5)
                         
                 case State.AIMING:
                     # Try to aim the robot at the detected object
                     move = Move(angle=self.last_detection_result.angle, distance=0)
-                    self.serial_comms.start_motion(
+                    response = self.serial_comms.start_motion(
                         heading=move.angle,
                         distance=move.distance
                     )
                     self.moves.append(move)
-                    self.wait(5)
+                    #self.wait(5)
                     self.last_detection_result = self.object_detector.detect_object()
-
-                    if self.last_detection_result.detection and self.last_detection_result.angle < ACCEPTANCE_ANGLE: #! May not be necessary to have it lower
-                        # If the object is still detected, transition to the firing state
-                        self.change_state(State.FIRE)
-                    elif self.last_detection_result.detection and self.last_detection_result.angle > ACCEPTANCE_ANGLE:
-                        # If the object is still in view, continue aiming
-                        pass
-                    else:
-                        # If the object is lost, transition back to the searching state
-                        self.change_state(State.SEARCHING)
+                    
+                    if "MOTION_CONTROLLER" in response and "Straight Complete" in response:
+                        if self.last_detection_result.detection and self.last_detection_result.angle < ACCEPTANCE_ANGLE: #! May not be necessary to have it lower
+                            # If the object is still detected, transition to the firing state
+                            self.change_state(State.FIRE)
+                        elif self.last_detection_result.detection and self.last_detection_result.angle > ACCEPTANCE_ANGLE:
+                            # If the object is still in view, continue aiming
+                            pass
+                        else:
+                            # If the object is lost, transition back to the searching state
+                            self.change_state(State.SEARCHING)
 
                 case State.FIRE:
                     # Drive the robot straight for a set distance
@@ -117,14 +118,15 @@ class Planner():
                         distance=self.last_detection_result.distance + FIRING_OFFSET,
                         angle=0,
                     )
-                    self.serial_comms.start_motion(
+                    response = self.serial_comms.start_motion(
                         heading=move.angle,
                         distance=move.distance
                     )
                     self.moves.append(move)
 
-                    self.wait(15) #! This is a guess
-                    self.change_state(State.REVERSE)
+                    #self.wait(15) #! This is a guess
+                    if "MOTION_CONTROLLER" in response and "Straight Complete" in response:
+                        self.change_state(State.REVERSE)
 
                 case State.REVERSE:
                     move = Move(
@@ -137,7 +139,7 @@ class Planner():
                     )
                     self.moves.append(move)
 
-                    self.wait(15)
+                    #self.wait(15)
                     self.change_state(State.FINISHED)
                 
                 case State.FINISHED:

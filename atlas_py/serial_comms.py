@@ -51,7 +51,11 @@ class SerialComms():
 
         # Form the command string
         cmd_string = f"m {float_distance:.2f} {float_heading:.2f}"
-        self.send_command(cmd_string)
+        response = self.send_command(cmd_string)
+        while "MOTION_CONTROLLER" in response and "Complete" in response:
+            self.logger.info("Motion complete.")
+            return 
+        
 
     def cleanup(self):
         # Close the serial port properly
