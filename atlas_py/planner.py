@@ -88,10 +88,7 @@ class Planner():
                             distance=move.distance
                         )
 
-                        if response:
-                            if "MOTION_CONTROLLER" in response and "Turning Complete" in response:
-                                pass
-                                list.append(self.moves, move)
+                        list.append(self.moves, move)
                         #self.wait(5)
                         
                 case State.AIMING:
@@ -104,16 +101,15 @@ class Planner():
                     #self.wait(5)
                     self.last_detection_result = self.object_detector.detect_object()
                     
-                    if "MOTION_CONTROLLER" in response and "Straight Complete" in response:
-                        if self.last_detection_result.detection and self.last_detection_result.angle < ACCEPTANCE_ANGLE: #! May not be necessary to have it lower
-                            # If the object is still detected, transition to the firing state
-                            self.change_state(State.FIRE)
-                        elif self.last_detection_result.detection and self.last_detection_result.angle > ACCEPTANCE_ANGLE:
-                            # If the object is still in view, continue aiming
-                            pass
-                        else:
-                            # If the object is lost, transition back to the searching state
-                            self.change_state(State.SEARCHING)
+                    if self.last_detection_result.detection and self.last_detection_result.angle < ACCEPTANCE_ANGLE: #! May not be necessary to have it lower
+                        # If the object is still detected, transition to the firing state
+                        self.change_state(State.FIRE)
+                    elif self.last_detection_result.detection and self.last_detection_result.angle > ACCEPTANCE_ANGLE:
+                        # If the object is still in view, continue aiming
+                        pass
+                    else:
+                        # If the object is lost, transition back to the searching state
+                        self.change_state(State.SEARCHING)
                         
                         self.moves.append(move)
 
@@ -130,9 +126,8 @@ class Planner():
 
 
                     #self.wait(15) #! This is a guess
-                    if "MOTION_CONTROLLER" in response and "Straight Complete" in response:
-                        self.change_state(State.REVERSE)
-                        self.moves.append(move)
+                    self.change_state(State.REVERSE)
+                    self.moves.append(move)
 
                 case State.REVERSE:
                     move = Move(
@@ -146,9 +141,8 @@ class Planner():
 
 
                     #self.wait(15)
-                    if "MOTION_CONTROLLER" in response and "Straight Complete" in response:
-                        self.change_state(State.FINISHED)
-                        self.moves.append(move)
+                    self.change_state(State.FINISHED)
+                    self.moves.append(move)
                 
                 case State.FINISHED:
                     self.logger.info("Atlas has finished")

@@ -146,48 +146,24 @@ void doPID(SetPointInfo * p) {
           leftPID.ITerm = 0;
           resetEncoder(LEFT);
       }
-      if (leftPID.Turning_CountsToTarget == 0 && rightPID.Turning_CountsToTarget == 0){
+      if (){
         turning = 0;
         delay(100);
-        Serial.println("OK.MOTION_CONTROLLER.Turning Complete");
       }
     }
     else{
       switch(p->motor){
         case RIGHT:
-          //Serial.print("Right wheel. Straight Complete.");
-          //Serial.print(",R:");
-          //Serial.print(rightPID.PrevErr);
-          //Serial.print(",R_e:");
-          //Serial.println(rightPID.output*10);
           p->output = 0;        
           resetPID(RIGHT);
         case LEFT:
-          //Serial.print("Left wheel. Straight Complete.");
-          //Serial.print(",L:");
-          //Serial.print(leftPID.PrevErr);
-          //Serial.print(",L_e:");
-          //Serial.println(leftPID.output*10);
           p->output = 0;  
           resetPID(LEFT);  
       }
-      //if (p->motor == RIGHT){
-
-        //rightPID.Straight_CountsToTarget = 0;
-        //rightPID.PrevErr = 0;
-        //resetEncoder(RIGHT);
-      //}
-      //else{
-    
-        //leftPID.Straight_CountsToTarget = 0;
-        //leftPID.PrevErr = 0;
-        //resetEncoder(LEFT);
-      //}
-      //delay(100);
       
-      if (leftPID.Straight_CountsToTarget == 0 && rightPID.Straight_CountsToTarget == 0){
+      if (leftPID.Turning_CountsToTarget == 0 && rightPID.Turning_CountsToTarget == 0 && leftPID.Straight_CountsToTarget == 0 && rightPID.Straight_CountsToTarget == 0){
         moving = 0;
-        Serial.println("OK.MOTION_CONTROLLER.Straight Complete");
+        Serial.println("OK.MOTION_CONTROLLER.Movement Complete");
       }
     }
     return;

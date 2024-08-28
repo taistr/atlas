@@ -6,6 +6,8 @@ import logging
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 
 
+
+
 class SerialComms():
     # Sets up serial port
     def __init__(self, uart_port: str = "/dev/ttyACM0", baud_rate: int = 115200):
@@ -21,6 +23,9 @@ class SerialComms():
 
         self.cmd_string = ""
 
+        # Flags
+        self.MOTION_COMPLETE = False
+
         self.logger.info("SerialComms initialised")
 
     # Handles UART communications
@@ -34,12 +39,15 @@ class SerialComms():
             c = ''
             value = ''
             while c != "\r":
-                c = self.serial.read(1).decode("utf-8")
-                if (c == ''):
-                    self.logger.info("Error_Serial timeout on command: " + cmd_string)
-                    return ''
-                value += c
-            value = value.strip('\r')
+                try:
+                    c = self.serial.read(1).decode("utf-8")
+                    if (c == ''):
+                        raise ValueError("Received no character")
+                    value += c
+                except ValueError as e:
+                    self.logger.warning(e)
+                else:
+                    value = value.strip('\r')
             return value
         finally:
             self.mutex_serial.release()
@@ -52,9 +60,14 @@ class SerialComms():
         # Form the command string
         cmd_string = f"m {float_distance:.2f} {float_heading:.2f}"
         response = self.send_command(cmd_string)
-        while "MOTION_CONTROLLER" in response and "Complete" in response:
-            self.logger.info("Motion complete.")
-            return 
+        print(response)
+        while not self.MOTION_COMPLETE:
+            #if "MOTION_CONTROLLER" in response and "Straight Complete" in response:
+            if response:
+                #temp = self.send_command("r")
+                print("complete")
+                self.MOTION_COMPLETE = True
+                return response
         
 
     def cleanup(self):

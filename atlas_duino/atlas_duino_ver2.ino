@@ -11,7 +11,7 @@
 /* Maximum PWM signal */
 #define MAX_PWM 255
 /* Minimum PWM signal */
-#define MIN_PWM 50    //Equivalent to 19.6% duty cycle
+#define MIN_PWM 100    //Equivalent to 19.6% duty cycle
 /* Range below MIN_PWM at which PWM signal is locked to MIN_PWM - To allow for motor micro-adjustments*/
 #define MIN_PWM_ALLOW_ZONE 10 
 
@@ -250,10 +250,10 @@ int executeSerialCmd(){
             }
 
             
-            Serial.print("OK.MOTOR_CONTROL.Distance:");
-            Serial.print(arg1d);
-            Serial.print(".Heading:");
-            Serial.println(arg2d);
+            // Serial.print("OK.MOTOR_CONTROL.Distance:");
+            // Serial.print(arg1d);
+            // Serial.print(".Heading:");
+            // Serial.println(arg2d);
 
             /* Calculates encoder counts for straightline movement */
             arg1d = (arg1d/(2*PI*WHEEL_RADIUS)) * 48 * SPINDLE_TO_ENCODER_GEAR_RATIO;  // Distance in m
