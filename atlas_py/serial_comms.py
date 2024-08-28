@@ -50,10 +50,16 @@ class SerialComms():
         float_distance = float(distance)
 
         # Form the command string
-        cmd_string = f"m {float_distance} {float_heading}"
+        cmd_string = f"m {float_distance:.2f} {float_heading:.2f}"
         self.send_command(cmd_string)
 
     def cleanup(self):
         # Close the serial port properly
+        cmd_string = f"o 0 0"
+        self.send_command(cmd_string)
+
+        cmd_string = f"r"
+        self.send_command(cmd_string)
+
         if self.serial.is_open:
             self.serial.close()

@@ -39,6 +39,7 @@ class Camera():
         if not ret:
             raise RuntimeError("Could not capture an image from the camera")
         
+
         return image
 
     def cleanup(self) -> None:
