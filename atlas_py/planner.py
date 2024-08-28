@@ -5,7 +5,7 @@ import numpy as np
 
 # Dependencies
 from motor_driver import motor_command
-from object_detection import detect_object
+from object_detection import object_detection
 
 # Planner prams
 SEARCH_ANGLE = 30
@@ -47,7 +47,7 @@ class Planner():
     def run_detection(self):
         """Run the object detection service"""
         print("planner.py:Running object detection...")
-        response = detect_object
+        response = object_detection()
 
         if response:
             msg = "planner.py:Detection result:Heading_" + str(response["heading"]) + ":Distance_" + str(response["distance"])
@@ -116,11 +116,8 @@ class Planner():
 
 def main(args: dict = None):
     planner = Planner()
-    try:
-        planner.run()
-    except:
-        print("planner.py:Planner failed")
-        sys.exit(1)
+    
+    planner.run()
 
 if __name__ == "__main__":
     main()

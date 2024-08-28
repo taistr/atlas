@@ -2,6 +2,7 @@
 atlas_ws/build/
 atlas_ws/install/
 atlas_ws/log/
+atlas_env
 
 ## Default ignores below ##
 devel/

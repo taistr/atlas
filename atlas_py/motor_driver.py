@@ -8,7 +8,7 @@ import signal
 
 
 # Dependencies
-from serialComms import serial_send
+#from serialComms import serial_send
 
 # Robot Params
 WHEEL_RADIUS = (56/1000)/2 #metres
@@ -60,8 +60,8 @@ class MotorDriver():
         serial_send("motor_driver", "o 0 0")
 
 
-def motorComplete_callback(response):
-    print("motor_driver.py:Motor Serial Response:" + str(response))
+#def motorComplete_callback(response):
+#   print("motor_driver.py:Motor Serial Response:" + str(response))
 
 
 def signal_handler(sig, frame):
