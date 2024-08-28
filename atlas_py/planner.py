@@ -87,7 +87,11 @@ class Planner():
                             heading=move.angle,
                             distance=move.distance
                         )
-                        list.append(self.moves, move)
+
+                        if response:
+                            if "MOTION_CONTROLLER" in response and "Turning Complete" in response:
+                                pass
+                                list.append(self.moves, move)
                         #self.wait(5)
                         
                 case State.AIMING:
@@ -97,7 +101,6 @@ class Planner():
                         heading=move.angle,
                         distance=move.distance
                     )
-                    self.moves.append(move)
                     #self.wait(5)
                     self.last_detection_result = self.object_detector.detect_object()
                     
@@ -111,6 +114,8 @@ class Planner():
                         else:
                             # If the object is lost, transition back to the searching state
                             self.change_state(State.SEARCHING)
+                        
+                        self.moves.append(move)
 
                 case State.FIRE:
                     # Drive the robot straight for a set distance
@@ -122,25 +127,28 @@ class Planner():
                         heading=move.angle,
                         distance=move.distance
                     )
-                    self.moves.append(move)
+
 
                     #self.wait(15) #! This is a guess
                     if "MOTION_CONTROLLER" in response and "Straight Complete" in response:
                         self.change_state(State.REVERSE)
+                        self.moves.append(move)
 
                 case State.REVERSE:
                     move = Move(
                         distance=-(self.last_detection_result.distance + FIRING_OFFSET), 
                         angle=0
                     )
-                    self.serial_comms.start_motion(
+                    response = self.serial_comms.start_motion(
                         heading=move.angle,
                         distance=move.distance
                     )
-                    self.moves.append(move)
+
 
                     #self.wait(15)
-                    self.change_state(State.FINISHED)
+                    if "MOTION_CONTROLLER" in response and "Straight Complete" in response:
+                        self.change_state(State.FINISHED)
+                        self.moves.append(move)
                 
                 case State.FINISHED:
                     self.logger.info("Atlas has finished")
