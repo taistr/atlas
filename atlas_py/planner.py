@@ -10,9 +10,9 @@ from serial_comms import SerialComms
 from object_detection import ObjectDetection, DetectionResult
 
 # Planner prams
-SEARCH_ANGLE = 30
+SEARCH_ANGLE = 17
 ACCEPTANCE_ANGLE = 5
-FIRING_OFFSET = 0.1
+FIRING_OFFSET = 0.5
 
 # Flags
 ATLAS_FINISHED = False
