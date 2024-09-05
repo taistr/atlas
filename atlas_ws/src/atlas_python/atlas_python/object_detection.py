@@ -27,7 +27,7 @@ class ObjectDetection(Node):
         self.bridge = CvBridge()
         self.image_subscriber = self.create_subscription(
             Image,
-            "camera/image_raw",
+            "/camera/image_raw",
             self.image_callback,
             5,
         )
@@ -64,13 +64,25 @@ class ObjectDetection(Node):
 
     def detect_objects(self, request: Detection.Request, response: Detection.Response) -> Detection.Response:
         """Detect objects in the received image"""
+        if self.latest_image is None:
+            self.get_logger().info("There was no camera image to detect objects on!")
+            response.detection = True
+            response.x_offset = 10
+            response.distance = 10
+            return response
+        
         self.get_logger().info("Detecting objects...")
-        # Run inference on latest image
         results = self.model(self.latest_image, conf=0.5)
         self.get_logger().info("Detection complete!")
         # Publish annotated image
         image_message = CvBridge().cv2_to_imgmsg(results[0].plot())
+        self.get_logger().info("GOt here")
         self.detection_publisher.publish(image_message)
+
+        response.detection = True
+        response.x_offset = 10
+        response.distance = 10
+        return response
 
         # # Populate response with detected objects
         # boxes = results[0].boxes
