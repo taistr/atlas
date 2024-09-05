@@ -64,28 +64,49 @@ class ObjectDetection(Node):
 
     def detect_objects(self, request: Detection.Request, response: Detection.Response) -> Detection.Response:
         """Detect objects in the received image"""
+        frame_center_x = 640 // 2
+
         if self.latest_image is None:
             self.get_logger().info("There was no camera image to detect objects on!")
-            response.detection = True
-            response.x_offset = 10
-            response.distance = 10
+            response.detection = False
             return response
         
         self.get_logger().info("Detecting objects...")
         results = self.model(self.latest_image, conf=0.5)
         self.get_logger().info("Detection complete!")
+
         # Publish annotated image
         image_message = CvBridge().cv2_to_imgmsg(results[0].plot())
-        self.get_logger().info("GOt here")
         self.detection_publisher.publish(image_message)
 
-        response.detection = True
-        response.x_offset = 10
-        response.distance = 10
-        return response
+        # Populate response with detected objects
+        boxes = results[0].boxes
 
-        # # Populate response with detected objects
-        # boxes = results[0].boxes
+        if boxes.cls.tolist(): # If an object was detected
+            # Find the most confident object
+            _, max_index = torch.max(boxes.conf, dim=0)
+
+            # Extract the xyxy coordinates of the most confident object
+            x_centre, y_centre, width, height = boxes.xywh[max_index].tolist()
+
+            # Calculate the heading offset
+            slope_angle = 0.0632085093204184
+            intercept_angle = 0.7163631056314085
+            x_distance = x_centre - frame_center_x
+
+            # Calculate the distance to the object (hint: use a dictionary)
+            slope_distance = 50.924376407217764
+            intercept_distance = 0.1332096544887631
+            
+            response.detection = True
+            response.angle = slope_angle * x_distance + intercept_angle
+            response.distance = slope_distance / height + intercept_distance
+
+            return response
+        else:
+            response.detection = False
+            return response
+
 
         # if boxes.cls.tolist(): #If an object was detected
         #     # Find the most confident object
