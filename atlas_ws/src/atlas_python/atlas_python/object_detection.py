@@ -18,13 +18,16 @@ class ObjectDetection(Node):
         super().__init__("object_detection")
         self.initialise_parameters()
         
-        model_directory_path = pathlib.Path(get_package_share_directory("atlas_python")) / "models"
-        self.model = YOLO(str(model_directory_path / self.get_parameter("model_name").value))
+        self.get_logger().info("Loading model...")
+        model_path = pathlib.Path(
+            get_package_share_directory("atlas_python")
+        ) / "models" / self.get_parameter("model_name").value
+        self.model = YOLO(str(model_path))
 
         self.bridge = CvBridge()
         self.image_subscriber = self.create_subscription(
             Image,
-            "atlas/capture",
+            "camera/image_raw",
             self.image_callback,
             5,
         )
@@ -61,45 +64,51 @@ class ObjectDetection(Node):
 
     def detect_objects(self, request: Detection.Request, response: Detection.Response) -> Detection.Response:
         """Detect objects in the received image"""
+        self.logger().info("Detecting objects...")
         # Run inference on latest image
-        results = self.model(self.latest_image, conf=0.7)
-
+        results = self.model(self.latest_image, conf=0.5)
+        self.logger().info("Detection complete!")
         # Publish annotated image
         image_message = CvBridge().cv2_to_imgmsg(results[0].plot())
         self.detection_publisher.publish(image_message)
 
-        #TODO: Populate response with detected objects
-        boxes = results[0].boxes
+        # # Populate response with detected objects
+        # boxes = results[0].boxes
 
-        if boxes.cls.tolist(): #If an object was detected
-            # Find the most confident object
-            _, max_index = torch.max(boxes.conf, dim=0)
+        # if boxes.cls.tolist(): #If an object was detected
+        #     # Find the most confident object
+        #     _, max_index = torch.max(boxes.conf, dim=0)
 
-            # Extract the xyxy coordinates of the most confident object
-            x_centre, y_centre, width, height = boxes.xywh[max_index].tolist()
+        #     # Extract the xyxy coordinates of the most confident object
+        #     x_centre, y_centre, width, height = boxes.xywh[max_index].tolist()
 
-            # TODO: Calculate the heading offset
+        #     # Calculate the heading offset
+        #     slope_angle = 0.0632085093204184
+        #     intercept_angle = 0.7163631056314085
+        #     x_distance = x_centre - frame_center_x
 
-            # TODO: Calculate the distance to the object (hint: use a dictionary)
+        #     # TODO: Calculate the distance to the object (hint: use a dictionary)
 
-            response.detection = True
-            response.x_offset = 10
-            response.distance = 10
-        else:
-            response.detection = False
-        return response
+        #     response.detection = True
+        #     response.x_offset = 10
+        #     response.distance = 10
+        # else:
+        #     response.detection = False
+        # return response
 
 
 def main(args: dict = None):
     rclpy.init(args=args)
-    
-    object_detection = ObjectDetection()
+    node = ObjectDetection()
     try:
-        rclpy.spin(object_detection, executor=MultiThreadedExecutor())
+        rclpy.spin(node)
     except KeyboardInterrupt:
         pass
-    except ExternalShutdownException:
-        sys.exit(1)
+    node.destroy_node()
+    try:
+        rclpy.shutdown()
+    except rclpy._rclpy_pybind11.RCLError:
+        pass
 
 if __name__ == "__main__":
     main()

@@ -11,6 +11,7 @@ setup(
     data_files=[
         ('share/ament_index/resource_index/packages',
             ['resource/' + package_name]),
+        (os.path.join("share", package_name, "launch"), glob("launch/*.py")),
         (os.path.join("share", package_name, "models"), glob("resource/models/*.pt")),
         ('share/' + package_name, ['package.xml']),
     ],
@@ -23,13 +24,8 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'actuation_test = atlas_python.actuation_test:main',
             'hello = atlas_python.hello:main',
-            'camera = atlas_python.camera:main',
             'object_detection = atlas_python.object_detection:main',
-            'encoder = atlas_python.encoder:main',
-            'odometry = atlas_python.odometry:main',
-            'motor_driver = atlas_python.motor_driver:main',
         ],
     },
 )
