@@ -64,10 +64,10 @@ class ObjectDetection(Node):
 
     def detect_objects(self, request: Detection.Request, response: Detection.Response) -> Detection.Response:
         """Detect objects in the received image"""
-        self.logger().info("Detecting objects...")
+        self.get_logger().info("Detecting objects...")
         # Run inference on latest image
         results = self.model(self.latest_image, conf=0.5)
-        self.logger().info("Detection complete!")
+        self.get_logger().info("Detection complete!")
         # Publish annotated image
         image_message = CvBridge().cv2_to_imgmsg(results[0].plot())
         self.detection_publisher.publish(image_message)
