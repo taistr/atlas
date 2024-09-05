@@ -44,7 +44,7 @@ double R_Kp = 0.1;
 double R_Ki = 0.05;
 double R_Kd = 5;
 double R_Ko = 10;
-// PID params Setters - Straightline
+// PID params Setters - Turning
 double Lt_Kp = 0.1;
 double Lt_Ki = 0;
 double Lt_Kd = 5;
@@ -72,7 +72,6 @@ unsigned char turning = 1; // is the base turning?
 * when going from stop to moving, that's why we can init everything on zero.
 */
 void resetPID(int motor){
-
   switch(motor){
     case LEFT:
         leftPID.Straight_CountsToTarget = 0.0;
@@ -110,20 +109,13 @@ void doPID(SetPointInfo * p) {
   }
   else{
     Perror = p->Turning_CountsToTarget;
-    //Serial.println("Turning");
   }
 
+  // Stops the controlled motor if within position margin
   if (abs(Perror) < PID_ERROR_MARGIN){
-    //p->PrevErr = 0;
-
     if (turning){  // Deactivate turning mode after passing threshold
       switch(p->motor){
         case RIGHT:
-          //Serial.print("Right wheel. Turning Complete.");
-          //Serial.print(",R:");
-          //Serial.print(rightPID.PrevErr);
-          //Serial.print(",R_e:");
-          //Serial.println(rightPID.output*10);
           p->output = 0;
           rightPID.Turning_CountsToTarget = 0.0;
           rightPID.Encoder = readEncoder(RIGHT);
@@ -131,13 +123,8 @@ void doPID(SetPointInfo * p) {
           rightPID.PrevErr = 0;
           rightPID.ITerm = 0;
           resetEncoder(RIGHT);        
-        
+          break;
         case LEFT:
-          //Serial.print("Left wheel. Turning Complete.");
-          //Serial.print(",L:");
-          //Serial.print(leftPID.PrevErr);
-          //Serial.print(",L_e:");
-          //Serial.println(leftPID.output*10);
           p->output = 0;  
           leftPID.Turning_CountsToTarget = 0.0;
           leftPID.Encoder = readEncoder(LEFT);
@@ -145,29 +132,17 @@ void doPID(SetPointInfo * p) {
           leftPID.PrevErr = 0;
           leftPID.ITerm = 0;
           resetEncoder(LEFT);
-      }
-      if (leftPID.Turning_CountsToTarget == 0 && rightPID.Turning_CountsToTarget == 0){
-        turning = 0;
+          break;
       }
     }
-    else{
-      switch(p->motor){
-        case RIGHT:
-          p->output = 0;        
-          resetPID(RIGHT);
-        case LEFT:
-          p->output = 0;  
-          resetPID(LEFT);  
-      }
-      
-      if (leftPID.Straight_CountsToTarget == 0 && rightPID.Straight_CountsToTarget == 0){
-        moving = 0;
-        Serial.println("OK.MOTION_CONTROLLER.Movement Complete");
-      }
+    else{     //Stops and resets PID for the relevant motor if finished with straight line
+      p->output = 0;  
+      resetPID(p->motor); 
     }
     return;
   }
 
+  // Calculates output based on scenario and motor
   if (turning){
     switch (p->motor){
       case LEFT:
@@ -201,37 +176,24 @@ void doPID(SetPointInfo * p) {
     }
   }
   
-
   output = (Kp * Perror + Kd * (Perror - p->PrevErr) + Ki * p->ITerm) / Ko;
   p->PrevErr = Perror;
 
   output += p->output;
-  // Accumulate Integral error *or* Limit output.
-  // Stop accumulating when output saturates
+
+  // Intergral Anti-windup and output limiting
   if (output >= MAX_PWM)
     output = MAX_PWM;
   else if (output <= -MAX_PWM)
     output = -MAX_PWM;
+  // Positive and snaps to MIN_PWM
   else if (output > 0 && output <= MIN_PWM && output >= MIN_PWM-MIN_PWM_ALLOW_ZONE)
     output = MIN_PWM;
+  // Negative and snaps to -MIN_PWM
   else if (output < 0 && output >= -MIN_PWM && output <= -MIN_PWM+MIN_PWM_ALLOW_ZONE)
     output = -MIN_PWM;
-  //Straightline motion
-  else if (!turning && output >= -MIN_PWM+MIN_PWM_ALLOW_ZONE && output <= MIN_PWM-MIN_PWM_ALLOW_ZONE)
-    if (output < 0) output = -MIN_PWM;
-    else if (output > 0) output = MIN_PWM;
-  //Turning motion
-  else if (turning && output >= -MIN_PWM && output < 0)
-    output = -MIN_PWM-70 ;
-  else if (turning && output <= MIN_PWM && output > 0)
-    output = MIN_PWM+70 ;
-
   else p->ITerm += Ki * Perror;
 
-  //if (abs(leftPID.output) <= MIN_PWM && abs(rightPID.output) <= MIN_PWM){
-  //  moving = 0;
-  //  Serial.println("OK.MOTION_CONTROLLER.Movement Complete");
-  //}
   p->output = output;
 
   /* Serial Plotter */
@@ -249,22 +211,36 @@ void doPID(SetPointInfo * p) {
 
 /* Read the encoder values and call the PID routine */
 void updatePID() {
-
-  /* Read the encoders */
-  if (!turning){
-    leftPID.Straight_CountsToTarget = leftPID.Straight_CountsToTarget + readEncoder(LEFT);
-    rightPID.Straight_CountsToTarget = rightPID.Straight_CountsToTarget - readEncoder(RIGHT);
-  }
-  else{
-    leftPID.Turning_CountsToTarget = leftPID.Turning_CountsToTarget + readEncoder(LEFT);
-    rightPID.Turning_CountsToTarget = rightPID.Turning_CountsToTarget - readEncoder(RIGHT);
+  /* Disables turning mode if target is met */
+  if (leftPID.Turning_CountsToTarget == 0 && rightPID.Turning_CountsToTarget == 0){
+    turning = 0;
   }
 
-  resetEncoder(LEFT);
-  resetEncoder(RIGHT);
-  
+  /* Disables moving mode if target is met */
+  if (leftPID.Straight_CountsToTarget == 0 && rightPID.Straight_CountsToTarget == 0){
+    moving = 0;
+    // Responds back to RPi and opens up Rx 
+    serialTxStruct.status = 200;
+    serialTxStruct.cmd = "m";
+    serialTxStruct.arg1 = 0;
+    serialTxStruct.arg2 = 0;
+    TX_REQUESTED = true;
+    RX_ALLOWED = true;
+  }
+
+  /* Read the encoders if still in moving mode */
+  if (moving){
+    if (!turning){
+      leftPID.Straight_CountsToTarget = leftPID.Straight_CountsToTarget + readEncoder(LEFT);
+      rightPID.Straight_CountsToTarget = rightPID.Straight_CountsToTarget - readEncoder(RIGHT);
+    }
+    else {
+      leftPID.Turning_CountsToTarget = leftPID.Turning_CountsToTarget + readEncoder(LEFT);
+      rightPID.Turning_CountsToTarget = rightPID.Turning_CountsToTarget - readEncoder(RIGHT);
+    }
+  }
   /* If we're not moving there is nothing more to do */
-  if (!moving){
+  else if (!moving){
     /*
     * Reset PIDs once, to prevent startup spikes,
     * see http://brettbeauregard.com/blog/2011/04/improving-the-beginner%E2%80%99s-pid-initialization/
@@ -274,9 +250,13 @@ void updatePID() {
     if (leftPID.PrevErr != 0 || rightPID.PrevErr != 0){
       resetPID(LEFT);
       resetPID(RIGHT);
+      RX_ALLOWED = true;
     } 
     return;
   }
+
+  resetEncoder(LEFT);
+  resetEncoder(RIGHT);
 
   /* Compute PID update for each motor */
   doPID(&rightPID);
