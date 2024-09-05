@@ -15,10 +15,6 @@ def generate_launch_description():
         ),
         Node(
             package='atlas_python',
-            executable='hello',
-        ),
-        Node(
-            package='atlas_python',
             executable='object_detection',
         ),
     ])
