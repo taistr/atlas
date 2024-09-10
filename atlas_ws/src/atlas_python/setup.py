@@ -26,7 +26,7 @@ setup(
         'console_scripts': [
             'hello = atlas_python.hello:main',
             'object_detection = atlas_python.object_detection:main',
-            'pySerialTransfer_test = atlas_python.pySerialTransfer_test:main',
+            'serial_comms = atlas_python.serial_comms:main',
         ],
     },
 )

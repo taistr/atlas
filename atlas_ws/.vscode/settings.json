@@ -1,0 +1,14 @@
+{
+    "python.autoComplete.extraPaths": [
+        "/mnt/d/Monash/ECE4191/Code/atlas/atlas_ws/install/atlas_python/lib/python3.10/site-packages",
+        "/mnt/d/Monash/ECE4191/Code/atlas/atlas_ws/install/atlas_msgs/local/lib/python3.10/dist-packages",
+        "/opt/ros/humble/lib/python3.10/site-packages",
+        "/opt/ros/humble/local/lib/python3.10/dist-packages"
+    ],
+    "python.analysis.extraPaths": [
+        "/mnt/d/Monash/ECE4191/Code/atlas/atlas_ws/install/atlas_python/lib/python3.10/site-packages",
+        "/mnt/d/Monash/ECE4191/Code/atlas/atlas_ws/install/atlas_msgs/local/lib/python3.10/dist-packages",
+        "/opt/ros/humble/lib/python3.10/site-packages",
+        "/opt/ros/humble/local/lib/python3.10/dist-packages"
+    ]
+}
