@@ -49,7 +49,7 @@ class ObjectDetection(Node):
         """Declare parameters for the camera node"""
         self.declare_parameter(
             "model_name",
-            value="29_08_640px.pt",
+            value="29_08_640px.onnx",
             descriptor=ParameterDescriptor(
                 type=ParameterType.PARAMETER_STRING,
                 description="Name of the model to use for object detection"
