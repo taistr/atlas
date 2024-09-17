@@ -11,7 +11,6 @@ from ultralytics import YOLO
 from ament_index_python.packages import get_package_share_directory
 import pathlib
 import torch
-import cv2
 
 class ObjectDetection(Node):
     def __init__(self):
@@ -50,7 +49,7 @@ class ObjectDetection(Node):
         """Declare parameters for the camera node"""
         self.declare_parameter(
             "model_name",
-            value="29_08_640px.pt",
+            value="29_08_640px.onnx",
             descriptor=ParameterDescriptor(
                 type=ParameterType.PARAMETER_STRING,
                 description="Name of the model to use for object detection"
@@ -60,8 +59,7 @@ class ObjectDetection(Node):
     def image_callback(self, msg: Image) -> None:
         """Callback function for the image subscriber"""
         # TODO: Fix the channels of the image
-        self.latest_image = self.bridge.imgmsg_to_cv2(msg) #Stores the image as BGR8 as per the CvBridge documentation
-        
+        self.latest_image = self.bridge.imgmsg_to_cv2(msg, "bgr8") #Stores the image as BGR8 as per the CvBridge documentation
 
     def detect_objects(self, request: Detection.Request, response: Detection.Response) -> Detection.Response:
         """Detect objects in the received image"""
