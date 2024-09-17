@@ -1,0 +1,431 @@
+[0.000000] (-) TimerEvent: {}
+[0.000532] (atlas_msgs) JobQueued: {'identifier': 'atlas_msgs', 'dependencies': OrderedDict()}
+[0.000977] (atlas_python) JobQueued: {'identifier': 'atlas_python', 'dependencies': OrderedDict()}
+[0.001352] (atlas_msgs) JobStarted: {'identifier': 'atlas_msgs'}
+[0.009401] (atlas_python) JobStarted: {'identifier': 'atlas_python'}
+[0.049711] (atlas_msgs) JobProgress: {'identifier': 'atlas_msgs', 'progress': 'cmake'}
+[0.063022] (atlas_msgs) Command: {'cmd': ['/usr/bin/cmake', '/mnt/d/MOnash/ECE4191/Code/atlas/atlas_ws/src/atlas_msgs', '-DCMAKE_INSTALL_PREFIX=/mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs'], 'cwd': '/mnt/d/MOnash/ECE4191/Code/atlas/build/atlas_msgs', 'env': OrderedDict([('LESSOPEN', '| /usr/bin/lesspipe %s'), ('USER', 'anhdau'), ('GIT_ASKPASS', '/home/anhdau/.vscode-server/bin/af28b32d7e553898b2a91af498b1fb666fdebe0c/extensions/git/dist/askpass.sh'), ('SHLVL', '2'), ('LD_LIBRARY_PATH', '/usr/lib/x86_64-linux-gnu/gazebo-11/plugins:/opt/ros/humble/opt/rviz_ogre_vendor/lib:/opt/ros/humble/lib/x86_64-linux-gnu:/opt/ros/humble/lib'), ('MOTD_SHOWN', 'update-motd'), ('HOME', '/home/anhdau'), ('OLDPWD', '/mnt/d/MOnash/ECE4191/Code/atlas/atlas_ws'), ('TERM_PROGRAM_VERSION', '1.85.0'), ('VSCODE_IPC_HOOK_CLI', '/run/user/1000/vscode-ipc-f475606f-40ca-4de3-99ce-39fa64ea43e4.sock'), ('ROS_PYTHON_VERSION', '3'), ('VSCODE_GIT_ASKPASS_MAIN', '/home/anhdau/.vscode-server/bin/af28b32d7e553898b2a91af498b1fb666fdebe0c/extensions/git/dist/askpass-main.js'), ('VSCODE_GIT_ASKPASS_NODE', '/home/anhdau/.vscode-server/bin/af28b32d7e553898b2a91af498b1fb666fdebe0c/node'), ('DBUS_SESSION_BUS_ADDRESS', 'unix:path=/run/user/1000/bus'), ('COLORTERM', 'truecolor'), ('WSL_DISTRO_NAME', 'Ubuntu-22.04'), ('WAYLAND_DISPLAY', 'wayland-0'), ('ROS_DISTRO', 'humble'), ('LOGNAME', 'anhdau'), ('NAME', 'Code'), ('WSL_INTEROP', '/run/WSL/1007_interop'), ('PULSE_SERVER', 'unix:/mnt/wslg/PulseServer'), ('_', '/home/anhdau/.local/bin/colcon'), ('ROS_VERSION', '2'), ('TERM', 'xterm-256color'), ('ROS_LOCALHOST_ONLY', '0'), ('PATH', '/home/anhdau/.vscode-server/bin/af28b32d7e553898b2a91af498b1fb666fdebe0c/bin/remote-cli:/home/anhdau/.local/bin:/opt/ros/humble/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/usr/lib/wsl/lib:/mnt/c/Program Files/WindowsApps/MicrosoftCorporationII.WindowsSubsystemForLinux_2.2.4.0_x64__8wekyb3d8bbwe:/mnt/c/Program Files/PlasticSCM5/server:/mnt/c/Program Files/PlasticSCM5/client:/mnt/c/Program Files (x86)/NVIDIA Corporation/PhysX/Common:/mnt/c/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v11.2/bin:/mnt/c/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v11.2/libnvvp:/mnt/c/Windows/system32:/mnt/c/Windows:/mnt/c/Windows/System32/Wbem:/mnt/c/Windows/System32/WindowsPowerShell/v1.0/:/mnt/c/Windows/System32/OpenSSH/:/mnt/c/Program Files/NVIDIA Corporation/NVIDIA NvDLISR:/mnt/d/MATLAB R2023b/bin:/mnt/c/Program Files/MATLAB/R2022a/bin:/mnt/c/Program Files/dotnet/:/mnt/c/Program Files/Microsoft SQL Server/150/Tools/Binn/:/mnt/c/Program Files/Microsoft SQL Server/Client SDK/ODBC/170/Tools/Binn/:/mnt/c/Program Files/Java/jre-1.8/bin:/mnt/c/Program Files/Siemens/NX2206/CAPITALINTEGRATION/capitalnxremote/:/mnt/c/Program Files/Docker/Docker/resources/bin:/mnt/c/Program Files/Microsoft VS Code/bin:/mnt/c/Program Files (x86)/Microsoft SQL Server/150/Tools/Binn/:/mnt/c/Program Files/Microsoft SQL Server/150/DTS/Binn/:/mnt/c/Program Files (x86)/Windows Kits/8.1/Windows Performance Toolkit/:/mnt/c/Program Files/PuTTY/:/mnt/c/Program Files/NVIDIA Corporation/Nsight Compute 2020.3.0/:/mnt/c/Program Files/nodejs/:/mnt/c/Program Files/Git/cmd:/mnt/c/Program Files/Git LFS:/mnt/c/Program Files/usbipd-win/:/mnt/c/Users/anhda/AppData/Local/Microsoft/WindowsApps:/mnt/c/Program Files/MATLAB/R2022a/bin:/mnt/d/openCV/opencv/build/x64/vc15/bin:/mnt/c/Users/anhda/AppData/Local/GitHubDesktop/bin:/mnt/c/Users/anhda/.dotnet/tools:/mnt/c/Users/anhda/AppData/Roaming/npm:/snap/bin'), ('XDG_RUNTIME_DIR', '/run/user/1000/'), ('DISPLAY', ':0'), ('LANG', 'C.UTF-8'), ('PYTHONSTARTUP', '/home/anhdau/.vscode-server/extensions/ms-python.python-2024.2.1/pythonFiles/pythonrc.py'), ('LS_COLORS', 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:'), ('VSCODE_GIT_IPC_HANDLE', '/run/user/1000/vscode-git-88a7a01561.sock'), ('TERM_PROGRAM', 'vscode'), ('AMENT_PREFIX_PATH', '/opt/ros/humble'), ('SHELL', '/bin/bash'), ('LESSCLOSE', '/usr/bin/lesspipe %s %s'), ('VSCODE_GIT_ASKPASS_EXTRA_ARGS', ''), ('PWD', '/mnt/d/MOnash/ECE4191/Code/atlas/build/atlas_msgs'), ('XDG_DATA_DIRS', '/usr/local/share:/usr/share:/var/lib/snapd/desktop'), ('PYTHONPATH', '/opt/ros/humble/lib/python3.10/site-packages:/opt/ros/humble/local/lib/python3.10/dist-packages'), ('COLCON', '1'), ('WSL2_GUI_APPS_ENABLED', '1'), ('HOSTTYPE', 'x86_64'), ('WSLENV', 'ELECTRON_RUN_AS_NODE/w:'), ('CMAKE_PREFIX_PATH', '/opt/ros/humble')]), 'shell': False}
+[0.100907] (atlas_msgs) StdoutLine: {'line': b'-- Found ament_cmake: 1.3.10 (/opt/ros/humble/share/ament_cmake/cmake)\n'}
+[0.101625] (-) TimerEvent: {}
+[0.213956] (-) TimerEvent: {}
+[0.226285] (atlas_msgs) StdoutLine: {'line': b'-- Found ament_lint_auto: 0.12.11 (/opt/ros/humble/share/ament_lint_auto/cmake)\n'}
+[0.301638] (atlas_msgs) StdoutLine: {'line': b'-- Found geometry_msgs: 4.2.4 (/opt/ros/humble/share/geometry_msgs/cmake)\n'}
+[0.333972] (-) TimerEvent: {}
+[0.415801] (atlas_msgs) StdoutLine: {'line': b'-- Found rosidl_generator_c: 3.1.5 (/opt/ros/humble/share/rosidl_generator_c/cmake)\n'}
+[0.417427] (atlas_msgs) StdoutLine: {'line': b'-- Found rosidl_adapter: 3.1.5 (/opt/ros/humble/share/rosidl_adapter/cmake)\n'}
+[0.421526] (atlas_msgs) StdoutLine: {'line': b'-- Found rosidl_generator_cpp: 3.1.5 (/opt/ros/humble/share/rosidl_generator_cpp/cmake)\n'}
+[0.428779] (atlas_msgs) StdoutLine: {'line': b'-- Using all available rosidl_typesupport_c: rosidl_typesupport_fastrtps_c;rosidl_typesupport_introspection_c\n'}
+[0.438142] (atlas_msgs) StdoutLine: {'line': b'-- Using all available rosidl_typesupport_cpp: rosidl_typesupport_fastrtps_cpp;rosidl_typesupport_introspection_cpp\n'}
+[0.438777] (-) TimerEvent: {}
+[0.464426] (atlas_msgs) StdoutLine: {'line': b'-- Found rosidl_default_generators: 1.2.0 (/opt/ros/humble/share/rosidl_default_generators/cmake)\n'}
+[0.547776] (-) TimerEvent: {}
+[0.663985] (-) TimerEvent: {}
+[0.773962] (-) TimerEvent: {}
+[0.892772] (atlas_msgs) StdoutLine: {'line': b'-- Found ament_cmake_ros: 0.10.0 (/opt/ros/humble/share/ament_cmake_ros/cmake)\n'}
+[0.893376] (-) TimerEvent: {}
+[1.013944] (-) TimerEvent: {}
+[1.137968] (-) TimerEvent: {}
+[1.143849] (atlas_python) Command: {'cmd': ['/usr/bin/python3', '-W', 'ignore:setup.py install is deprecated', 'setup.py', 'egg_info', '--egg-base', '../../../build/atlas_python', 'build', '--build-base', '/mnt/d/MOnash/ECE4191/Code/atlas/build/atlas_python/build', 'install', '--record', '/mnt/d/MOnash/ECE4191/Code/atlas/build/atlas_python/install.log', '--single-version-externally-managed', 'install_data'], 'cwd': '/mnt/d/MOnash/ECE4191/Code/atlas/atlas_ws/src/atlas_python', 'env': {'LESSOPEN': '| /usr/bin/lesspipe %s', 'USER': 'anhdau', 'GIT_ASKPASS': '/home/anhdau/.vscode-server/bin/af28b32d7e553898b2a91af498b1fb666fdebe0c/extensions/git/dist/askpass.sh', 'SHLVL': '2', 'LD_LIBRARY_PATH': '/usr/lib/x86_64-linux-gnu/gazebo-11/plugins:/opt/ros/humble/opt/rviz_ogre_vendor/lib:/opt/ros/humble/lib/x86_64-linux-gnu:/opt/ros/humble/lib', 'MOTD_SHOWN': 'update-motd', 'HOME': '/home/anhdau', 'OLDPWD': '/mnt/d/MOnash/ECE4191/Code/atlas/atlas_ws', 'TERM_PROGRAM_VERSION': '1.85.0', 'VSCODE_IPC_HOOK_CLI': '/run/user/1000/vscode-ipc-f475606f-40ca-4de3-99ce-39fa64ea43e4.sock', 'ROS_PYTHON_VERSION': '3', 'VSCODE_GIT_ASKPASS_MAIN': '/home/anhdau/.vscode-server/bin/af28b32d7e553898b2a91af498b1fb666fdebe0c/extensions/git/dist/askpass-main.js', 'VSCODE_GIT_ASKPASS_NODE': '/home/anhdau/.vscode-server/bin/af28b32d7e553898b2a91af498b1fb666fdebe0c/node', 'DBUS_SESSION_BUS_ADDRESS': 'unix:path=/run/user/1000/bus', 'COLORTERM': 'truecolor', 'WSL_DISTRO_NAME': 'Ubuntu-22.04', 'WAYLAND_DISPLAY': 'wayland-0', 'ROS_DISTRO': 'humble', 'LOGNAME': 'anhdau', 'NAME': 'Code', 'WSL_INTEROP': '/run/WSL/1007_interop', 'PULSE_SERVER': 'unix:/mnt/wslg/PulseServer', '_': '/home/anhdau/.local/bin/colcon', 'ROS_VERSION': '2', 'TERM': 'xterm-256color', 'ROS_LOCALHOST_ONLY': '0', 'PATH': '/home/anhdau/.vscode-server/bin/af28b32d7e553898b2a91af498b1fb666fdebe0c/bin/remote-cli:/home/anhdau/.local/bin:/opt/ros/humble/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/usr/lib/wsl/lib:/mnt/c/Program Files/WindowsApps/MicrosoftCorporationII.WindowsSubsystemForLinux_2.2.4.0_x64__8wekyb3d8bbwe:/mnt/c/Program Files/PlasticSCM5/server:/mnt/c/Program Files/PlasticSCM5/client:/mnt/c/Program Files (x86)/NVIDIA Corporation/PhysX/Common:/mnt/c/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v11.2/bin:/mnt/c/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v11.2/libnvvp:/mnt/c/Windows/system32:/mnt/c/Windows:/mnt/c/Windows/System32/Wbem:/mnt/c/Windows/System32/WindowsPowerShell/v1.0/:/mnt/c/Windows/System32/OpenSSH/:/mnt/c/Program Files/NVIDIA Corporation/NVIDIA NvDLISR:/mnt/d/MATLAB R2023b/bin:/mnt/c/Program Files/MATLAB/R2022a/bin:/mnt/c/Program Files/dotnet/:/mnt/c/Program Files/Microsoft SQL Server/150/Tools/Binn/:/mnt/c/Program Files/Microsoft SQL Server/Client SDK/ODBC/170/Tools/Binn/:/mnt/c/Program Files/Java/jre-1.8/bin:/mnt/c/Program Files/Siemens/NX2206/CAPITALINTEGRATION/capitalnxremote/:/mnt/c/Program Files/Docker/Docker/resources/bin:/mnt/c/Program Files/Microsoft VS Code/bin:/mnt/c/Program Files (x86)/Microsoft SQL Server/150/Tools/Binn/:/mnt/c/Program Files/Microsoft SQL Server/150/DTS/Binn/:/mnt/c/Program Files (x86)/Windows Kits/8.1/Windows Performance Toolkit/:/mnt/c/Program Files/PuTTY/:/mnt/c/Program Files/NVIDIA Corporation/Nsight Compute 2020.3.0/:/mnt/c/Program Files/nodejs/:/mnt/c/Program Files/Git/cmd:/mnt/c/Program Files/Git LFS:/mnt/c/Program Files/usbipd-win/:/mnt/c/Users/anhda/AppData/Local/Microsoft/WindowsApps:/mnt/c/Program Files/MATLAB/R2022a/bin:/mnt/d/openCV/opencv/build/x64/vc15/bin:/mnt/c/Users/anhda/AppData/Local/GitHubDesktop/bin:/mnt/c/Users/anhda/.dotnet/tools:/mnt/c/Users/anhda/AppData/Roaming/npm:/snap/bin', 'XDG_RUNTIME_DIR': '/run/user/1000/', 'DISPLAY': ':0', 'LANG': 'C.UTF-8', 'PYTHONSTARTUP': '/home/anhdau/.vscode-server/extensions/ms-python.python-2024.2.1/pythonFiles/pythonrc.py', 'LS_COLORS': 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:', 'VSCODE_GIT_IPC_HANDLE': '/run/user/1000/vscode-git-88a7a01561.sock', 'TERM_PROGRAM': 'vscode', 'AMENT_PREFIX_PATH': '/opt/ros/humble', 'SHELL': '/bin/bash', 'LESSCLOSE': '/usr/bin/lesspipe %s %s', 'VSCODE_GIT_ASKPASS_EXTRA_ARGS': '', 'PWD': '/mnt/d/MOnash/ECE4191/Code/atlas/build/atlas_python', 'XDG_DATA_DIRS': '/usr/local/share:/usr/share:/var/lib/snapd/desktop', 'PYTHONPATH': '/mnt/d/MOnash/ECE4191/Code/atlas/build/atlas_python/prefix_override:/home/anhdau/.local/lib/python3.10/site-packages/colcon_core/task/python/colcon_distutils_commands:/mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_python/lib/python3.10/site-packages:/opt/ros/humble/lib/python3.10/site-packages:/opt/ros/humble/local/lib/python3.10/dist-packages', 'COLCON': '1', 'WSL2_GUI_APPS_ENABLED': '1', 'HOSTTYPE': 'x86_64', 'WSLENV': 'ELECTRON_RUN_AS_NODE/w:'}, 'shell': False}
+[1.243953] (-) TimerEvent: {}
+[1.363963] (-) TimerEvent: {}
+[1.475915] (atlas_msgs) StdoutLine: {'line': b'-- Using all available rosidl_typesupport_c: rosidl_typesupport_fastrtps_c;rosidl_typesupport_introspection_c\n'}
+[1.476883] (-) TimerEvent: {}
+[1.583960] (-) TimerEvent: {}
+[1.658784] (atlas_msgs) StdoutLine: {'line': b'-- Using all available rosidl_typesupport_cpp: rosidl_typesupport_fastrtps_cpp;rosidl_typesupport_introspection_cpp\n'}
+[1.693991] (-) TimerEvent: {}
+[1.706634] (atlas_python) StdoutLine: {'line': b'running egg_info\n'}
+[1.709964] (atlas_python) StdoutLine: {'line': b'writing ../../../build/atlas_python/atlas_python.egg-info/PKG-INFO\n'}
+[1.713713] (atlas_python) StdoutLine: {'line': b'writing dependency_links to ../../../build/atlas_python/atlas_python.egg-info/dependency_links.txt\n'}
+[1.717525] (atlas_python) StdoutLine: {'line': b'writing entry points to ../../../build/atlas_python/atlas_python.egg-info/entry_points.txt\n'}
+[1.720586] (atlas_python) StdoutLine: {'line': b'writing requirements to ../../../build/atlas_python/atlas_python.egg-info/requires.txt\n'}
+[1.722741] (atlas_python) StdoutLine: {'line': b'writing top-level names to ../../../build/atlas_python/atlas_python.egg-info/top_level.txt\n'}
+[1.753777] (atlas_python) StdoutLine: {'line': b"reading manifest file '../../../build/atlas_python/atlas_python.egg-info/SOURCES.txt'\n"}
+[1.776472] (atlas_msgs) StdoutLine: {'line': b'-- Found PythonInterp: /usr/bin/python3 (found suitable version "3.10.12", minimum required is "3.6") \n'}
+[1.777851] (atlas_msgs) StdoutLine: {'line': b'-- Found python_cmake_module: 0.10.0 (/opt/ros/humble/share/python_cmake_module/cmake)\n'}
+[1.788431] (atlas_python) StdoutLine: {'line': b"adding license file 'LICENSE'\n"}
+[1.808800] (atlas_python) StdoutLine: {'line': b"writing manifest file '../../../build/atlas_python/atlas_python.egg-info/SOURCES.txt'\n"}
+[1.809413] (-) TimerEvent: {}
+[1.810937] (atlas_python) StdoutLine: {'line': b'running build\n'}
+[1.811587] (atlas_python) StdoutLine: {'line': b'running build_py\n'}
+[1.857828] (atlas_python) StdoutLine: {'line': b'running install\n'}
+[1.858494] (atlas_python) StdoutLine: {'line': b'running install_lib\n'}
+[1.923983] (-) TimerEvent: {}
+[2.001222] (atlas_python) StdoutLine: {'line': b'running install_data\n'}
+[2.034066] (-) TimerEvent: {}
+[2.059598] (atlas_python) StdoutLine: {'line': b'running install_egg_info\n'}
+[2.067857] (atlas_python) StdoutLine: {'line': b"removing '/mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_python/lib/python3.10/site-packages/atlas_python-0.0.0-py3.10.egg-info' (and everything under it)\n"}
+[2.103301] (atlas_msgs) StdoutLine: {'line': b'-- Found PythonLibs: /usr/lib/x86_64-linux-gnu/libpython3.10.so (found suitable version "3.10.12", minimum required is "3.5") \n'}
+[2.104597] (atlas_msgs) StdoutLine: {'line': b'-- Using PYTHON_EXECUTABLE: /usr/bin/python3\n'}
+[2.105169] (atlas_msgs) StdoutLine: {'line': b'-- Using PYTHON_INCLUDE_DIRS: /usr/include/python3.10\n'}
+[2.105650] (atlas_msgs) StdoutLine: {'line': b'-- Using PYTHON_LIBRARIES: /usr/lib/x86_64-linux-gnu/libpython3.10.so\n'}
+[2.112287] (atlas_python) StdoutLine: {'line': b'Copying ../../../build/atlas_python/atlas_python.egg-info to /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_python/lib/python3.10/site-packages/atlas_python-0.0.0-py3.10.egg-info\n'}
+[2.121686] (atlas_msgs) StdoutLine: {'line': b'-- Found PythonExtra: .so  \n'}
+[2.157786] (-) TimerEvent: {}
+[2.273944] (-) TimerEvent: {}
+[2.291897] (atlas_python) StdoutLine: {'line': b'running install_scripts\n'}
+[2.347186] (atlas_python) StdoutLine: {'line': b'Installing hello script to /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_python/lib/atlas_python\n'}
+[2.356818] (atlas_python) StdoutLine: {'line': b'Installing object_detection script to /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_python/lib/atlas_python\n'}
+[2.365076] (atlas_python) StdoutLine: {'line': b'Installing pySerialTransfer_test script to /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_python/lib/atlas_python\n'}
+[2.375528] (atlas_python) StdoutLine: {'line': b"writing list of installed files to '/mnt/d/MOnash/ECE4191/Code/atlas/build/atlas_python/install.log'\n"}
+[2.376269] (-) TimerEvent: {}
+[2.395051] (atlas_python) CommandEnded: {'returncode': 0}
+[2.483936] (-) TimerEvent: {}
+[2.607871] (-) TimerEvent: {}
+[2.617881] (atlas_python) JobEnded: {'identifier': 'atlas_python', 'rc': 0}
+[2.711402] (atlas_msgs) StdoutLine: {'line': b"-- Added test 'lint_cmake' to check CMake code style\n"}
+[2.712210] (-) TimerEvent: {}
+[2.836215] (-) TimerEvent: {}
+[2.903880] (atlas_msgs) StdoutLine: {'line': b"-- Added test 'xmllint' to check XML markup files\n"}
+[2.959721] (-) TimerEvent: {}
+[3.083652] (-) TimerEvent: {}
+[3.193964] (-) TimerEvent: {}
+[3.269549] (atlas_msgs) StdoutLine: {'line': b'-- Configuring done\n'}
+[3.303985] (-) TimerEvent: {}
+[3.427974] (-) TimerEvent: {}
+[3.533956] (-) TimerEvent: {}
+[3.653972] (-) TimerEvent: {}
+[3.773988] (-) TimerEvent: {}
+[3.898015] (-) TimerEvent: {}
+[4.022106] (-) TimerEvent: {}
+[4.143992] (-) TimerEvent: {}
+[4.267992] (-) TimerEvent: {}
+[4.391972] (-) TimerEvent: {}
+[4.418343] (atlas_msgs) StdoutLine: {'line': b'-- Generating done\n'}
+[4.503997] (-) TimerEvent: {}
+[4.573082] (atlas_msgs) StdoutLine: {'line': b'-- Build files have been written to: /mnt/d/MOnash/ECE4191/Code/atlas/build/atlas_msgs\n'}
+[4.580053] (atlas_msgs) CommandEnded: {'returncode': 0}
+[4.583531] (atlas_msgs) JobProgress: {'identifier': 'atlas_msgs', 'progress': 'build'}
+[4.587570] (atlas_msgs) Command: {'cmd': ['/usr/bin/cmake', '--build', '/mnt/d/MOnash/ECE4191/Code/atlas/build/atlas_msgs', '--', '-j16', '-l16'], 'cwd': '/mnt/d/MOnash/ECE4191/Code/atlas/build/atlas_msgs', 'env': OrderedDict([('LESSOPEN', '| /usr/bin/lesspipe %s'), ('USER', 'anhdau'), ('GIT_ASKPASS', '/home/anhdau/.vscode-server/bin/af28b32d7e553898b2a91af498b1fb666fdebe0c/extensions/git/dist/askpass.sh'), ('SHLVL', '2'), ('LD_LIBRARY_PATH', '/usr/lib/x86_64-linux-gnu/gazebo-11/plugins:/opt/ros/humble/opt/rviz_ogre_vendor/lib:/opt/ros/humble/lib/x86_64-linux-gnu:/opt/ros/humble/lib'), ('MOTD_SHOWN', 'update-motd'), ('HOME', '/home/anhdau'), ('OLDPWD', '/mnt/d/MOnash/ECE4191/Code/atlas/atlas_ws'), ('TERM_PROGRAM_VERSION', '1.85.0'), ('VSCODE_IPC_HOOK_CLI', '/run/user/1000/vscode-ipc-f475606f-40ca-4de3-99ce-39fa64ea43e4.sock'), ('ROS_PYTHON_VERSION', '3'), ('VSCODE_GIT_ASKPASS_MAIN', '/home/anhdau/.vscode-server/bin/af28b32d7e553898b2a91af498b1fb666fdebe0c/extensions/git/dist/askpass-main.js'), ('VSCODE_GIT_ASKPASS_NODE', '/home/anhdau/.vscode-server/bin/af28b32d7e553898b2a91af498b1fb666fdebe0c/node'), ('DBUS_SESSION_BUS_ADDRESS', 'unix:path=/run/user/1000/bus'), ('COLORTERM', 'truecolor'), ('WSL_DISTRO_NAME', 'Ubuntu-22.04'), ('WAYLAND_DISPLAY', 'wayland-0'), ('ROS_DISTRO', 'humble'), ('LOGNAME', 'anhdau'), ('NAME', 'Code'), ('WSL_INTEROP', '/run/WSL/1007_interop'), ('PULSE_SERVER', 'unix:/mnt/wslg/PulseServer'), ('_', '/home/anhdau/.local/bin/colcon'), ('ROS_VERSION', '2'), ('TERM', 'xterm-256color'), ('ROS_LOCALHOST_ONLY', '0'), ('PATH', '/home/anhdau/.vscode-server/bin/af28b32d7e553898b2a91af498b1fb666fdebe0c/bin/remote-cli:/home/anhdau/.local/bin:/opt/ros/humble/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/usr/lib/wsl/lib:/mnt/c/Program Files/WindowsApps/MicrosoftCorporationII.WindowsSubsystemForLinux_2.2.4.0_x64__8wekyb3d8bbwe:/mnt/c/Program Files/PlasticSCM5/server:/mnt/c/Program Files/PlasticSCM5/client:/mnt/c/Program Files (x86)/NVIDIA Corporation/PhysX/Common:/mnt/c/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v11.2/bin:/mnt/c/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v11.2/libnvvp:/mnt/c/Windows/system32:/mnt/c/Windows:/mnt/c/Windows/System32/Wbem:/mnt/c/Windows/System32/WindowsPowerShell/v1.0/:/mnt/c/Windows/System32/OpenSSH/:/mnt/c/Program Files/NVIDIA Corporation/NVIDIA NvDLISR:/mnt/d/MATLAB R2023b/bin:/mnt/c/Program Files/MATLAB/R2022a/bin:/mnt/c/Program Files/dotnet/:/mnt/c/Program Files/Microsoft SQL Server/150/Tools/Binn/:/mnt/c/Program Files/Microsoft SQL Server/Client SDK/ODBC/170/Tools/Binn/:/mnt/c/Program Files/Java/jre-1.8/bin:/mnt/c/Program Files/Siemens/NX2206/CAPITALINTEGRATION/capitalnxremote/:/mnt/c/Program Files/Docker/Docker/resources/bin:/mnt/c/Program Files/Microsoft VS Code/bin:/mnt/c/Program Files (x86)/Microsoft SQL Server/150/Tools/Binn/:/mnt/c/Program Files/Microsoft SQL Server/150/DTS/Binn/:/mnt/c/Program Files (x86)/Windows Kits/8.1/Windows Performance Toolkit/:/mnt/c/Program Files/PuTTY/:/mnt/c/Program Files/NVIDIA Corporation/Nsight Compute 2020.3.0/:/mnt/c/Program Files/nodejs/:/mnt/c/Program Files/Git/cmd:/mnt/c/Program Files/Git LFS:/mnt/c/Program Files/usbipd-win/:/mnt/c/Users/anhda/AppData/Local/Microsoft/WindowsApps:/mnt/c/Program Files/MATLAB/R2022a/bin:/mnt/d/openCV/opencv/build/x64/vc15/bin:/mnt/c/Users/anhda/AppData/Local/GitHubDesktop/bin:/mnt/c/Users/anhda/.dotnet/tools:/mnt/c/Users/anhda/AppData/Roaming/npm:/snap/bin'), ('XDG_RUNTIME_DIR', '/run/user/1000/'), ('DISPLAY', ':0'), ('LANG', 'C.UTF-8'), ('PYTHONSTARTUP', '/home/anhdau/.vscode-server/extensions/ms-python.python-2024.2.1/pythonFiles/pythonrc.py'), ('LS_COLORS', 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:'), ('VSCODE_GIT_IPC_HANDLE', '/run/user/1000/vscode-git-88a7a01561.sock'), ('TERM_PROGRAM', 'vscode'), ('AMENT_PREFIX_PATH', '/opt/ros/humble'), ('SHELL', '/bin/bash'), ('LESSCLOSE', '/usr/bin/lesspipe %s %s'), ('VSCODE_GIT_ASKPASS_EXTRA_ARGS', ''), ('PWD', '/mnt/d/MOnash/ECE4191/Code/atlas/build/atlas_msgs'), ('XDG_DATA_DIRS', '/usr/local/share:/usr/share:/var/lib/snapd/desktop'), ('PYTHONPATH', '/opt/ros/humble/lib/python3.10/site-packages:/opt/ros/humble/local/lib/python3.10/dist-packages'), ('COLCON', '1'), ('WSL2_GUI_APPS_ENABLED', '1'), ('HOSTTYPE', 'x86_64'), ('WSLENV', 'ELECTRON_RUN_AS_NODE/w:'), ('CMAKE_PREFIX_PATH', '/opt/ros/humble')]), 'shell': False}
+[4.614059] (-) TimerEvent: {}
+[4.717923] (atlas_msgs) StdoutLine: {'line': b'[  2%] \x1b[34m\x1b[1mGenerating C code for ROS interfaces\x1b[0m\n'}
+[4.718656] (-) TimerEvent: {}
+[4.732021] (atlas_msgs) StdoutLine: {'line': b'[  5%] \x1b[34m\x1b[1mGenerating C++ code for ROS interfaces\x1b[0m\n'}
+[4.756901] (atlas_msgs) StdoutLine: {'line': b'[  5%] Built target ament_cmake_python_copy_atlas_msgs\n'}
+[4.823978] (-) TimerEvent: {}
+[4.944011] (-) TimerEvent: {}
+[5.022664] (atlas_msgs) StdoutLine: {'line': b'running egg_info\n'}
+[5.023817] (atlas_msgs) StdoutLine: {'line': b'creating atlas_msgs.egg-info\n'}
+[5.025414] (atlas_msgs) StdoutLine: {'line': b'writing atlas_msgs.egg-info/PKG-INFO\n'}
+[5.029831] (atlas_msgs) StdoutLine: {'line': b'writing dependency_links to atlas_msgs.egg-info/dependency_links.txt\n'}
+[5.034969] (atlas_msgs) StdoutLine: {'line': b'writing top-level names to atlas_msgs.egg-info/top_level.txt\n'}
+[5.038398] (atlas_msgs) StdoutLine: {'line': b"writing manifest file 'atlas_msgs.egg-info/SOURCES.txt'\n"}
+[5.052045] (atlas_msgs) StdoutLine: {'line': b"reading manifest file 'atlas_msgs.egg-info/SOURCES.txt'\n"}
+[5.052726] (-) TimerEvent: {}
+[5.070020] (atlas_msgs) StdoutLine: {'line': b"writing manifest file 'atlas_msgs.egg-info/SOURCES.txt'\n"}
+[5.096196] (atlas_msgs) StdoutLine: {'line': b'[  5%] Built target ament_cmake_python_build_atlas_msgs_egg\n'}
+[5.096997] (atlas_msgs) StdoutLine: {'line': b'[  5%] Built target atlas_msgs__cpp\n'}
+[5.130257] (atlas_msgs) StdoutLine: {'line': b'[ 10%] \x1b[34m\x1b[1mGenerating C++ type support dispatch for ROS interfaces\x1b[0m\n'}
+[5.132289] (atlas_msgs) StdoutLine: {'line': b'[ 12%] \x1b[34m\x1b[1mGenerating C++ introspection for ROS interfaces\x1b[0m\n'}
+[5.134119] (atlas_msgs) StdoutLine: {'line': b'[ 12%] \x1b[34m\x1b[1mGenerating C++ type support for eProsima Fast-RTPS\x1b[0m\n'}
+[5.153986] (-) TimerEvent: {}
+[5.210489] (atlas_msgs) StdoutLine: {'line': b'[ 15%] \x1b[32mBuilding C object CMakeFiles/atlas_msgs__rosidl_generator_c.dir/rosidl_generator_c/atlas_msgs/srv/detail/motion_request__functions.c.o\x1b[0m\n'}
+[5.214312] (atlas_msgs) StdoutLine: {'line': b'[ 17%] \x1b[32mBuilding C object CMakeFiles/atlas_msgs__rosidl_generator_c.dir/rosidl_generator_c/atlas_msgs/srv/detail/detection__functions.c.o\x1b[0m\n'}
+[5.277610] (-) TimerEvent: {}
+[5.366913] (atlas_msgs) StdoutLine: {'line': b'[ 20%] \x1b[32m\x1b[1mLinking C shared library libatlas_msgs__rosidl_generator_c.so\x1b[0m\n'}
+[5.393993] (-) TimerEvent: {}
+[5.439674] (atlas_msgs) StdoutLine: {'line': b'[ 25%] \x1b[32mBuilding CXX object CMakeFiles/atlas_msgs__rosidl_typesupport_cpp.dir/rosidl_typesupport_cpp/atlas_msgs/srv/detection__type_support.cpp.o\x1b[0m\n'}
+[5.440571] (atlas_msgs) StdoutLine: {'line': b'[ 25%] \x1b[32mBuilding CXX object CMakeFiles/atlas_msgs__rosidl_typesupport_cpp.dir/rosidl_typesupport_cpp/atlas_msgs/srv/motion_request__type_support.cpp.o\x1b[0m\n'}
+[5.505012] (atlas_msgs) StdoutLine: {'line': b'[ 28%] \x1b[32mBuilding CXX object CMakeFiles/atlas_msgs__rosidl_typesupport_introspection_cpp.dir/rosidl_typesupport_introspection_cpp/atlas_msgs/srv/detail/motion_request__type_support.cpp.o\x1b[0m\n'}
+[5.505870] (-) TimerEvent: {}
+[5.514198] (atlas_msgs) StdoutLine: {'line': b'[ 30%] \x1b[32mBuilding CXX object CMakeFiles/atlas_msgs__rosidl_typesupport_introspection_cpp.dir/rosidl_typesupport_introspection_cpp/atlas_msgs/srv/detail/detection__type_support.cpp.o\x1b[0m\n'}
+[5.555899] (atlas_msgs) StdoutLine: {'line': b'[ 33%] \x1b[32mBuilding CXX object CMakeFiles/atlas_msgs__rosidl_typesupport_fastrtps_cpp.dir/rosidl_typesupport_fastrtps_cpp/atlas_msgs/srv/detail/dds_fastrtps/motion_request__type_support.cpp.o\x1b[0m\n'}
+[5.561943] (atlas_msgs) StdoutLine: {'line': b'[ 33%] Built target atlas_msgs__rosidl_generator_c\n'}
+[5.572502] (atlas_msgs) StdoutLine: {'line': b'[ 35%] \x1b[32mBuilding CXX object CMakeFiles/atlas_msgs__rosidl_typesupport_fastrtps_cpp.dir/rosidl_typesupport_fastrtps_cpp/atlas_msgs/srv/detail/dds_fastrtps/detection__type_support.cpp.o\x1b[0m\n'}
+[5.607036] (atlas_msgs) StdoutLine: {'line': b'[ 43%] \x1b[34m\x1b[1mGenerating C type support dispatch for ROS interfaces\x1b[0m\n'}
+[5.608318] (-) TimerEvent: {}
+[5.608682] (atlas_msgs) StdoutLine: {'line': b'[ 43%] \x1b[34m\x1b[1mGenerating C introspection for ROS interfaces\x1b[0m\n'}
+[5.609759] (atlas_msgs) StdoutLine: {'line': b'[ 43%] \x1b[34m\x1b[1mGenerating C type support for eProsima Fast-RTPS\x1b[0m\n'}
+[5.723985] (-) TimerEvent: {}
+[5.844010] (-) TimerEvent: {}
+[5.963994] (-) TimerEvent: {}
+[5.967845] (atlas_msgs) StdoutLine: {'line': b'[ 46%] \x1b[32m\x1b[1mLinking CXX shared library libatlas_msgs__rosidl_typesupport_cpp.so\x1b[0m\n'}
+[6.013419] (atlas_msgs) StdoutLine: {'line': b'[ 48%] \x1b[32mBuilding CXX object CMakeFiles/atlas_msgs__rosidl_typesupport_c.dir/rosidl_typesupport_c/atlas_msgs/srv/motion_request__type_support.cpp.o\x1b[0m\n'}
+[6.021873] (atlas_msgs) StdoutLine: {'line': b'[ 51%] \x1b[32mBuilding CXX object CMakeFiles/atlas_msgs__rosidl_typesupport_c.dir/rosidl_typesupport_c/atlas_msgs/srv/detection__type_support.cpp.o\x1b[0m\n'}
+[6.073978] (-) TimerEvent: {}
+[6.117366] (atlas_msgs) StdoutLine: {'line': b'[ 53%] \x1b[32mBuilding C object CMakeFiles/atlas_msgs__rosidl_typesupport_introspection_c.dir/rosidl_typesupport_introspection_c/atlas_msgs/srv/detail/motion_request__type_support.c.o\x1b[0m\n'}
+[6.125792] (atlas_msgs) StdoutLine: {'line': b'[ 56%] \x1b[32mBuilding C object CMakeFiles/atlas_msgs__rosidl_typesupport_introspection_c.dir/rosidl_typesupport_introspection_c/atlas_msgs/srv/detail/detection__type_support.c.o\x1b[0m\n'}
+[6.143284] (atlas_msgs) StdoutLine: {'line': b'[ 61%] \x1b[32mBuilding CXX object CMakeFiles/atlas_msgs__rosidl_typesupport_fastrtps_c.dir/rosidl_typesupport_fastrtps_c/atlas_msgs/srv/detail/motion_request__type_support_c.cpp.o\x1b[0m\n'}
+[6.144785] (atlas_msgs) StdoutLine: {'line': b'[ 61%] \x1b[32m\x1b[1mLinking CXX shared library libatlas_msgs__rosidl_typesupport_c.so\x1b[0m\n'}
+[6.150499] (atlas_msgs) StdoutLine: {'line': b'[ 64%] \x1b[32mBuilding CXX object CMakeFiles/atlas_msgs__rosidl_typesupport_fastrtps_c.dir/rosidl_typesupport_fastrtps_c/atlas_msgs/srv/detail/detection__type_support_c.cpp.o\x1b[0m\n'}
+[6.197664] (-) TimerEvent: {}
+[6.229680] (atlas_msgs) StdoutLine: {'line': b'[ 64%] Built target atlas_msgs__rosidl_typesupport_cpp\n'}
+[6.298283] (atlas_msgs) StdoutLine: {'line': b'[ 66%] \x1b[32m\x1b[1mLinking CXX shared library libatlas_msgs__rosidl_typesupport_introspection_cpp.so\x1b[0m\n'}
+[6.299301] (-) TimerEvent: {}
+[6.341883] (atlas_msgs) StdoutLine: {'line': b'[ 69%] \x1b[32m\x1b[1mLinking C shared library libatlas_msgs__rosidl_typesupport_introspection_c.so\x1b[0m\n'}
+[6.399616] (atlas_msgs) StdoutLine: {'line': b'[ 69%] Built target atlas_msgs__rosidl_typesupport_c\n'}
+[6.400682] (-) TimerEvent: {}
+[6.499210] (atlas_msgs) StdoutLine: {'line': b'[ 71%] \x1b[32m\x1b[1mLinking CXX shared library libatlas_msgs__rosidl_typesupport_fastrtps_cpp.so\x1b[0m\n'}
+[6.513992] (-) TimerEvent: {}
+[6.526165] (atlas_msgs) StdoutLine: {'line': b'[ 71%] Built target atlas_msgs__rosidl_typesupport_introspection_cpp\n'}
+[6.550170] (atlas_msgs) StdoutLine: {'line': b'[ 71%] Built target atlas_msgs__rosidl_typesupport_introspection_c\n'}
+[6.634011] (-) TimerEvent: {}
+[6.706492] (atlas_msgs) StdoutLine: {'line': b'[ 71%] Built target atlas_msgs__rosidl_typesupport_fastrtps_cpp\n'}
+[6.754039] (-) TimerEvent: {}
+[6.812791] (atlas_msgs) StdoutLine: {'line': b'[ 74%] \x1b[32m\x1b[1mLinking CXX shared library libatlas_msgs__rosidl_typesupport_fastrtps_c.so\x1b[0m\n'}
+[6.873997] (-) TimerEvent: {}
+[6.982919] (atlas_msgs) StdoutLine: {'line': b'[ 74%] Built target atlas_msgs__rosidl_typesupport_fastrtps_c\n'}
+[6.983538] (-) TimerEvent: {}
+[7.023952] (atlas_msgs) StdoutLine: {'line': b'[ 74%] Built target atlas_msgs\n'}
+[7.076103] (atlas_msgs) StdoutLine: {'line': b'[ 76%] \x1b[34m\x1b[1mGenerating Python code for ROS interfaces\x1b[0m\n'}
+[7.083924] (-) TimerEvent: {}
+[7.203982] (-) TimerEvent: {}
+[7.323964] (-) TimerEvent: {}
+[7.444053] (-) TimerEvent: {}
+[7.533956] (atlas_msgs) StdoutLine: {'line': b'[ 76%] Built target atlas_msgs__py\n'}
+[7.563973] (-) TimerEvent: {}
+[7.586972] (atlas_msgs) StdoutLine: {'line': b'[ 79%] \x1b[32mBuilding C object CMakeFiles/atlas_msgs__rosidl_generator_py.dir/rosidl_generator_py/atlas_msgs/srv/_motion_request_s.c.o\x1b[0m\n'}
+[7.592578] (atlas_msgs) StdoutLine: {'line': b'[ 82%] \x1b[32mBuilding C object CMakeFiles/atlas_msgs__rosidl_generator_py.dir/rosidl_generator_py/atlas_msgs/srv/_detection_s.c.o\x1b[0m\n'}
+[7.687602] (-) TimerEvent: {}
+[7.811577] (-) TimerEvent: {}
+[7.855759] (atlas_msgs) StdoutLine: {'line': b'[ 84%] \x1b[32m\x1b[1mLinking C shared library rosidl_generator_py/atlas_msgs/libatlas_msgs__rosidl_generator_py.so\x1b[0m\n'}
+[7.933961] (-) TimerEvent: {}
+[8.009375] (atlas_msgs) StdoutLine: {'line': b'[ 84%] Built target atlas_msgs__rosidl_generator_py\n'}
+[8.057648] (-) TimerEvent: {}
+[8.062805] (atlas_msgs) StdoutLine: {'line': b'[ 92%] \x1b[32mBuilding C object CMakeFiles/atlas_msgs__rosidl_typesupport_fastrtps_c__pyext.dir/rosidl_generator_py/atlas_msgs/_atlas_msgs_s.ep.rosidl_typesupport_fastrtps_c.c.o\x1b[0m\n'}
+[8.063490] (atlas_msgs) StdoutLine: {'line': b'[ 92%] \x1b[32mBuilding C object CMakeFiles/atlas_msgs__rosidl_typesupport_c__pyext.dir/rosidl_generator_py/atlas_msgs/_atlas_msgs_s.ep.rosidl_typesupport_c.c.o\x1b[0m\n'}
+[8.064728] (atlas_msgs) StdoutLine: {'line': b'[ 92%] \x1b[32mBuilding C object CMakeFiles/atlas_msgs__rosidl_typesupport_introspection_c__pyext.dir/rosidl_generator_py/atlas_msgs/_atlas_msgs_s.ep.rosidl_typesupport_introspection_c.c.o\x1b[0m\n'}
+[8.181274] (-) TimerEvent: {}
+[8.303958] (-) TimerEvent: {}
+[8.314743] (atlas_msgs) StdoutLine: {'line': b'[ 94%] \x1b[32m\x1b[1mLinking C shared library rosidl_generator_py/atlas_msgs/atlas_msgs_s__rosidl_typesupport_c.cpython-310-x86_64-linux-gnu.so\x1b[0m\n'}
+[8.368264] (atlas_msgs) StdoutLine: {'line': b'[100%] \x1b[32m\x1b[1mLinking C shared library rosidl_generator_py/atlas_msgs/atlas_msgs_s__rosidl_typesupport_introspection_c.cpython-310-x86_64-linux-gnu.so\x1b[0m\n'}
+[8.369556] (atlas_msgs) StdoutLine: {'line': b'[100%] \x1b[32m\x1b[1mLinking C shared library rosidl_generator_py/atlas_msgs/atlas_msgs_s__rosidl_typesupport_fastrtps_c.cpython-310-x86_64-linux-gnu.so\x1b[0m\n'}
+[8.423965] (-) TimerEvent: {}
+[8.471867] (atlas_msgs) StdoutLine: {'line': b'[100%] Built target atlas_msgs__rosidl_typesupport_c__pyext\n'}
+[8.515611] (atlas_msgs) StdoutLine: {'line': b'[100%] Built target atlas_msgs__rosidl_typesupport_introspection_c__pyext\n'}
+[8.518216] (atlas_msgs) StdoutLine: {'line': b'[100%] Built target atlas_msgs__rosidl_typesupport_fastrtps_c__pyext\n'}
+[8.533956] (-) TimerEvent: {}
+[8.609766] (atlas_msgs) CommandEnded: {'returncode': 0}
+[8.653968] (-) TimerEvent: {}
+[8.690621] (atlas_msgs) JobProgress: {'identifier': 'atlas_msgs', 'progress': 'install'}
+[8.701214] (atlas_msgs) Command: {'cmd': ['/usr/bin/cmake', '--install', '/mnt/d/MOnash/ECE4191/Code/atlas/build/atlas_msgs'], 'cwd': '/mnt/d/MOnash/ECE4191/Code/atlas/build/atlas_msgs', 'env': OrderedDict([('LESSOPEN', '| /usr/bin/lesspipe %s'), ('USER', 'anhdau'), ('GIT_ASKPASS', '/home/anhdau/.vscode-server/bin/af28b32d7e553898b2a91af498b1fb666fdebe0c/extensions/git/dist/askpass.sh'), ('SHLVL', '2'), ('LD_LIBRARY_PATH', '/usr/lib/x86_64-linux-gnu/gazebo-11/plugins:/opt/ros/humble/opt/rviz_ogre_vendor/lib:/opt/ros/humble/lib/x86_64-linux-gnu:/opt/ros/humble/lib'), ('MOTD_SHOWN', 'update-motd'), ('HOME', '/home/anhdau'), ('OLDPWD', '/mnt/d/MOnash/ECE4191/Code/atlas/atlas_ws'), ('TERM_PROGRAM_VERSION', '1.85.0'), ('VSCODE_IPC_HOOK_CLI', '/run/user/1000/vscode-ipc-f475606f-40ca-4de3-99ce-39fa64ea43e4.sock'), ('ROS_PYTHON_VERSION', '3'), ('VSCODE_GIT_ASKPASS_MAIN', '/home/anhdau/.vscode-server/bin/af28b32d7e553898b2a91af498b1fb666fdebe0c/extensions/git/dist/askpass-main.js'), ('VSCODE_GIT_ASKPASS_NODE', '/home/anhdau/.vscode-server/bin/af28b32d7e553898b2a91af498b1fb666fdebe0c/node'), ('DBUS_SESSION_BUS_ADDRESS', 'unix:path=/run/user/1000/bus'), ('COLORTERM', 'truecolor'), ('WSL_DISTRO_NAME', 'Ubuntu-22.04'), ('WAYLAND_DISPLAY', 'wayland-0'), ('ROS_DISTRO', 'humble'), ('LOGNAME', 'anhdau'), ('NAME', 'Code'), ('WSL_INTEROP', '/run/WSL/1007_interop'), ('PULSE_SERVER', 'unix:/mnt/wslg/PulseServer'), ('_', '/home/anhdau/.local/bin/colcon'), ('ROS_VERSION', '2'), ('TERM', 'xterm-256color'), ('ROS_LOCALHOST_ONLY', '0'), ('PATH', '/home/anhdau/.vscode-server/bin/af28b32d7e553898b2a91af498b1fb666fdebe0c/bin/remote-cli:/home/anhdau/.local/bin:/opt/ros/humble/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/usr/lib/wsl/lib:/mnt/c/Program Files/WindowsApps/MicrosoftCorporationII.WindowsSubsystemForLinux_2.2.4.0_x64__8wekyb3d8bbwe:/mnt/c/Program Files/PlasticSCM5/server:/mnt/c/Program Files/PlasticSCM5/client:/mnt/c/Program Files (x86)/NVIDIA Corporation/PhysX/Common:/mnt/c/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v11.2/bin:/mnt/c/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v11.2/libnvvp:/mnt/c/Windows/system32:/mnt/c/Windows:/mnt/c/Windows/System32/Wbem:/mnt/c/Windows/System32/WindowsPowerShell/v1.0/:/mnt/c/Windows/System32/OpenSSH/:/mnt/c/Program Files/NVIDIA Corporation/NVIDIA NvDLISR:/mnt/d/MATLAB R2023b/bin:/mnt/c/Program Files/MATLAB/R2022a/bin:/mnt/c/Program Files/dotnet/:/mnt/c/Program Files/Microsoft SQL Server/150/Tools/Binn/:/mnt/c/Program Files/Microsoft SQL Server/Client SDK/ODBC/170/Tools/Binn/:/mnt/c/Program Files/Java/jre-1.8/bin:/mnt/c/Program Files/Siemens/NX2206/CAPITALINTEGRATION/capitalnxremote/:/mnt/c/Program Files/Docker/Docker/resources/bin:/mnt/c/Program Files/Microsoft VS Code/bin:/mnt/c/Program Files (x86)/Microsoft SQL Server/150/Tools/Binn/:/mnt/c/Program Files/Microsoft SQL Server/150/DTS/Binn/:/mnt/c/Program Files (x86)/Windows Kits/8.1/Windows Performance Toolkit/:/mnt/c/Program Files/PuTTY/:/mnt/c/Program Files/NVIDIA Corporation/Nsight Compute 2020.3.0/:/mnt/c/Program Files/nodejs/:/mnt/c/Program Files/Git/cmd:/mnt/c/Program Files/Git LFS:/mnt/c/Program Files/usbipd-win/:/mnt/c/Users/anhda/AppData/Local/Microsoft/WindowsApps:/mnt/c/Program Files/MATLAB/R2022a/bin:/mnt/d/openCV/opencv/build/x64/vc15/bin:/mnt/c/Users/anhda/AppData/Local/GitHubDesktop/bin:/mnt/c/Users/anhda/.dotnet/tools:/mnt/c/Users/anhda/AppData/Roaming/npm:/snap/bin'), ('XDG_RUNTIME_DIR', '/run/user/1000/'), ('DISPLAY', ':0'), ('LANG', 'C.UTF-8'), ('PYTHONSTARTUP', '/home/anhdau/.vscode-server/extensions/ms-python.python-2024.2.1/pythonFiles/pythonrc.py'), ('LS_COLORS', 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:'), ('VSCODE_GIT_IPC_HANDLE', '/run/user/1000/vscode-git-88a7a01561.sock'), ('TERM_PROGRAM', 'vscode'), ('AMENT_PREFIX_PATH', '/opt/ros/humble'), ('SHELL', '/bin/bash'), ('LESSCLOSE', '/usr/bin/lesspipe %s %s'), ('VSCODE_GIT_ASKPASS_EXTRA_ARGS', ''), ('PWD', '/mnt/d/MOnash/ECE4191/Code/atlas/build/atlas_msgs'), ('XDG_DATA_DIRS', '/usr/local/share:/usr/share:/var/lib/snapd/desktop'), ('PYTHONPATH', '/opt/ros/humble/lib/python3.10/site-packages:/opt/ros/humble/local/lib/python3.10/dist-packages'), ('COLCON', '1'), ('WSL2_GUI_APPS_ENABLED', '1'), ('HOSTTYPE', 'x86_64'), ('WSLENV', 'ELECTRON_RUN_AS_NODE/w:'), ('CMAKE_PREFIX_PATH', '/opt/ros/humble')]), 'shell': False}
+[8.708538] (atlas_msgs) StdoutLine: {'line': b'-- Install configuration: ""\n'}
+[8.732834] (atlas_msgs) StdoutLine: {'line': b'-- Installing: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/share/ament_index/resource_index/rosidl_interfaces/atlas_msgs\n'}
+[8.777648] (-) TimerEvent: {}
+[8.782696] (atlas_msgs) StdoutLine: {'line': b'-- Installing: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/include/atlas_msgs/atlas_msgs\n'}
+[8.798300] (atlas_msgs) StdoutLine: {'line': b'-- Installing: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/include/atlas_msgs/atlas_msgs/msg\n'}
+[8.821893] (atlas_msgs) StdoutLine: {'line': b'-- Installing: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/include/atlas_msgs/atlas_msgs/msg/rosidl_generator_c__visibility_control.h\n'}
+[8.871438] (atlas_msgs) StdoutLine: {'line': b'-- Installing: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/include/atlas_msgs/atlas_msgs/srv\n'}
+[8.891859] (atlas_msgs) StdoutLine: {'line': b'-- Installing: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/include/atlas_msgs/atlas_msgs/srv/detail\n'}
+[8.892668] (-) TimerEvent: {}
+[8.921899] (atlas_msgs) StdoutLine: {'line': b'-- Installing: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/include/atlas_msgs/atlas_msgs/srv/detail/detection__functions.c\n'}
+[8.986336] (atlas_msgs) StdoutLine: {'line': b'-- Installing: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/include/atlas_msgs/atlas_msgs/srv/detail/detection__functions.h\n'}
+[9.013984] (-) TimerEvent: {}
+[9.047887] (atlas_msgs) StdoutLine: {'line': b'-- Installing: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/include/atlas_msgs/atlas_msgs/srv/detail/detection__struct.h\n'}
+[9.110743] (atlas_msgs) StdoutLine: {'line': b'-- Installing: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/include/atlas_msgs/atlas_msgs/srv/detail/detection__type_support.h\n'}
+[9.137641] (-) TimerEvent: {}
+[9.173185] (atlas_msgs) StdoutLine: {'line': b'-- Installing: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/include/atlas_msgs/atlas_msgs/srv/detail/motion_request__functions.c\n'}
+[9.235257] (atlas_msgs) StdoutLine: {'line': b'-- Installing: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/include/atlas_msgs/atlas_msgs/srv/detail/motion_request__functions.h\n'}
+[9.253961] (-) TimerEvent: {}
+[9.298350] (atlas_msgs) StdoutLine: {'line': b'-- Installing: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/include/atlas_msgs/atlas_msgs/srv/detail/motion_request__struct.h\n'}
+[9.361373] (atlas_msgs) StdoutLine: {'line': b'-- Installing: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/include/atlas_msgs/atlas_msgs/srv/detail/motion_request__type_support.h\n'}
+[9.362935] (-) TimerEvent: {}
+[9.423067] (atlas_msgs) StdoutLine: {'line': b'-- Installing: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/include/atlas_msgs/atlas_msgs/srv/detection.h\n'}
+[9.474004] (-) TimerEvent: {}
+[9.475627] (atlas_msgs) StdoutLine: {'line': b'-- Installing: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/include/atlas_msgs/atlas_msgs/srv/motion_request.h\n'}
+[9.532382] (atlas_msgs) StdoutLine: {'line': b'-- Installing: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/share/atlas_msgs/environment/library_path.sh\n'}
+[9.571281] (atlas_msgs) StdoutLine: {'line': b'-- Installing: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/share/atlas_msgs/environment/library_path.dsv\n'}
+[9.593951] (-) TimerEvent: {}
+[9.612393] (atlas_msgs) StdoutLine: {'line': b'-- Installing: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/lib/libatlas_msgs__rosidl_generator_c.so\n'}
+[9.666289] (atlas_msgs) StdoutLine: {'line': b'-- Set runtime path of "/mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/lib/libatlas_msgs__rosidl_generator_c.so" to ""\n'}
+[9.674495] (atlas_msgs) StdoutLine: {'line': b'-- Up-to-date: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/include/atlas_msgs/atlas_msgs\n'}
+[9.688849] (atlas_msgs) StdoutLine: {'line': b'-- Up-to-date: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/include/atlas_msgs/atlas_msgs/msg\n'}
+[9.707017] (atlas_msgs) StdoutLine: {'line': b'-- Installing: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/include/atlas_msgs/atlas_msgs/msg/rosidl_typesupport_fastrtps_c__visibility_control.h\n'}
+[9.707675] (-) TimerEvent: {}
+[9.759639] (atlas_msgs) StdoutLine: {'line': b'-- Up-to-date: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/include/atlas_msgs/atlas_msgs/srv\n'}
+[9.782359] (atlas_msgs) StdoutLine: {'line': b'-- Up-to-date: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/include/atlas_msgs/atlas_msgs/srv/detail\n'}
+[9.819538] (atlas_msgs) StdoutLine: {'line': b'-- Installing: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/include/atlas_msgs/atlas_msgs/srv/detail/detection__rosidl_typesupport_fastrtps_c.h\n'}
+[9.820382] (-) TimerEvent: {}
+[9.905649] (atlas_msgs) StdoutLine: {'line': b'-- Installing: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/include/atlas_msgs/atlas_msgs/srv/detail/motion_request__rosidl_typesupport_fastrtps_c.h\n'}
+[9.944035] (-) TimerEvent: {}
+[9.966223] (atlas_msgs) StdoutLine: {'line': b'-- Installing: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/lib/libatlas_msgs__rosidl_typesupport_fastrtps_c.so\n'}
+[10.022003] (atlas_msgs) StdoutLine: {'line': b'-- Set runtime path of "/mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/lib/libatlas_msgs__rosidl_typesupport_fastrtps_c.so" to ""\n'}
+[10.028935] (atlas_msgs) StdoutLine: {'line': b'-- Up-to-date: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/include/atlas_msgs/atlas_msgs\n'}
+[10.043669] (atlas_msgs) StdoutLine: {'line': b'-- Up-to-date: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/include/atlas_msgs/atlas_msgs/srv\n'}
+[10.044642] (-) TimerEvent: {}
+[10.061026] (atlas_msgs) StdoutLine: {'line': b'-- Up-to-date: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/include/atlas_msgs/atlas_msgs/srv/detail\n'}
+[10.084190] (atlas_msgs) StdoutLine: {'line': b'-- Installing: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/include/atlas_msgs/atlas_msgs/srv/detail/detection__builder.hpp\n'}
+[10.151976] (atlas_msgs) StdoutLine: {'line': b'-- Installing: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/include/atlas_msgs/atlas_msgs/srv/detail/detection__struct.hpp\n'}
+[10.152591] (-) TimerEvent: {}
+[10.213404] (atlas_msgs) StdoutLine: {'line': b'-- Installing: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/include/atlas_msgs/atlas_msgs/srv/detail/detection__traits.hpp\n'}
+[10.276305] (-) TimerEvent: {}
+[10.277344] (atlas_msgs) StdoutLine: {'line': b'-- Installing: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/include/atlas_msgs/atlas_msgs/srv/detail/motion_request__builder.hpp\n'}
+[10.339656] (atlas_msgs) StdoutLine: {'line': b'-- Installing: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/include/atlas_msgs/atlas_msgs/srv/detail/motion_request__struct.hpp\n'}
+[10.399946] (-) TimerEvent: {}
+[10.402904] (atlas_msgs) StdoutLine: {'line': b'-- Installing: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/include/atlas_msgs/atlas_msgs/srv/detail/motion_request__traits.hpp\n'}
+[10.459895] (atlas_msgs) StdoutLine: {'line': b'-- Installing: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/include/atlas_msgs/atlas_msgs/srv/detection.hpp\n'}
+[10.515455] (atlas_msgs) StdoutLine: {'line': b'-- Installing: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/include/atlas_msgs/atlas_msgs/srv/motion_request.hpp\n'}
+[10.516131] (-) TimerEvent: {}
+[10.563809] (atlas_msgs) StdoutLine: {'line': b'-- Up-to-date: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/include/atlas_msgs/atlas_msgs\n'}
+[10.579276] (atlas_msgs) StdoutLine: {'line': b'-- Up-to-date: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/include/atlas_msgs/atlas_msgs/msg\n'}
+[10.597657] (atlas_msgs) StdoutLine: {'line': b'-- Installing: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/include/atlas_msgs/atlas_msgs/msg/rosidl_typesupport_fastrtps_cpp__visibility_control.h\n'}
+[10.639774] (-) TimerEvent: {}
+[10.644277] (atlas_msgs) StdoutLine: {'line': b'-- Up-to-date: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/include/atlas_msgs/atlas_msgs/srv\n'}
+[10.661856] (atlas_msgs) StdoutLine: {'line': b'-- Up-to-date: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/include/atlas_msgs/atlas_msgs/srv/detail\n'}
+[10.680625] (atlas_msgs) StdoutLine: {'line': b'-- Installing: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/include/atlas_msgs/atlas_msgs/srv/detail/dds_fastrtps\n'}
+[10.713103] (atlas_msgs) StdoutLine: {'line': b'-- Installing: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/include/atlas_msgs/atlas_msgs/srv/detail/detection__rosidl_typesupport_fastrtps_cpp.hpp\n'}
+[10.763428] (-) TimerEvent: {}
+[10.771008] (atlas_msgs) StdoutLine: {'line': b'-- Installing: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/include/atlas_msgs/atlas_msgs/srv/detail/motion_request__rosidl_typesupport_fastrtps_cpp.hpp\n'}
+[10.827231] (atlas_msgs) StdoutLine: {'line': b'-- Installing: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/lib/libatlas_msgs__rosidl_typesupport_fastrtps_cpp.so\n'}
+[10.877655] (atlas_msgs) StdoutLine: {'line': b'-- Set runtime path of "/mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/lib/libatlas_msgs__rosidl_typesupport_fastrtps_cpp.so" to ""\n'}
+[10.878261] (-) TimerEvent: {}
+[10.884485] (atlas_msgs) StdoutLine: {'line': b'-- Up-to-date: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/include/atlas_msgs/atlas_msgs\n'}
+[10.897802] (atlas_msgs) StdoutLine: {'line': b'-- Up-to-date: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/include/atlas_msgs/atlas_msgs/msg\n'}
+[10.915592] (atlas_msgs) StdoutLine: {'line': b'-- Installing: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/include/atlas_msgs/atlas_msgs/msg/rosidl_typesupport_introspection_c__visibility_control.h\n'}
+[10.968062] (atlas_msgs) StdoutLine: {'line': b'-- Up-to-date: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/include/atlas_msgs/atlas_msgs/srv\n'}
+[10.984479] (atlas_msgs) StdoutLine: {'line': b'-- Up-to-date: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/include/atlas_msgs/atlas_msgs/srv/detail\n'}
+[10.985694] (-) TimerEvent: {}
+[11.009356] (atlas_msgs) StdoutLine: {'line': b'-- Installing: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/include/atlas_msgs/atlas_msgs/srv/detail/detection__rosidl_typesupport_introspection_c.h\n'}
+[11.072748] (atlas_msgs) StdoutLine: {'line': b'-- Installing: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/include/atlas_msgs/atlas_msgs/srv/detail/detection__type_support.c\n'}
+[11.103967] (-) TimerEvent: {}
+[11.134552] (atlas_msgs) StdoutLine: {'line': b'-- Installing: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/include/atlas_msgs/atlas_msgs/srv/detail/motion_request__rosidl_typesupport_introspection_c.h\n'}
+[11.196240] (atlas_msgs) StdoutLine: {'line': b'-- Installing: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/include/atlas_msgs/atlas_msgs/srv/detail/motion_request__type_support.c\n'}
+[11.227597] (-) TimerEvent: {}
+[11.251671] (atlas_msgs) StdoutLine: {'line': b'-- Installing: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/lib/libatlas_msgs__rosidl_typesupport_introspection_c.so\n'}
+[11.301544] (atlas_msgs) StdoutLine: {'line': b'-- Set runtime path of "/mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/lib/libatlas_msgs__rosidl_typesupport_introspection_c.so" to ""\n'}
+[11.311459] (atlas_msgs) StdoutLine: {'line': b'-- Installing: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/lib/libatlas_msgs__rosidl_typesupport_c.so\n'}
+[11.351252] (-) TimerEvent: {}
+[11.360939] (atlas_msgs) StdoutLine: {'line': b'-- Set runtime path of "/mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/lib/libatlas_msgs__rosidl_typesupport_c.so" to ""\n'}
+[11.368043] (atlas_msgs) StdoutLine: {'line': b'-- Up-to-date: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/include/atlas_msgs/atlas_msgs\n'}
+[11.381125] (atlas_msgs) StdoutLine: {'line': b'-- Up-to-date: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/include/atlas_msgs/atlas_msgs/srv\n'}
+[11.399591] (atlas_msgs) StdoutLine: {'line': b'-- Up-to-date: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/include/atlas_msgs/atlas_msgs/srv/detail\n'}
+[11.422440] (atlas_msgs) StdoutLine: {'line': b'-- Installing: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/include/atlas_msgs/atlas_msgs/srv/detail/detection__rosidl_typesupport_introspection_cpp.hpp\n'}
+[11.474946] (-) TimerEvent: {}
+[11.479622] (atlas_msgs) StdoutLine: {'line': b'-- Installing: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/include/atlas_msgs/atlas_msgs/srv/detail/detection__type_support.cpp\n'}
+[11.542145] (atlas_msgs) StdoutLine: {'line': b'-- Installing: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/include/atlas_msgs/atlas_msgs/srv/detail/motion_request__rosidl_typesupport_introspection_cpp.hpp\n'}
+[11.593997] (-) TimerEvent: {}
+[11.604019] (atlas_msgs) StdoutLine: {'line': b'-- Installing: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/include/atlas_msgs/atlas_msgs/srv/detail/motion_request__type_support.cpp\n'}
+[11.664456] (atlas_msgs) StdoutLine: {'line': b'-- Installing: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/lib/libatlas_msgs__rosidl_typesupport_introspection_cpp.so\n'}
+[11.712288] (atlas_msgs) StdoutLine: {'line': b'-- Set runtime path of "/mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/lib/libatlas_msgs__rosidl_typesupport_introspection_cpp.so" to ""\n'}
+[11.713065] (-) TimerEvent: {}
+[11.722037] (atlas_msgs) StdoutLine: {'line': b'-- Installing: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/lib/libatlas_msgs__rosidl_typesupport_cpp.so\n'}
+[11.769905] (atlas_msgs) StdoutLine: {'line': b'-- Set runtime path of "/mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/lib/libatlas_msgs__rosidl_typesupport_cpp.so" to ""\n'}
+[11.783255] (atlas_msgs) StdoutLine: {'line': b'-- Installing: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/share/atlas_msgs/environment/pythonpath.sh\n'}
+[11.830707] (atlas_msgs) StdoutLine: {'line': b'-- Installing: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/share/atlas_msgs/environment/pythonpath.dsv\n'}
+[11.831305] (-) TimerEvent: {}
+[11.868705] (atlas_msgs) StdoutLine: {'line': b'-- Installing: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/local/lib/python3.10/dist-packages/atlas_msgs-0.0.0-py3.10.egg-info\n'}
+[11.897055] (atlas_msgs) StdoutLine: {'line': b'-- Installing: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/local/lib/python3.10/dist-packages/atlas_msgs-0.0.0-py3.10.egg-info/dependency_links.txt\n'}
+[11.944476] (-) TimerEvent: {}
+[11.955682] (atlas_msgs) StdoutLine: {'line': b'-- Installing: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/local/lib/python3.10/dist-packages/atlas_msgs-0.0.0-py3.10.egg-info/PKG-INFO\n'}
+[12.015925] (atlas_msgs) StdoutLine: {'line': b'-- Installing: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/local/lib/python3.10/dist-packages/atlas_msgs-0.0.0-py3.10.egg-info/SOURCES.txt\n'}
+[12.063974] (-) TimerEvent: {}
+[12.077887] (atlas_msgs) StdoutLine: {'line': b'-- Installing: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/local/lib/python3.10/dist-packages/atlas_msgs-0.0.0-py3.10.egg-info/top_level.txt\n'}
+[12.131904] (atlas_msgs) StdoutLine: {'line': b'-- Installing: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/local/lib/python3.10/dist-packages/atlas_msgs\n'}
+[12.156033] (atlas_msgs) StdoutLine: {'line': b'-- Installing: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/local/lib/python3.10/dist-packages/atlas_msgs/atlas_msgs_s__rosidl_typesupport_c.cpython-310-x86_64-linux-gnu.so\n'}
+[12.187609] (-) TimerEvent: {}
+[12.210261] (atlas_msgs) StdoutLine: {'line': b'-- Installing: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/local/lib/python3.10/dist-packages/atlas_msgs/atlas_msgs_s__rosidl_typesupport_fastrtps_c.cpython-310-x86_64-linux-gnu.so\n'}
+[12.271127] (atlas_msgs) StdoutLine: {'line': b'-- Installing: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/local/lib/python3.10/dist-packages/atlas_msgs/atlas_msgs_s__rosidl_typesupport_introspection_c.cpython-310-x86_64-linux-gnu.so\n'}
+[12.303956] (-) TimerEvent: {}
+[12.324243] (atlas_msgs) StdoutLine: {'line': b'-- Installing: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/local/lib/python3.10/dist-packages/atlas_msgs/libatlas_msgs__rosidl_generator_py.so\n'}
+[12.376710] (atlas_msgs) StdoutLine: {'line': b'-- Installing: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/local/lib/python3.10/dist-packages/atlas_msgs/srv\n'}
+[12.408292] (atlas_msgs) StdoutLine: {'line': b'-- Installing: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/local/lib/python3.10/dist-packages/atlas_msgs/srv/_detection.py\n'}
+[12.409181] (-) TimerEvent: {}
+[12.475069] (atlas_msgs) StdoutLine: {'line': b'-- Installing: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/local/lib/python3.10/dist-packages/atlas_msgs/srv/_detection_s.c\n'}
+[12.532835] (-) TimerEvent: {}
+[12.540376] (atlas_msgs) StdoutLine: {'line': b'-- Installing: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/local/lib/python3.10/dist-packages/atlas_msgs/srv/_motion_request.py\n'}
+[12.603409] (atlas_msgs) StdoutLine: {'line': b'-- Installing: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/local/lib/python3.10/dist-packages/atlas_msgs/srv/_motion_request_s.c\n'}
+[12.656490] (-) TimerEvent: {}
+[12.668240] (atlas_msgs) StdoutLine: {'line': b'-- Installing: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/local/lib/python3.10/dist-packages/atlas_msgs/srv/__init__.py\n'}
+[12.731547] (atlas_msgs) StdoutLine: {'line': b'-- Installing: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/local/lib/python3.10/dist-packages/atlas_msgs/_atlas_msgs_s.ep.rosidl_typesupport_c.c\n'}
+[12.763956] (-) TimerEvent: {}
+[12.785946] (atlas_msgs) StdoutLine: {'line': b'-- Installing: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/local/lib/python3.10/dist-packages/atlas_msgs/_atlas_msgs_s.ep.rosidl_typesupport_fastrtps_c.c\n'}
+[12.843431] (atlas_msgs) StdoutLine: {'line': b'-- Installing: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/local/lib/python3.10/dist-packages/atlas_msgs/_atlas_msgs_s.ep.rosidl_typesupport_introspection_c.c\n'}
+[12.887612] (-) TimerEvent: {}
+[12.902434] (atlas_msgs) StdoutLine: {'line': b'-- Installing: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/local/lib/python3.10/dist-packages/atlas_msgs/__init__.py\n'}
+[13.009128] (-) TimerEvent: {}
+[13.133305] (-) TimerEvent: {}
+[13.195577] (atlas_msgs) StdoutLine: {'line': b"Listing '/mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/local/lib/python3.10/dist-packages/atlas_msgs'...\n"}
+[13.196206] (atlas_msgs) StdoutLine: {'line': b"Compiling '/mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/local/lib/python3.10/dist-packages/atlas_msgs/__init__.py'...\n"}
+[13.196615] (atlas_msgs) StdoutLine: {'line': b"Listing '/mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/local/lib/python3.10/dist-packages/atlas_msgs/srv'...\n"}
+[13.197019] (atlas_msgs) StdoutLine: {'line': b"Compiling '/mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/local/lib/python3.10/dist-packages/atlas_msgs/srv/__init__.py'...\n"}
+[13.197378] (atlas_msgs) StdoutLine: {'line': b"Compiling '/mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/local/lib/python3.10/dist-packages/atlas_msgs/srv/_detection.py'...\n"}
+[13.197721] (atlas_msgs) StdoutLine: {'line': b"Compiling '/mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/local/lib/python3.10/dist-packages/atlas_msgs/srv/_motion_request.py'...\n"}
+[13.238478] (atlas_msgs) StdoutLine: {'line': b'-- Installing: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/local/lib/python3.10/dist-packages/atlas_msgs/atlas_msgs_s__rosidl_typesupport_fastrtps_c.cpython-310-x86_64-linux-gnu.so\n'}
+[13.239278] (-) TimerEvent: {}
+[13.326955] (atlas_msgs) StdoutLine: {'line': b'-- Set runtime path of "/mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/local/lib/python3.10/dist-packages/atlas_msgs/atlas_msgs_s__rosidl_typesupport_fastrtps_c.cpython-310-x86_64-linux-gnu.so" to ""\n'}
+[13.362897] (-) TimerEvent: {}
+[13.364948] (atlas_msgs) StdoutLine: {'line': b'-- Installing: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/local/lib/python3.10/dist-packages/atlas_msgs/atlas_msgs_s__rosidl_typesupport_introspection_c.cpython-310-x86_64-linux-gnu.so\n'}
+[13.452260] (atlas_msgs) StdoutLine: {'line': b'-- Set runtime path of "/mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/local/lib/python3.10/dist-packages/atlas_msgs/atlas_msgs_s__rosidl_typesupport_introspection_c.cpython-310-x86_64-linux-gnu.so" to ""\n'}
+[13.482161] (-) TimerEvent: {}
+[13.492920] (atlas_msgs) StdoutLine: {'line': b'-- Installing: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/local/lib/python3.10/dist-packages/atlas_msgs/atlas_msgs_s__rosidl_typesupport_c.cpython-310-x86_64-linux-gnu.so\n'}
+[13.579551] (atlas_msgs) StdoutLine: {'line': b'-- Set runtime path of "/mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/local/lib/python3.10/dist-packages/atlas_msgs/atlas_msgs_s__rosidl_typesupport_c.cpython-310-x86_64-linux-gnu.so" to ""\n'}
+[13.592648] (atlas_msgs) StdoutLine: {'line': b'-- Installing: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/lib/libatlas_msgs__rosidl_generator_py.so\n'}
+[13.593152] (-) TimerEvent: {}
+[13.650979] (atlas_msgs) StdoutLine: {'line': b'-- Set runtime path of "/mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/lib/libatlas_msgs__rosidl_generator_py.so" to ""\n'}
+[13.672248] (atlas_msgs) StdoutLine: {'line': b'-- Installing: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/share/atlas_msgs/srv/MotionRequest.idl\n'}
+[13.716826] (-) TimerEvent: {}
+[13.724144] (atlas_msgs) StdoutLine: {'line': b'-- Installing: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/share/atlas_msgs/srv/Detection.idl\n'}
+[13.775867] (atlas_msgs) StdoutLine: {'line': b'-- Installing: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/share/atlas_msgs/srv/MotionRequest.srv\n'}
+[13.826673] (atlas_msgs) StdoutLine: {'line': b'-- Installing: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/share/atlas_msgs/srv/MotionRequest_Request.msg\n'}
+[13.827306] (-) TimerEvent: {}
+[13.874139] (atlas_msgs) StdoutLine: {'line': b'-- Installing: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/share/atlas_msgs/srv/MotionRequest_Response.msg\n'}
+[13.924710] (atlas_msgs) StdoutLine: {'line': b'-- Installing: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/share/atlas_msgs/srv/Detection.srv\n'}
+[13.950972] (-) TimerEvent: {}
+[13.975778] (atlas_msgs) StdoutLine: {'line': b'-- Installing: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/share/atlas_msgs/srv/Detection_Request.msg\n'}
+[14.027318] (atlas_msgs) StdoutLine: {'line': b'-- Installing: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/share/atlas_msgs/srv/Detection_Response.msg\n'}
+[14.074604] (-) TimerEvent: {}
+[14.083127] (atlas_msgs) StdoutLine: {'line': b'-- Installing: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/share/ament_index/resource_index/package_run_dependencies/atlas_msgs\n'}
+[14.153707] (atlas_msgs) StdoutLine: {'line': b'-- Installing: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/share/ament_index/resource_index/parent_prefix_path/atlas_msgs\n'}
+[14.194000] (-) TimerEvent: {}
+[14.204303] (atlas_msgs) StdoutLine: {'line': b'-- Installing: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/share/atlas_msgs/environment/ament_prefix_path.sh\n'}
+[14.243049] (atlas_msgs) StdoutLine: {'line': b'-- Installing: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/share/atlas_msgs/environment/ament_prefix_path.dsv\n'}
+[14.283888] (atlas_msgs) StdoutLine: {'line': b'-- Installing: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/share/atlas_msgs/environment/path.sh\n'}
+[14.314001] (-) TimerEvent: {}
+[14.323050] (atlas_msgs) StdoutLine: {'line': b'-- Installing: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/share/atlas_msgs/environment/path.dsv\n'}
+[14.366199] (atlas_msgs) StdoutLine: {'line': b'-- Installing: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/share/atlas_msgs/local_setup.bash\n'}
+[14.406518] (atlas_msgs) StdoutLine: {'line': b'-- Installing: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/share/atlas_msgs/local_setup.sh\n'}
+[14.437658] (-) TimerEvent: {}
+[14.444905] (atlas_msgs) StdoutLine: {'line': b'-- Installing: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/share/atlas_msgs/local_setup.zsh\n'}
+[14.483206] (atlas_msgs) StdoutLine: {'line': b'-- Installing: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/share/atlas_msgs/local_setup.dsv\n'}
+[14.523725] (atlas_msgs) StdoutLine: {'line': b'-- Installing: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/share/atlas_msgs/package.dsv\n'}
+[14.543992] (-) TimerEvent: {}
+[14.576869] (atlas_msgs) StdoutLine: {'line': b'-- Installing: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/share/ament_index/resource_index/packages/atlas_msgs\n'}
+[14.647497] (atlas_msgs) StdoutLine: {'line': b'-- Installing: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/share/atlas_msgs/cmake/export_atlas_msgs__rosidl_generator_cExport.cmake\n'}
+[14.648430] (-) TimerEvent: {}
+[14.705970] (atlas_msgs) StdoutLine: {'line': b'-- Installing: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/share/atlas_msgs/cmake/export_atlas_msgs__rosidl_generator_cExport-noconfig.cmake\n'}
+[14.763971] (-) TimerEvent: {}
+[14.766235] (atlas_msgs) StdoutLine: {'line': b'-- Installing: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/share/atlas_msgs/cmake/export_atlas_msgs__rosidl_typesupport_fastrtps_cExport.cmake\n'}
+[14.823146] (atlas_msgs) StdoutLine: {'line': b'-- Installing: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/share/atlas_msgs/cmake/export_atlas_msgs__rosidl_typesupport_fastrtps_cExport-noconfig.cmake\n'}
+[14.873990] (-) TimerEvent: {}
+[14.883412] (atlas_msgs) StdoutLine: {'line': b'-- Installing: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/share/atlas_msgs/cmake/export_atlas_msgs__rosidl_generator_cppExport.cmake\n'}
+[14.942580] (atlas_msgs) StdoutLine: {'line': b'-- Installing: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/share/atlas_msgs/cmake/export_atlas_msgs__rosidl_typesupport_fastrtps_cppExport.cmake\n'}
+[14.993989] (-) TimerEvent: {}
+[15.000265] (atlas_msgs) StdoutLine: {'line': b'-- Installing: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/share/atlas_msgs/cmake/export_atlas_msgs__rosidl_typesupport_fastrtps_cppExport-noconfig.cmake\n'}
+[15.060628] (atlas_msgs) StdoutLine: {'line': b'-- Installing: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/share/atlas_msgs/cmake/atlas_msgs__rosidl_typesupport_introspection_cExport.cmake\n'}
+[15.103981] (-) TimerEvent: {}
+[15.116370] (atlas_msgs) StdoutLine: {'line': b'-- Installing: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/share/atlas_msgs/cmake/atlas_msgs__rosidl_typesupport_introspection_cExport-noconfig.cmake\n'}
+[15.177809] (atlas_msgs) StdoutLine: {'line': b'-- Installing: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/share/atlas_msgs/cmake/atlas_msgs__rosidl_typesupport_cExport.cmake\n'}
+[15.224001] (-) TimerEvent: {}
+[15.235541] (atlas_msgs) StdoutLine: {'line': b'-- Installing: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/share/atlas_msgs/cmake/atlas_msgs__rosidl_typesupport_cExport-noconfig.cmake\n'}
+[15.298261] (atlas_msgs) StdoutLine: {'line': b'-- Installing: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/share/atlas_msgs/cmake/atlas_msgs__rosidl_typesupport_introspection_cppExport.cmake\n'}
+[15.347660] (-) TimerEvent: {}
+[15.355537] (atlas_msgs) StdoutLine: {'line': b'-- Installing: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/share/atlas_msgs/cmake/atlas_msgs__rosidl_typesupport_introspection_cppExport-noconfig.cmake\n'}
+[15.414461] (atlas_msgs) StdoutLine: {'line': b'-- Installing: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/share/atlas_msgs/cmake/atlas_msgs__rosidl_typesupport_cppExport.cmake\n'}
+[15.471310] (-) TimerEvent: {}
+[15.473047] (atlas_msgs) StdoutLine: {'line': b'-- Installing: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/share/atlas_msgs/cmake/atlas_msgs__rosidl_typesupport_cppExport-noconfig.cmake\n'}
+[15.530146] (atlas_msgs) StdoutLine: {'line': b'-- Installing: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/share/atlas_msgs/cmake/export_atlas_msgs__rosidl_generator_pyExport.cmake\n'}
+[15.572146] (-) TimerEvent: {}
+[15.587342] (atlas_msgs) StdoutLine: {'line': b'-- Installing: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/share/atlas_msgs/cmake/export_atlas_msgs__rosidl_generator_pyExport-noconfig.cmake\n'}
+[15.641265] (atlas_msgs) StdoutLine: {'line': b'-- Installing: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/share/atlas_msgs/cmake/rosidl_cmake-extras.cmake\n'}
+[15.684443] (atlas_msgs) StdoutLine: {'line': b'-- Installing: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/share/atlas_msgs/cmake/ament_cmake_export_include_directories-extras.cmake\n'}
+[15.685255] (-) TimerEvent: {}
+[15.727648] (atlas_msgs) StdoutLine: {'line': b'-- Installing: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/share/atlas_msgs/cmake/ament_cmake_export_libraries-extras.cmake\n'}
+[15.773215] (atlas_msgs) StdoutLine: {'line': b'-- Installing: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/share/atlas_msgs/cmake/ament_cmake_export_targets-extras.cmake\n'}
+[15.809080] (-) TimerEvent: {}
+[15.818085] (atlas_msgs) StdoutLine: {'line': b'-- Installing: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/share/atlas_msgs/cmake/rosidl_cmake_export_typesupport_targets-extras.cmake\n'}
+[15.861296] (atlas_msgs) StdoutLine: {'line': b'-- Installing: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/share/atlas_msgs/cmake/ament_cmake_export_dependencies-extras.cmake\n'}
+[15.912183] (atlas_msgs) StdoutLine: {'line': b'-- Installing: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/share/atlas_msgs/cmake/rosidl_cmake_export_typesupport_libraries-extras.cmake\n'}
+[15.912860] (-) TimerEvent: {}
+[15.959967] (atlas_msgs) StdoutLine: {'line': b'-- Installing: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/share/atlas_msgs/cmake/atlas_msgsConfig.cmake\n'}
+[16.001856] (atlas_msgs) StdoutLine: {'line': b'-- Installing: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/share/atlas_msgs/cmake/atlas_msgsConfig-version.cmake\n'}
+[16.036537] (-) TimerEvent: {}
+[16.048873] (atlas_msgs) StdoutLine: {'line': b'-- Installing: /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/share/atlas_msgs/package.xml\n'}
+[16.089057] (atlas_msgs) CommandEnded: {'returncode': 0}
+[16.143945] (-) TimerEvent: {}
+[16.263978] (-) TimerEvent: {}
+[16.374053] (-) TimerEvent: {}
+[16.484004] (-) TimerEvent: {}
+[16.603941] (-) TimerEvent: {}
+[16.723964] (-) TimerEvent: {}
+[16.847883] (-) TimerEvent: {}
+[16.931212] (atlas_msgs) JobEnded: {'identifier': 'atlas_msgs', 'rc': 0}
+[16.937117] (-) EventReactorShutdown: {}

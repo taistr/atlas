@@ -1,0 +1,8 @@
+srv/Detection.idl
+srv/Detection.srv
+srv/Detection_Request.msg
+srv/Detection_Response.msg
+srv/MotionRequest.idl
+srv/MotionRequest.srv
+srv/MotionRequest_Request.msg
+srv/MotionRequest_Response.msg

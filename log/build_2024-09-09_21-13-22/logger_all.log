@@ -1,0 +1,267 @@
+[0.177s] DEBUG:colcon:Command line arguments: ['/home/anhdau/.local/bin/colcon', 'build']
+[0.178s] DEBUG:colcon:Parsed command line arguments: Namespace(log_base=None, log_level=None, verb_name='build', build_base='build', install_base='install', merge_install=False, symlink_install=False, test_result_base=None, continue_on_error=False, executor='parallel', parallel_workers=16, event_handlers=None, ignore_user_meta=False, metas=['./colcon.meta'], base_paths=['.'], packages_ignore=None, packages_ignore_regex=None, paths=None, packages_up_to=None, packages_up_to_regex=None, packages_above=None, packages_above_and_dependencies=None, packages_above_depth=None, packages_select_by_dep=None, packages_skip_by_dep=None, packages_skip_up_to=None, packages_select_build_failed=False, packages_skip_build_finished=False, packages_select_test_failures=False, packages_skip_test_passed=False, packages_select=None, packages_skip=None, packages_select_regex=None, packages_skip_regex=None, packages_start=None, packages_end=None, allow_overriding=[], cmake_args=None, cmake_target=None, cmake_target_skip_unavailable=False, cmake_clean_cache=False, cmake_clean_first=False, cmake_force_configure=False, ament_cmake_args=None, catkin_cmake_args=None, catkin_skip_building_tests=False, mixin_files=None, mixin=None, verb_parser=<colcon_mixin.mixin.mixin_argument.MixinArgumentDecorator object at 0x7f2d0adec130>, verb_extension=<colcon_core.verb.build.BuildVerb object at 0x7f2d0af518a0>, main=<bound method BuildVerb.main of <colcon_core.verb.build.BuildVerb object at 0x7f2d0af518a0>>, mixin_verb=('build',))
+[0.292s] Level 1:colcon.colcon_core.package_discovery:discover_packages(colcon_meta) check parameters
+[0.293s] Level 1:colcon.colcon_core.package_discovery:discover_packages(recursive) check parameters
+[0.293s] Level 1:colcon.colcon_core.package_discovery:discover_packages(ignore) check parameters
+[0.293s] Level 1:colcon.colcon_core.package_discovery:discover_packages(path) check parameters
+[0.293s] Level 1:colcon.colcon_core.package_discovery:discover_packages(colcon_meta) discover
+[0.293s] Level 1:colcon.colcon_core.package_discovery:discover_packages(recursive) discover
+[0.293s] INFO:colcon.colcon_core.package_discovery:Crawling recursively for packages in '/mnt/d/MOnash/ECE4191/Code/atlas'
+[0.294s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['ignore', 'ignore_ament_install']
+[0.295s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'ignore'
+[0.295s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'ignore_ament_install'
+[0.295s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['colcon_pkg']
+[0.296s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'colcon_pkg'
+[0.296s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['colcon_meta']
+[0.296s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'colcon_meta'
+[0.296s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['ros']
+[0.296s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'ros'
+[0.306s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['cmake', 'python']
+[0.306s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'cmake'
+[0.306s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'python'
+[0.307s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['python_setup_py']
+[0.307s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'python_setup_py'
+[0.308s] Level 1:colcon.colcon_core.package_identification:_identify(atlas_duino) by extensions ['ignore', 'ignore_ament_install']
+[0.309s] Level 1:colcon.colcon_core.package_identification:_identify(atlas_duino) by extension 'ignore'
+[0.310s] Level 1:colcon.colcon_core.package_identification:_identify(atlas_duino) by extension 'ignore_ament_install'
+[0.312s] Level 1:colcon.colcon_core.package_identification:_identify(atlas_duino) by extensions ['colcon_pkg']
+[0.312s] Level 1:colcon.colcon_core.package_identification:_identify(atlas_duino) by extension 'colcon_pkg'
+[0.313s] Level 1:colcon.colcon_core.package_identification:_identify(atlas_duino) by extensions ['colcon_meta']
+[0.313s] Level 1:colcon.colcon_core.package_identification:_identify(atlas_duino) by extension 'colcon_meta'
+[0.313s] Level 1:colcon.colcon_core.package_identification:_identify(atlas_duino) by extensions ['ros']
+[0.314s] Level 1:colcon.colcon_core.package_identification:_identify(atlas_duino) by extension 'ros'
+[0.317s] Level 1:colcon.colcon_core.package_identification:_identify(atlas_duino) by extensions ['cmake', 'python']
+[0.317s] Level 1:colcon.colcon_core.package_identification:_identify(atlas_duino) by extension 'cmake'
+[0.318s] Level 1:colcon.colcon_core.package_identification:_identify(atlas_duino) by extension 'python'
+[0.319s] Level 1:colcon.colcon_core.package_identification:_identify(atlas_duino) by extensions ['python_setup_py']
+[0.319s] Level 1:colcon.colcon_core.package_identification:_identify(atlas_duino) by extension 'python_setup_py'
+[0.321s] Level 1:colcon.colcon_core.package_identification:_identify(atlas_ws) by extensions ['ignore', 'ignore_ament_install']
+[0.321s] Level 1:colcon.colcon_core.package_identification:_identify(atlas_ws) by extension 'ignore'
+[0.322s] Level 1:colcon.colcon_core.package_identification:_identify(atlas_ws) by extension 'ignore_ament_install'
+[0.323s] Level 1:colcon.colcon_core.package_identification:_identify(atlas_ws) by extensions ['colcon_pkg']
+[0.323s] Level 1:colcon.colcon_core.package_identification:_identify(atlas_ws) by extension 'colcon_pkg'
+[0.324s] Level 1:colcon.colcon_core.package_identification:_identify(atlas_ws) by extensions ['colcon_meta']
+[0.324s] Level 1:colcon.colcon_core.package_identification:_identify(atlas_ws) by extension 'colcon_meta'
+[0.325s] Level 1:colcon.colcon_core.package_identification:_identify(atlas_ws) by extensions ['ros']
+[0.325s] Level 1:colcon.colcon_core.package_identification:_identify(atlas_ws) by extension 'ros'
+[0.327s] Level 1:colcon.colcon_core.package_identification:_identify(atlas_ws) by extensions ['cmake', 'python']
+[0.327s] Level 1:colcon.colcon_core.package_identification:_identify(atlas_ws) by extension 'cmake'
+[0.328s] Level 1:colcon.colcon_core.package_identification:_identify(atlas_ws) by extension 'python'
+[0.329s] Level 1:colcon.colcon_core.package_identification:_identify(atlas_ws) by extensions ['python_setup_py']
+[0.329s] Level 1:colcon.colcon_core.package_identification:_identify(atlas_ws) by extension 'python_setup_py'
+[0.332s] Level 1:colcon.colcon_core.package_identification:_identify(atlas_ws/build) by extensions ['ignore', 'ignore_ament_install']
+[0.332s] Level 1:colcon.colcon_core.package_identification:_identify(atlas_ws/build) by extension 'ignore'
+[0.333s] Level 1:colcon.colcon_core.package_identification:_identify(atlas_ws/build) ignored
+[0.336s] Level 1:colcon.colcon_core.package_identification:_identify(atlas_ws/install) by extensions ['ignore', 'ignore_ament_install']
+[0.336s] Level 1:colcon.colcon_core.package_identification:_identify(atlas_ws/install) by extension 'ignore'
+[0.337s] Level 1:colcon.colcon_core.package_identification:_identify(atlas_ws/install) ignored
+[0.341s] Level 1:colcon.colcon_core.package_identification:_identify(atlas_ws/log) by extensions ['ignore', 'ignore_ament_install']
+[0.341s] Level 1:colcon.colcon_core.package_identification:_identify(atlas_ws/log) by extension 'ignore'
+[0.343s] Level 1:colcon.colcon_core.package_identification:_identify(atlas_ws/log) ignored
+[0.345s] Level 1:colcon.colcon_core.package_identification:_identify(atlas_ws/src) by extensions ['ignore', 'ignore_ament_install']
+[0.346s] Level 1:colcon.colcon_core.package_identification:_identify(atlas_ws/src) by extension 'ignore'
+[0.347s] Level 1:colcon.colcon_core.package_identification:_identify(atlas_ws/src) by extension 'ignore_ament_install'
+[0.348s] Level 1:colcon.colcon_core.package_identification:_identify(atlas_ws/src) by extensions ['colcon_pkg']
+[0.348s] Level 1:colcon.colcon_core.package_identification:_identify(atlas_ws/src) by extension 'colcon_pkg'
+[0.349s] Level 1:colcon.colcon_core.package_identification:_identify(atlas_ws/src) by extensions ['colcon_meta']
+[0.349s] Level 1:colcon.colcon_core.package_identification:_identify(atlas_ws/src) by extension 'colcon_meta'
+[0.350s] Level 1:colcon.colcon_core.package_identification:_identify(atlas_ws/src) by extensions ['ros']
+[0.351s] Level 1:colcon.colcon_core.package_identification:_identify(atlas_ws/src) by extension 'ros'
+[0.354s] Level 1:colcon.colcon_core.package_identification:_identify(atlas_ws/src) by extensions ['cmake', 'python']
+[0.354s] Level 1:colcon.colcon_core.package_identification:_identify(atlas_ws/src) by extension 'cmake'
+[0.355s] Level 1:colcon.colcon_core.package_identification:_identify(atlas_ws/src) by extension 'python'
+[0.356s] Level 1:colcon.colcon_core.package_identification:_identify(atlas_ws/src) by extensions ['python_setup_py']
+[0.356s] Level 1:colcon.colcon_core.package_identification:_identify(atlas_ws/src) by extension 'python_setup_py'
+[0.360s] Level 1:colcon.colcon_core.package_identification:_identify(atlas_ws/src/atlas_msgs) by extensions ['ignore', 'ignore_ament_install']
+[0.360s] Level 1:colcon.colcon_core.package_identification:_identify(atlas_ws/src/atlas_msgs) by extension 'ignore'
+[0.361s] Level 1:colcon.colcon_core.package_identification:_identify(atlas_ws/src/atlas_msgs) by extension 'ignore_ament_install'
+[0.363s] Level 1:colcon.colcon_core.package_identification:_identify(atlas_ws/src/atlas_msgs) by extensions ['colcon_pkg']
+[0.364s] Level 1:colcon.colcon_core.package_identification:_identify(atlas_ws/src/atlas_msgs) by extension 'colcon_pkg'
+[0.365s] Level 1:colcon.colcon_core.package_identification:_identify(atlas_ws/src/atlas_msgs) by extensions ['colcon_meta']
+[0.365s] Level 1:colcon.colcon_core.package_identification:_identify(atlas_ws/src/atlas_msgs) by extension 'colcon_meta'
+[0.368s] Level 1:colcon.colcon_core.package_identification:_identify(atlas_ws/src/atlas_msgs) by extensions ['ros']
+[0.368s] Level 1:colcon.colcon_core.package_identification:_identify(atlas_ws/src/atlas_msgs) by extension 'ros'
+[0.380s] DEBUG:colcon.colcon_core.package_identification:Package 'atlas_ws/src/atlas_msgs' with type 'ros.ament_cmake' and name 'atlas_msgs'
+[0.384s] Level 1:colcon.colcon_core.package_identification:_identify(atlas_ws/src/atlas_python) by extensions ['ignore', 'ignore_ament_install']
+[0.384s] Level 1:colcon.colcon_core.package_identification:_identify(atlas_ws/src/atlas_python) by extension 'ignore'
+[0.385s] Level 1:colcon.colcon_core.package_identification:_identify(atlas_ws/src/atlas_python) by extension 'ignore_ament_install'
+[0.387s] Level 1:colcon.colcon_core.package_identification:_identify(atlas_ws/src/atlas_python) by extensions ['colcon_pkg']
+[0.387s] Level 1:colcon.colcon_core.package_identification:_identify(atlas_ws/src/atlas_python) by extension 'colcon_pkg'
+[0.388s] Level 1:colcon.colcon_core.package_identification:_identify(atlas_ws/src/atlas_python) by extensions ['colcon_meta']
+[0.388s] Level 1:colcon.colcon_core.package_identification:_identify(atlas_ws/src/atlas_python) by extension 'colcon_meta'
+[0.390s] Level 1:colcon.colcon_core.package_identification:_identify(atlas_ws/src/atlas_python) by extensions ['ros']
+[0.390s] Level 1:colcon.colcon_core.package_identification:_identify(atlas_ws/src/atlas_python) by extension 'ros'
+[0.401s] DEBUG:colcon.colcon_core.package_identification:Package 'atlas_ws/src/atlas_python' with type 'ros.ament_python' and name 'atlas_python'
+[0.403s] Level 1:colcon.colcon_core.package_identification:_identify(build) by extensions ['ignore', 'ignore_ament_install']
+[0.403s] Level 1:colcon.colcon_core.package_identification:_identify(build) by extension 'ignore'
+[0.404s] Level 1:colcon.colcon_core.package_identification:_identify(build) ignored
+[0.406s] Level 1:colcon.colcon_core.package_identification:_identify(install) by extensions ['ignore', 'ignore_ament_install']
+[0.406s] Level 1:colcon.colcon_core.package_identification:_identify(install) by extension 'ignore'
+[0.406s] Level 1:colcon.colcon_core.package_identification:_identify(install) ignored
+[0.409s] Level 1:colcon.colcon_core.package_identification:_identify(log) by extensions ['ignore', 'ignore_ament_install']
+[0.409s] Level 1:colcon.colcon_core.package_identification:_identify(log) by extension 'ignore'
+[0.409s] Level 1:colcon.colcon_core.package_identification:_identify(log) ignored
+[0.411s] Level 1:colcon.colcon_core.package_identification:_identify(scripts) by extensions ['ignore', 'ignore_ament_install']
+[0.412s] Level 1:colcon.colcon_core.package_identification:_identify(scripts) by extension 'ignore'
+[0.412s] Level 1:colcon.colcon_core.package_identification:_identify(scripts) by extension 'ignore_ament_install'
+[0.413s] Level 1:colcon.colcon_core.package_identification:_identify(scripts) by extensions ['colcon_pkg']
+[0.413s] Level 1:colcon.colcon_core.package_identification:_identify(scripts) by extension 'colcon_pkg'
+[0.414s] Level 1:colcon.colcon_core.package_identification:_identify(scripts) by extensions ['colcon_meta']
+[0.414s] Level 1:colcon.colcon_core.package_identification:_identify(scripts) by extension 'colcon_meta'
+[0.414s] Level 1:colcon.colcon_core.package_identification:_identify(scripts) by extensions ['ros']
+[0.414s] Level 1:colcon.colcon_core.package_identification:_identify(scripts) by extension 'ros'
+[0.416s] Level 1:colcon.colcon_core.package_identification:_identify(scripts) by extensions ['cmake', 'python']
+[0.416s] Level 1:colcon.colcon_core.package_identification:_identify(scripts) by extension 'cmake'
+[0.417s] Level 1:colcon.colcon_core.package_identification:_identify(scripts) by extension 'python'
+[0.417s] Level 1:colcon.colcon_core.package_identification:_identify(scripts) by extensions ['python_setup_py']
+[0.417s] Level 1:colcon.colcon_core.package_identification:_identify(scripts) by extension 'python_setup_py'
+[0.420s] Level 1:colcon.colcon_core.package_identification:_identify(scripts/ball_detection) by extensions ['ignore', 'ignore_ament_install']
+[0.420s] Level 1:colcon.colcon_core.package_identification:_identify(scripts/ball_detection) by extension 'ignore'
+[0.421s] Level 1:colcon.colcon_core.package_identification:_identify(scripts/ball_detection) by extension 'ignore_ament_install'
+[0.422s] Level 1:colcon.colcon_core.package_identification:_identify(scripts/ball_detection) by extensions ['colcon_pkg']
+[0.422s] Level 1:colcon.colcon_core.package_identification:_identify(scripts/ball_detection) by extension 'colcon_pkg'
+[0.423s] Level 1:colcon.colcon_core.package_identification:_identify(scripts/ball_detection) by extensions ['colcon_meta']
+[0.423s] Level 1:colcon.colcon_core.package_identification:_identify(scripts/ball_detection) by extension 'colcon_meta'
+[0.424s] Level 1:colcon.colcon_core.package_identification:_identify(scripts/ball_detection) by extensions ['ros']
+[0.424s] Level 1:colcon.colcon_core.package_identification:_identify(scripts/ball_detection) by extension 'ros'
+[0.429s] Level 1:colcon.colcon_core.package_identification:_identify(scripts/ball_detection) by extensions ['cmake', 'python']
+[0.429s] Level 1:colcon.colcon_core.package_identification:_identify(scripts/ball_detection) by extension 'cmake'
+[0.430s] Level 1:colcon.colcon_core.package_identification:_identify(scripts/ball_detection) by extension 'python'
+[0.430s] Level 1:colcon.colcon_core.package_identification:_identify(scripts/ball_detection) by extensions ['python_setup_py']
+[0.431s] Level 1:colcon.colcon_core.package_identification:_identify(scripts/ball_detection) by extension 'python_setup_py'
+[0.431s] Level 1:colcon.colcon_core.package_discovery:discover_packages(recursive) using defaults
+[0.431s] Level 1:colcon.colcon_core.package_discovery:discover_packages(ignore) discover
+[0.432s] Level 1:colcon.colcon_core.package_discovery:discover_packages(ignore) using defaults
+[0.432s] Level 1:colcon.colcon_core.package_discovery:discover_packages(path) discover
+[0.432s] Level 1:colcon.colcon_core.package_discovery:discover_packages(path) using defaults
+[0.458s] Level 1:colcon.colcon_core.package_discovery:discover_packages(prefix_path) check parameters
+[0.459s] Level 1:colcon.colcon_core.package_discovery:discover_packages(prefix_path) discover
+[0.460s] DEBUG:colcon.colcon_installed_package_information.package_discovery:Found 348 installed packages in /opt/ros/humble
+[0.462s] Level 1:colcon.colcon_core.package_discovery:discover_packages(prefix_path) using defaults
+[0.501s] Level 5:colcon.colcon_core.verb:set package 'atlas_msgs' build argument 'cmake_args' from command line to 'None'
+[0.502s] Level 5:colcon.colcon_core.verb:set package 'atlas_msgs' build argument 'cmake_target' from command line to 'None'
+[0.502s] Level 5:colcon.colcon_core.verb:set package 'atlas_msgs' build argument 'cmake_target_skip_unavailable' from command line to 'False'
+[0.502s] Level 5:colcon.colcon_core.verb:set package 'atlas_msgs' build argument 'cmake_clean_cache' from command line to 'False'
+[0.503s] Level 5:colcon.colcon_core.verb:set package 'atlas_msgs' build argument 'cmake_clean_first' from command line to 'False'
+[0.503s] Level 5:colcon.colcon_core.verb:set package 'atlas_msgs' build argument 'cmake_force_configure' from command line to 'False'
+[0.503s] Level 5:colcon.colcon_core.verb:set package 'atlas_msgs' build argument 'ament_cmake_args' from command line to 'None'
+[0.503s] Level 5:colcon.colcon_core.verb:set package 'atlas_msgs' build argument 'catkin_cmake_args' from command line to 'None'
+[0.503s] Level 5:colcon.colcon_core.verb:set package 'atlas_msgs' build argument 'catkin_skip_building_tests' from command line to 'False'
+[0.504s] DEBUG:colcon.colcon_core.verb:Building package 'atlas_msgs' with the following arguments: {'ament_cmake_args': None, 'build_base': '/mnt/d/MOnash/ECE4191/Code/atlas/build/atlas_msgs', 'catkin_cmake_args': None, 'catkin_skip_building_tests': False, 'cmake_args': None, 'cmake_clean_cache': False, 'cmake_clean_first': False, 'cmake_force_configure': False, 'cmake_target': None, 'cmake_target_skip_unavailable': False, 'install_base': '/mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs', 'merge_install': False, 'path': '/mnt/d/MOnash/ECE4191/Code/atlas/atlas_ws/src/atlas_msgs', 'symlink_install': False, 'test_result_base': None}
+[0.504s] Level 5:colcon.colcon_core.verb:set package 'atlas_python' build argument 'cmake_args' from command line to 'None'
+[0.504s] Level 5:colcon.colcon_core.verb:set package 'atlas_python' build argument 'cmake_target' from command line to 'None'
+[0.504s] Level 5:colcon.colcon_core.verb:set package 'atlas_python' build argument 'cmake_target_skip_unavailable' from command line to 'False'
+[0.505s] Level 5:colcon.colcon_core.verb:set package 'atlas_python' build argument 'cmake_clean_cache' from command line to 'False'
+[0.505s] Level 5:colcon.colcon_core.verb:set package 'atlas_python' build argument 'cmake_clean_first' from command line to 'False'
+[0.505s] Level 5:colcon.colcon_core.verb:set package 'atlas_python' build argument 'cmake_force_configure' from command line to 'False'
+[0.505s] Level 5:colcon.colcon_core.verb:set package 'atlas_python' build argument 'ament_cmake_args' from command line to 'None'
+[0.505s] Level 5:colcon.colcon_core.verb:set package 'atlas_python' build argument 'catkin_cmake_args' from command line to 'None'
+[0.505s] Level 5:colcon.colcon_core.verb:set package 'atlas_python' build argument 'catkin_skip_building_tests' from command line to 'False'
+[0.505s] DEBUG:colcon.colcon_core.verb:Building package 'atlas_python' with the following arguments: {'ament_cmake_args': None, 'build_base': '/mnt/d/MOnash/ECE4191/Code/atlas/build/atlas_python', 'catkin_cmake_args': None, 'catkin_skip_building_tests': False, 'cmake_args': None, 'cmake_clean_cache': False, 'cmake_clean_first': False, 'cmake_force_configure': False, 'cmake_target': None, 'cmake_target_skip_unavailable': False, 'install_base': '/mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_python', 'merge_install': False, 'path': '/mnt/d/MOnash/ECE4191/Code/atlas/atlas_ws/src/atlas_python', 'symlink_install': False, 'test_result_base': None}
+[0.505s] INFO:colcon.colcon_core.executor:Executing jobs using 'parallel' executor
+[0.507s] DEBUG:colcon.colcon_parallel_executor.executor.parallel:run_until_complete
+[0.507s] INFO:colcon.colcon_ros.task.ament_cmake.build:Building ROS package in '/mnt/d/MOnash/ECE4191/Code/atlas/atlas_ws/src/atlas_msgs' with build type 'ament_cmake'
+[0.507s] INFO:colcon.colcon_cmake.task.cmake.build:Building CMake package in '/mnt/d/MOnash/ECE4191/Code/atlas/atlas_ws/src/atlas_msgs'
+[0.509s] INFO:colcon.colcon_core.plugin_system:Skipping extension 'colcon_core.shell.bat': Not used on non-Windows systems
+[0.510s] INFO:colcon.colcon_core.shell:Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[0.510s] DEBUG:colcon.colcon_core.shell:Skip shell extension 'dsv' for command environment
+[0.517s] INFO:colcon.colcon_ros.task.ament_python.build:Building ROS package in '/mnt/d/MOnash/ECE4191/Code/atlas/atlas_ws/src/atlas_python' with build type 'ament_python'
+[0.518s] Level 1:colcon.colcon_core.shell:create_environment_hook('atlas_python', 'ament_prefix_path')
+[0.518s] INFO:colcon.colcon_core.shell:Creating environment hook '/mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_python/share/atlas_python/hook/ament_prefix_path.ps1'
+[0.527s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_python/share/atlas_python/hook/ament_prefix_path.dsv'
+[0.536s] INFO:colcon.colcon_core.shell:Creating environment hook '/mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_python/share/atlas_python/hook/ament_prefix_path.sh'
+[0.546s] INFO:colcon.colcon_core.shell:Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[0.546s] DEBUG:colcon.colcon_core.shell:Skip shell extension 'dsv' for command environment
+[0.581s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/mnt/d/MOnash/ECE4191/Code/atlas/build/atlas_msgs': CMAKE_PREFIX_PATH=/opt/ros/humble WSLENV=ELECTRON_RUN_AS_NODE/w: /usr/bin/cmake /mnt/d/MOnash/ECE4191/Code/atlas/atlas_ws/src/atlas_msgs -DCMAKE_INSTALL_PREFIX=/mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs
+[0.833s] INFO:colcon.colcon_core.task.python.build:Building Python package in '/mnt/d/MOnash/ECE4191/Code/atlas/atlas_ws/src/atlas_python'
+[0.833s] INFO:colcon.colcon_core.shell:Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[0.833s] DEBUG:colcon.colcon_core.shell:Skip shell extension 'dsv' for command environment
+[1.659s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/mnt/d/MOnash/ECE4191/Code/atlas/atlas_ws/src/atlas_python': PYTHONPATH=/mnt/d/MOnash/ECE4191/Code/atlas/build/atlas_python/prefix_override:/home/anhdau/.local/lib/python3.10/site-packages/colcon_core/task/python/colcon_distutils_commands:/mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_python/lib/python3.10/site-packages:${PYTHONPATH} WSLENV=ELECTRON_RUN_AS_NODE/w: /usr/bin/python3 -W ignore:setup.py install is deprecated setup.py egg_info --egg-base ../../../build/atlas_python build --build-base /mnt/d/MOnash/ECE4191/Code/atlas/build/atlas_python/build install --record /mnt/d/MOnash/ECE4191/Code/atlas/build/atlas_python/install.log --single-version-externally-managed install_data
+[2.904s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/mnt/d/MOnash/ECE4191/Code/atlas/atlas_ws/src/atlas_python' returned '0': PYTHONPATH=/mnt/d/MOnash/ECE4191/Code/atlas/build/atlas_python/prefix_override:/home/anhdau/.local/lib/python3.10/site-packages/colcon_core/task/python/colcon_distutils_commands:/mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_python/lib/python3.10/site-packages:${PYTHONPATH} WSLENV=ELECTRON_RUN_AS_NODE/w: /usr/bin/python3 -W ignore:setup.py install is deprecated setup.py egg_info --egg-base ../../../build/atlas_python build --build-base /mnt/d/MOnash/ECE4191/Code/atlas/build/atlas_python/build install --record /mnt/d/MOnash/ECE4191/Code/atlas/build/atlas_python/install.log --single-version-externally-managed install_data
+[2.905s] Level 1:colcon.colcon_core.environment:checking '/mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_python' for CMake module files
+[2.946s] Level 1:colcon.colcon_core.environment:checking '/mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_python' for CMake config files
+[3.011s] Level 1:colcon.colcon_core.environment:checking '/mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_python/lib'
+[3.014s] Level 1:colcon.colcon_core.environment:checking '/mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_python/bin'
+[3.015s] Level 1:colcon.colcon_core.environment:checking '/mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_python/lib/pkgconfig/atlas_python.pc'
+[3.017s] Level 1:colcon.colcon_core.environment:checking '/mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_python/lib/python3.10/site-packages'
+[3.018s] Level 1:colcon.colcon_core.shell:create_environment_hook('atlas_python', 'pythonpath')
+[3.019s] INFO:colcon.colcon_core.shell:Creating environment hook '/mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_python/share/atlas_python/hook/pythonpath.ps1'
+[3.028s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_python/share/atlas_python/hook/pythonpath.dsv'
+[3.039s] INFO:colcon.colcon_core.shell:Creating environment hook '/mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_python/share/atlas_python/hook/pythonpath.sh'
+[3.049s] Level 1:colcon.colcon_core.environment:checking '/mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_python/bin'
+[3.050s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(atlas_python)
+[3.051s] INFO:colcon.colcon_core.shell:Creating package script '/mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_python/share/atlas_python/package.ps1'
+[3.060s] INFO:colcon.colcon_core.shell:Creating package descriptor '/mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_python/share/atlas_python/package.dsv'
+[3.071s] INFO:colcon.colcon_core.shell:Creating package script '/mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_python/share/atlas_python/package.sh'
+[3.085s] INFO:colcon.colcon_core.shell:Creating package script '/mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_python/share/atlas_python/package.bash'
+[3.101s] INFO:colcon.colcon_core.shell:Creating package script '/mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_python/share/atlas_python/package.zsh'
+[3.115s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_python/share/colcon-core/packages/atlas_python)
+[5.089s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/mnt/d/MOnash/ECE4191/Code/atlas/build/atlas_msgs' returned '0': CMAKE_PREFIX_PATH=/opt/ros/humble WSLENV=ELECTRON_RUN_AS_NODE/w: /usr/bin/cmake /mnt/d/MOnash/ECE4191/Code/atlas/atlas_ws/src/atlas_msgs -DCMAKE_INSTALL_PREFIX=/mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs
+[5.097s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/mnt/d/MOnash/ECE4191/Code/atlas/build/atlas_msgs': CMAKE_PREFIX_PATH=/opt/ros/humble WSLENV=ELECTRON_RUN_AS_NODE/w: /usr/bin/cmake --build /mnt/d/MOnash/ECE4191/Code/atlas/build/atlas_msgs -- -j16 -l16
+[9.119s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/mnt/d/MOnash/ECE4191/Code/atlas/build/atlas_msgs' returned '0': CMAKE_PREFIX_PATH=/opt/ros/humble WSLENV=ELECTRON_RUN_AS_NODE/w: /usr/bin/cmake --build /mnt/d/MOnash/ECE4191/Code/atlas/build/atlas_msgs -- -j16 -l16
+[9.210s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/mnt/d/MOnash/ECE4191/Code/atlas/build/atlas_msgs': CMAKE_PREFIX_PATH=/opt/ros/humble WSLENV=ELECTRON_RUN_AS_NODE/w: /usr/bin/cmake --install /mnt/d/MOnash/ECE4191/Code/atlas/build/atlas_msgs
+[16.597s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(atlas_msgs)
+[16.597s] Level 1:colcon.colcon_core.environment:checking '/mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs' for CMake module files
+[16.598s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/mnt/d/MOnash/ECE4191/Code/atlas/build/atlas_msgs' returned '0': CMAKE_PREFIX_PATH=/opt/ros/humble WSLENV=ELECTRON_RUN_AS_NODE/w: /usr/bin/cmake --install /mnt/d/MOnash/ECE4191/Code/atlas/build/atlas_msgs
+[16.745s] Level 1:colcon.colcon_core.environment:checking '/mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs' for CMake config files
+[16.849s] Level 1:colcon.colcon_core.shell:create_environment_hook('atlas_msgs', 'cmake_prefix_path')
+[16.849s] INFO:colcon.colcon_core.shell:Creating environment hook '/mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/share/atlas_msgs/hook/cmake_prefix_path.ps1'
+[16.859s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/share/atlas_msgs/hook/cmake_prefix_path.dsv'
+[16.870s] INFO:colcon.colcon_core.shell:Creating environment hook '/mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/share/atlas_msgs/hook/cmake_prefix_path.sh'
+[16.881s] Level 1:colcon.colcon_core.environment:checking '/mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/lib'
+[16.885s] Level 1:colcon.colcon_core.shell:create_environment_hook('atlas_msgs', 'ld_library_path_lib')
+[16.885s] INFO:colcon.colcon_core.shell:Creating environment hook '/mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/share/atlas_msgs/hook/ld_library_path_lib.ps1'
+[16.893s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/share/atlas_msgs/hook/ld_library_path_lib.dsv'
+[16.902s] INFO:colcon.colcon_core.shell:Creating environment hook '/mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/share/atlas_msgs/hook/ld_library_path_lib.sh'
+[16.911s] Level 1:colcon.colcon_core.environment:checking '/mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/bin'
+[16.911s] Level 1:colcon.colcon_core.environment:checking '/mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/lib/pkgconfig/atlas_msgs.pc'
+[16.913s] Level 1:colcon.colcon_core.environment:checking '/mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/lib/python3.10/site-packages'
+[16.915s] Level 1:colcon.colcon_core.environment:checking '/mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/bin'
+[16.917s] INFO:colcon.colcon_core.shell:Creating package script '/mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/share/atlas_msgs/package.ps1'
+[16.924s] INFO:colcon.colcon_core.shell:Creating package descriptor '/mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/share/atlas_msgs/package.dsv'
+[16.932s] INFO:colcon.colcon_core.shell:Creating package script '/mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/share/atlas_msgs/package.sh'
+[16.941s] INFO:colcon.colcon_core.shell:Creating package script '/mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/share/atlas_msgs/package.bash'
+[16.950s] INFO:colcon.colcon_core.shell:Creating package script '/mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/share/atlas_msgs/package.zsh'
+[16.959s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/share/colcon-core/packages/atlas_msgs)
+[17.050s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(atlas_msgs)
+[17.051s] Level 1:colcon.colcon_core.environment:checking '/mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs' for CMake module files
+[17.200s] Level 1:colcon.colcon_core.environment:checking '/mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs' for CMake config files
+[17.322s] Level 1:colcon.colcon_core.shell:create_environment_hook('atlas_msgs', 'cmake_prefix_path')
+[17.322s] INFO:colcon.colcon_core.shell:Creating environment hook '/mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/share/atlas_msgs/hook/cmake_prefix_path.ps1'
+[17.331s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/share/atlas_msgs/hook/cmake_prefix_path.dsv'
+[17.341s] INFO:colcon.colcon_core.shell:Creating environment hook '/mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/share/atlas_msgs/hook/cmake_prefix_path.sh'
+[17.352s] Level 1:colcon.colcon_core.environment:checking '/mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/lib'
+[17.355s] Level 1:colcon.colcon_core.shell:create_environment_hook('atlas_msgs', 'ld_library_path_lib')
+[17.355s] INFO:colcon.colcon_core.shell:Creating environment hook '/mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/share/atlas_msgs/hook/ld_library_path_lib.ps1'
+[17.364s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/share/atlas_msgs/hook/ld_library_path_lib.dsv'
+[17.374s] INFO:colcon.colcon_core.shell:Creating environment hook '/mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/share/atlas_msgs/hook/ld_library_path_lib.sh'
+[17.382s] Level 1:colcon.colcon_core.environment:checking '/mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/bin'
+[17.383s] Level 1:colcon.colcon_core.environment:checking '/mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/lib/pkgconfig/atlas_msgs.pc'
+[17.384s] Level 1:colcon.colcon_core.environment:checking '/mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/lib/python3.10/site-packages'
+[17.386s] Level 1:colcon.colcon_core.environment:checking '/mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/bin'
+[17.387s] INFO:colcon.colcon_core.shell:Creating package script '/mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/share/atlas_msgs/package.ps1'
+[17.395s] INFO:colcon.colcon_core.shell:Creating package descriptor '/mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/share/atlas_msgs/package.dsv'
+[17.404s] INFO:colcon.colcon_core.shell:Creating package script '/mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/share/atlas_msgs/package.sh'
+[17.412s] INFO:colcon.colcon_core.shell:Creating package script '/mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/share/atlas_msgs/package.bash'
+[17.422s] INFO:colcon.colcon_core.shell:Creating package script '/mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/share/atlas_msgs/package.zsh'
+[17.432s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs/share/colcon-core/packages/atlas_msgs)
+[17.439s] DEBUG:colcon.colcon_parallel_executor.executor.parallel:closing loop
+[17.440s] DEBUG:colcon.colcon_parallel_executor.executor.parallel:loop closed
+[17.440s] DEBUG:colcon.colcon_parallel_executor.executor.parallel:run_until_complete finished with '0'
+[17.440s] DEBUG:colcon.colcon_core.event_reactor:joining thread
+[17.481s] INFO:colcon.colcon_core.plugin_system:Skipping extension 'colcon_notification.desktop_notification.notify_send': Could not find 'notify-send'
+[17.482s] INFO:colcon.colcon_core.plugin_system:Skipping extension 'colcon_notification.desktop_notification.terminal_notifier': Not used on non-Darwin systems
+[17.482s] INFO:colcon.colcon_core.plugin_system:Skipping extension 'colcon_notification.desktop_notification.win32': Not used on non-Windows systems
+[17.483s] INFO:colcon.colcon_notification.desktop_notification:Sending desktop notification using 'notify2'
+[17.483s] DEBUG:colcon.colcon_notification.desktop_notification.notify2:Failed to initialize notify2: org.freedesktop.DBus.Error.FileNotFound: Failed to connect to socket /run/user/1000/bus: No such file or directory
+[17.483s] DEBUG:colcon.colcon_core.event_reactor:joined thread
+[17.484s] INFO:colcon.colcon_core.shell:Creating prefix script '/mnt/d/MOnash/ECE4191/Code/atlas/install/local_setup.ps1'
+[17.489s] INFO:colcon.colcon_core.shell:Creating prefix util module '/mnt/d/MOnash/ECE4191/Code/atlas/install/_local_setup_util_ps1.py'
+[17.494s] INFO:colcon.colcon_core.shell:Creating prefix chain script '/mnt/d/MOnash/ECE4191/Code/atlas/install/setup.ps1'
+[17.499s] INFO:colcon.colcon_core.shell:Creating prefix script '/mnt/d/MOnash/ECE4191/Code/atlas/install/local_setup.sh'
+[17.504s] INFO:colcon.colcon_core.shell:Creating prefix util module '/mnt/d/MOnash/ECE4191/Code/atlas/install/_local_setup_util_sh.py'
+[17.508s] INFO:colcon.colcon_core.shell:Creating prefix chain script '/mnt/d/MOnash/ECE4191/Code/atlas/install/setup.sh'
+[17.513s] INFO:colcon.colcon_core.shell:Creating prefix script '/mnt/d/MOnash/ECE4191/Code/atlas/install/local_setup.bash'
+[17.516s] INFO:colcon.colcon_core.shell:Creating prefix chain script '/mnt/d/MOnash/ECE4191/Code/atlas/install/setup.bash'
+[17.520s] INFO:colcon.colcon_core.shell:Creating prefix script '/mnt/d/MOnash/ECE4191/Code/atlas/install/local_setup.zsh'
+[17.524s] INFO:colcon.colcon_core.shell:Creating prefix chain script '/mnt/d/MOnash/ECE4191/Code/atlas/install/setup.zsh'

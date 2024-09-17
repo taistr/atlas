@@ -95,8 +95,6 @@ void resetPID(int motor){
  
   leftPID.motor = LEFT;
   rightPID.motor = RIGHT;
-
-  //Serial.println("PID Reset.");
 }
 
 /* PID routine to compute the next motor commands */
@@ -151,7 +149,7 @@ void doPID(SetPointInfo * p) {
           Kd = Lt_Kd;
           Ko = Lt_Ko;
           break;
-        case RIGHT:
+      case RIGHT:
           Kp = Rt_Kp;
           Ki = Rt_Ki;
           Kd = Rt_Kd;
@@ -167,7 +165,7 @@ void doPID(SetPointInfo * p) {
           Kd = L_Kd;
           Ko = L_Ko;
           break;
-        case RIGHT:
+      case RIGHT:
           Kp = R_Kp;
           Ki = R_Ki;
           Kd = R_Kd;
@@ -193,41 +191,12 @@ void doPID(SetPointInfo * p) {
   else if (output < 0 && output >= -MIN_PWM && output <= -MIN_PWM+MIN_PWM_ALLOW_ZONE)
     output = -MIN_PWM;
   else p->ITerm += Ki * Perror;
-
+  //Serial.println(p->PrevErr);
   p->output = output;
-
-  /* Serial Plotter */
-  //Serial.print("Fixed:");
-  //Serial.print(50000);
-  //Serial.print(",L:");
-  //Serial.print(leftPID.PrevErr);
-  //Serial.print(",R:");
-  //Serial.print(rightPID.PrevErr);
-  //Serial.print(",L_e:");
-  //Serial.print(leftPID.output*10);
-  //Serial.print(",R_e:");
-  //Serial.println(rightPID.output*10);
 }
 
 /* Read the encoder values and call the PID routine */
 void updatePID() {
-  /* Disables turning mode if target is met */
-  if (leftPID.Turning_CountsToTarget == 0 && rightPID.Turning_CountsToTarget == 0){
-    turning = 0;
-  }
-
-  /* Disables moving mode if target is met */
-  if (moving && leftPID.Straight_CountsToTarget == 0 && rightPID.Straight_CountsToTarget == 0){
-    moving = 0;
-    // Responds back to RPi and opens up Rx 
-    serialTxStruct.status = 200;
-    serialTxStruct.cmd = 'm';
-    serialTxStruct.arg1 = 0.0;
-    serialTxStruct.arg2 = 0.0;
-    TX_REQUESTED = true;
-    RX_ALLOWED = true;
-  }
-
   /* Read the encoders if still in moving mode */
   if (moving){
     if (!turning){
@@ -239,8 +208,29 @@ void updatePID() {
       rightPID.Turning_CountsToTarget = rightPID.Turning_CountsToTarget - readEncoder(RIGHT);
     }
   }
+  /* Disables turning mode if target is met */
+  if (leftPID.Turning_CountsToTarget == 0 && rightPID.Turning_CountsToTarget == 0){
+    turning = 0;
+  }
+
+  /* Disables moving mode if target is met */
+  if (!turning && moving && leftPID.Straight_CountsToTarget == 0 && rightPID.Straight_CountsToTarget == 0){
+    moving = 0;
+    // Responds back to RPi and opens up Rx 
+    serialTxStruct.status = 200;
+    serialTxStruct.cmd = 'm';
+    serialTxStruct.arg1 = 0.0;
+    serialTxStruct.arg2 = 0.0;
+    TX_REQUESTED = true;
+    RX_ALLOWED = true;
+  }
+
+  resetEncoder(LEFT);
+  resetEncoder(RIGHT);
+
   /* If we're not moving there is nothing more to do */
-  else if (!moving){
+  //else if (!moving){
+  if (!moving){
     /*
     * Reset PIDs once, to prevent startup spikes,
     * see http://brettbeauregard.com/blog/2011/04/improving-the-beginner%E2%80%99s-pid-initialization/
@@ -255,8 +245,6 @@ void updatePID() {
     return;
   }
 
-  resetEncoder(LEFT);
-  resetEncoder(RIGHT);
 
   /* Compute PID update for each motor */
   doPID(&rightPID);

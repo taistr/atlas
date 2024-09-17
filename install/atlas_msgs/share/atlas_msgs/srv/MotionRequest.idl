@@ -1,0 +1,17 @@
+// generated from rosidl_adapter/resource/srv.idl.em
+// with input from atlas_msgs/srv/MotionRequest.srv
+// generated code does not contain a copyright notice
+
+
+module atlas_msgs {
+  module srv {
+    struct MotionRequest_Request {
+      float angle;
+
+      float distance;
+    };
+    struct MotionRequest_Response {
+      uint8 structure_needs_at_least_one_member;
+    };
+  };
+};

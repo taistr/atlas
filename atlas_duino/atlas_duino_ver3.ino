@@ -91,9 +91,9 @@ struct __attribute__((packed)) STRUCT_TX {
 } serialTxStruct;
 //---------------------------------------------------------
 // Differential Drive--------------------------------------
-double SPINDLE_TO_ENCODER_GEAR_RATIO = 74.8317;
-double WHEEL_RADIUS = 56.0/(1000*2); // mm
-double WHEEL_BASE = 25.5/100; //cm
+float SPINDLE_TO_ENCODER_GEAR_RATIO = 74.8317;
+float WHEEL_RADIUS = 56.0/(1000*2); // m
+float WHEEL_BASE = 25.5/100; //m
 //---------------------------------------------------------
 
 /* Custom header files */
@@ -333,7 +333,7 @@ int executeSerialCmd(){
         // Sets motors' closed-loop distance, based on input
             /* Reset the auto stop timer */
             lastMotorCommand = micros();
-
+            
             /* 0 input */
             if (serialRxStruct.arg1  == 0 && serialRxStruct.arg2 == 0) {
               setMotorSpeeds(0, 0);
@@ -350,7 +350,6 @@ int executeSerialCmd(){
             //float straight_counts = (serialRxStruct.arg1/(2*PI*WHEEL_RADIUS)) * 48 * SPINDLE_TO_ENCODER_GEAR_RATIO;  // Distance in m
             /* Calculates encoder counts for turning movement */
             //float turning_counts = (serialRxStruct.arg2*(48*SPINDLE_TO_ENCODER_GEAR_RATIO)*(WHEEL_BASE/2))/(360*WHEEL_RADIUS);  // Angle in degrees
-
             leftPID.Straight_CountsToTarget = floor((serialRxStruct.arg1/(2*PI*WHEEL_RADIUS)) * 48 * SPINDLE_TO_ENCODER_GEAR_RATIO);
             rightPID.Straight_CountsToTarget = floor(leftPID.Straight_CountsToTarget);
             leftPID.Turning_CountsToTarget = floor(-(serialRxStruct.arg2*(48*SPINDLE_TO_ENCODER_GEAR_RATIO)*(WHEEL_BASE/2))/(360*WHEEL_RADIUS));

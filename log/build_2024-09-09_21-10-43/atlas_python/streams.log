@@ -1,0 +1,53 @@
+[1.104s] Invoking command in '/mnt/d/MOnash/ECE4191/Code/atlas/atlas_ws/src/atlas_python': PYTHONPATH=/mnt/d/MOnash/ECE4191/Code/atlas/build/atlas_python/prefix_override:/home/anhdau/.local/lib/python3.10/site-packages/colcon_core/task/python/colcon_distutils_commands:/mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_python/lib/python3.10/site-packages:${PYTHONPATH} WSLENV=ELECTRON_RUN_AS_NODE/w: /usr/bin/python3 -W ignore:setup.py install is deprecated setup.py egg_info --egg-base ../../../build/atlas_python build --build-base /mnt/d/MOnash/ECE4191/Code/atlas/build/atlas_python/build install --record /mnt/d/MOnash/ECE4191/Code/atlas/build/atlas_python/install.log --single-version-externally-managed install_data
+[1.625s] running egg_info
+[1.627s] creating ../../../build/atlas_python/atlas_python.egg-info
+[1.629s] writing ../../../build/atlas_python/atlas_python.egg-info/PKG-INFO
+[1.636s] writing dependency_links to ../../../build/atlas_python/atlas_python.egg-info/dependency_links.txt
+[1.640s] writing entry points to ../../../build/atlas_python/atlas_python.egg-info/entry_points.txt
+[1.643s] writing requirements to ../../../build/atlas_python/atlas_python.egg-info/requires.txt
+[1.645s] writing top-level names to ../../../build/atlas_python/atlas_python.egg-info/top_level.txt
+[1.649s] writing manifest file '../../../build/atlas_python/atlas_python.egg-info/SOURCES.txt'
+[1.681s] reading manifest file '../../../build/atlas_python/atlas_python.egg-info/SOURCES.txt'
+[1.702s] adding license file 'LICENSE'
+[1.723s] writing manifest file '../../../build/atlas_python/atlas_python.egg-info/SOURCES.txt'
+[1.725s] running build
+[1.726s] running build_py
+[1.729s] creating /mnt/d/MOnash/ECE4191/Code/atlas/build/atlas_python/build
+[1.730s] creating /mnt/d/MOnash/ECE4191/Code/atlas/build/atlas_python/build/lib
+[1.732s] creating /mnt/d/MOnash/ECE4191/Code/atlas/build/atlas_python/build/lib/atlas_python
+[1.738s] copying atlas_python/hello.py -> /mnt/d/MOnash/ECE4191/Code/atlas/build/atlas_python/build/lib/atlas_python
+[1.753s] copying atlas_python/object_detection.py -> /mnt/d/MOnash/ECE4191/Code/atlas/build/atlas_python/build/lib/atlas_python
+[1.768s] copying atlas_python/planner.py -> /mnt/d/MOnash/ECE4191/Code/atlas/build/atlas_python/build/lib/atlas_python
+[1.784s] copying atlas_python/pySerialTransfer_test.py -> /mnt/d/MOnash/ECE4191/Code/atlas/build/atlas_python/build/lib/atlas_python
+[1.799s] copying atlas_python/__init__.py -> /mnt/d/MOnash/ECE4191/Code/atlas/build/atlas_python/build/lib/atlas_python
+[1.808s] running install
+[1.809s] running install_lib
+[1.822s] creating /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_python/lib/python3.10/site-packages/atlas_python
+[1.833s] copying /mnt/d/MOnash/ECE4191/Code/atlas/build/atlas_python/build/lib/atlas_python/hello.py -> /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_python/lib/python3.10/site-packages/atlas_python
+[1.856s] copying /mnt/d/MOnash/ECE4191/Code/atlas/build/atlas_python/build/lib/atlas_python/object_detection.py -> /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_python/lib/python3.10/site-packages/atlas_python
+[1.881s] copying /mnt/d/MOnash/ECE4191/Code/atlas/build/atlas_python/build/lib/atlas_python/planner.py -> /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_python/lib/python3.10/site-packages/atlas_python
+[1.905s] copying /mnt/d/MOnash/ECE4191/Code/atlas/build/atlas_python/build/lib/atlas_python/pySerialTransfer_test.py -> /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_python/lib/python3.10/site-packages/atlas_python
+[1.928s] copying /mnt/d/MOnash/ECE4191/Code/atlas/build/atlas_python/build/lib/atlas_python/__init__.py -> /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_python/lib/python3.10/site-packages/atlas_python
+[1.953s] byte-compiling /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_python/lib/python3.10/site-packages/atlas_python/hello.py to hello.cpython-310.pyc
+[1.983s] byte-compiling /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_python/lib/python3.10/site-packages/atlas_python/object_detection.py to object_detection.cpython-310.pyc
+[2.013s] byte-compiling /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_python/lib/python3.10/site-packages/atlas_python/planner.py to planner.cpython-310.pyc
+[2.042s] byte-compiling /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_python/lib/python3.10/site-packages/atlas_python/pySerialTransfer_test.py to pySerialTransfer_test.cpython-310.pyc
+[2.071s] byte-compiling /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_python/lib/python3.10/site-packages/atlas_python/__init__.py to __init__.cpython-310.pyc
+[2.096s] running install_data
+[2.102s] creating /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_python/share/ament_index
+[2.104s] creating /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_python/share/ament_index/resource_index
+[2.106s] creating /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_python/share/ament_index/resource_index/packages
+[2.115s] copying resource/atlas_python -> /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_python/share/ament_index/resource_index/packages
+[2.130s] creating /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_python/share/atlas_python/launch
+[2.137s] copying launch/atlas_launch.py -> /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_python/share/atlas_python/launch
+[2.150s] creating /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_python/share/atlas_python/models
+[2.158s] copying resource/models/26_08_640px.pt -> /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_python/share/atlas_python/models
+[2.586s] copying resource/models/29_08_640px.pt -> /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_python/share/atlas_python/models
+[2.715s] copying resource/models/old_best.pt -> /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_python/share/atlas_python/models
+[3.124s] copying package.xml -> /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_python/share/atlas_python
+[3.133s] running install_egg_info
+[3.145s] Copying ../../../build/atlas_python/atlas_python.egg-info to /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_python/lib/python3.10/site-packages/atlas_python-0.0.0-py3.10.egg-info
+[3.318s] running install_scripts
+[3.372s] Installing hello script to /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_python/lib/atlas_python
+[3.379s] Installing object_detection script to /mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_python/lib/atlas_python
+[3.389s] writing list of installed files to '/mnt/d/MOnash/ECE4191/Code/atlas/build/atlas_python/install.log'
