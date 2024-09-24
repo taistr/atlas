@@ -11,7 +11,8 @@
 /* Maximum PWM signal */
 #define MAX_PWM 255
 /* Minimum PWM signal */
-#define MIN_PWM 50    //Equivalent to 19.6% duty cycle
+//#define MIN_PWM 50    //Equivalent to 19.6% duty cycle - 12V Polulu Motor
+#define MIN_PWM 65    //Equivalent to 19.6% duty cycle - 12V Polulu Motor
 /* Range below MIN_PWM at which PWM signal is locked to MIN_PWM - To allow for motor micro-adjustments*/
 #define MIN_PWM_ALLOW_ZONE  20
 
@@ -22,7 +23,7 @@
 /* Convert the rate into an interval */
 const long int PID_INTERVAL = 1000L*1000L / PID_RATE;
 /* PID error margin - anything under margin is considered perfect */
-#define PID_ERROR_MARGIN 50
+#define PID_ERROR_MARGIN 75
 /* Track the next time we make a PID calculation */
 unsigned long nextPID = PID_INTERVAL;
 
@@ -91,9 +92,12 @@ struct __attribute__((packed)) STRUCT_TX {
 } serialTxStruct;
 //---------------------------------------------------------
 // Differential Drive--------------------------------------
-float SPINDLE_TO_ENCODER_GEAR_RATIO = 74.8317;
+//float SPINDLE_TO_ENCODER_GEAR_RATIO = 74.8317;    // 12V Polulu Motor
+float SPINDLE_TO_ENCODER_GEAR_RATIO = 34.02;    // 6V DFRobot Motor
 float WHEEL_RADIUS = 56.0/(1000*2); // m
-float WHEEL_BASE = 25.5/100; //m
+//long ENCODER_CPR = 48;   // 12V Polulu Motor
+long ENCODER_CPR = 11*4;   // 6V DFRobot Motor
+float WHEEL_BASE = 40.0/100; //m
 //---------------------------------------------------------
 
 /* Custom header files */
@@ -350,10 +354,10 @@ int executeSerialCmd(){
             //float straight_counts = (serialRxStruct.arg1/(2*PI*WHEEL_RADIUS)) * 48 * SPINDLE_TO_ENCODER_GEAR_RATIO;  // Distance in m
             /* Calculates encoder counts for turning movement */
             //float turning_counts = (serialRxStruct.arg2*(48*SPINDLE_TO_ENCODER_GEAR_RATIO)*(WHEEL_BASE/2))/(360*WHEEL_RADIUS);  // Angle in degrees
-            leftPID.Straight_CountsToTarget = floor((serialRxStruct.arg1/(2*PI*WHEEL_RADIUS)) * 48 * SPINDLE_TO_ENCODER_GEAR_RATIO);
+            leftPID.Straight_CountsToTarget = floor((serialRxStruct.arg1/(2*PI*WHEEL_RADIUS)) * ENCODER_CPR * SPINDLE_TO_ENCODER_GEAR_RATIO);
             rightPID.Straight_CountsToTarget = floor(leftPID.Straight_CountsToTarget);
-            leftPID.Turning_CountsToTarget = floor(-(serialRxStruct.arg2*(48*SPINDLE_TO_ENCODER_GEAR_RATIO)*(WHEEL_BASE/2))/(360*WHEEL_RADIUS));
-            rightPID.Turning_CountsToTarget = floor(leftPID.Turning_CountsToTarget);
+            leftPID.Turning_CountsToTarget = -floor((serialRxStruct.arg2*(ENCODER_CPR*SPINDLE_TO_ENCODER_GEAR_RATIO)*(WHEEL_BASE/2))/(360*WHEEL_RADIUS));
+            rightPID.Turning_CountsToTarget = -floor(leftPID.Turning_CountsToTarget);
 
             serialTxStruct.cmd = 'm';
             serialTxStruct.arg1 = float(leftPID.Straight_CountsToTarget);
@@ -597,7 +601,7 @@ void loop(){
       resetCmd();
       TX_REQUESTED = false;
       RX_ALLOWED = true;
-    }
+    } 
     // run a PID calculation at the appropriate intervals
     if (micros() > nextPID) {
         /* Blocks further Serial commands from interfering with the PID loop */
