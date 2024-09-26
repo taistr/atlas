@@ -28,6 +28,7 @@ setup(
             'hello = atlas_python.hello:main',
             'object_detection = atlas_python.object_detection:main',
             'serial_comms = atlas_python.serial_comms:main',
+            'planner = atlas_python.planner:main',
         ],
     },
 )

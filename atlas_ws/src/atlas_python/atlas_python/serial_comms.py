@@ -109,7 +109,7 @@ class SerialComms(Node):
         )
         self.declare_parameter(
             "port_name",
-            value='/dev/ttyACM1',
+            value='/dev/ttyACM0',
             descriptor=ParameterDescriptor(
                 type=ParameterType.PARAMETER_STRING,
                 description="Name of the serial port."
@@ -146,10 +146,13 @@ class SerialComms(Node):
                     if self.serial.in_waiting <=0:
                         current_time = self.get_clock().now().nanoseconds
                         if self.COMMAND_ACCEPTED:
-                            timeout_period = 15000000000    #nanoseconds
+                            timeout_period = 30000000000    #nanoseconds
                         else:
                             timeout_period = 4000000000     #nanoseconds
+
+                        #self.get_logger().info(str(timeout_period))
                         if current_time > send_time + timeout_period:
+                            self.COMMAND_ACCEPTED = False
                             raise Exception("Serial Timed Out.")
                     elif self.serial.in_waiting > 0:
                         incoming_data = self.serial.readline().decode('utf-8')
@@ -160,7 +163,7 @@ class SerialComms(Node):
                 ###### DEBUG BLOCK - Activated by self.DEBUG flag
                 if self.DEBUG:
                     if self.COMMAND_ACCEPTED:
-                            timeout_period = 15000000000    #nanoseconds
+                            timeout_period = 30000000000    #nanoseconds
                     else:
                             timeout_period = 4000000000     #nanoseconds
 
@@ -185,14 +188,14 @@ class SerialComms(Node):
                     self.COMMAND_ACCEPTED = True
                     self.serialRxStruct.reset()
                 else:
-                    self.COMMAND_ACCEPTED = False
-                    self.COMMAND_COMPLETE = False
                     self.serialRxStruct.reset()
                     pass
                     
         except Exception as e:
             print(f"An error occured: {e}")
         finally:
+            self.COMMAND_ACCEPTED = False
+            self.COMMAND_COMPLETE = False
             self.mutex_serial.release()
 
     def cleanup(self):

@@ -2,7 +2,6 @@ from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument
 from launch_ros.actions import Node
 from launch_ros.descriptions import ParameterValue
-from launch_ros.parameter_descriptions import Parameter
 from launch.substitutions import LaunchConfiguration
 
 def generate_launch_description():
@@ -14,23 +13,31 @@ def generate_launch_description():
         ),
         DeclareLaunchArgument(
             "camera",
-            default_value=0,
+            default_value="0",  # Changed to a string to match LaunchConfiguration expectations
             description="Camera number to use for object detection",
         ),
         Node(
             package='camera_ros',
             executable='camera_node',
             parameters=[
-                Parameter("camera", LaunchConfiguration("camera")),
-                Parameter("height", 480),
-                Parameter("width", 640)
+                {"camera": LaunchConfiguration("camera")},
+                {"height": ParameterValue(480, value_type=int)},  # Wrapped in ParameterValue
+                {"width": ParameterValue(640, value_type=int)},   # Wrapped in ParameterValue
             ],
         ),
         Node(
             package='atlas_python',
             executable='object_detection',
             parameters=[
-                Parameter("model_name", LaunchConfiguration("model_name"))
+                {"model_name": LaunchConfiguration("model_name")}
             ],
         ),
+        Node(
+            package='atlas_python',
+            executable='serial_comms',
+        ),
+        Node(
+            package='atlas_python',
+            executable='planner',
+        )
     ])

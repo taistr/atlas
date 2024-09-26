@@ -3,6 +3,7 @@ import rclpy
 from rclpy.node import Node
 from rclpy.executors import MultiThreadedExecutor
 from atlas_msgs.srv import Detection, MotionRequest
+from enum import Enum
 
 class State(Enum):
     SEARCHING = 1
