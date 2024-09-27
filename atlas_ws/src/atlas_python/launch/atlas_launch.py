@@ -36,8 +36,4 @@ def generate_launch_description():
             package='atlas_python',
             executable='serial_comms',
         ),
-        Node(
-            package='atlas_python',
-            executable='planner',
-        )
     ])

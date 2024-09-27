@@ -22,7 +22,7 @@ class Planner(Node):
         self.detection_client = self.create_client(Detection, "atlas/detect_objects")
         self.motion_client = self.create_client(MotionRequest, "atlas/motion_request")   
 
-        self.previous_detection = Detection(
+        self.previous_detection = Detection.Response(
             detection=False,
             angle=0.0,
             distance=0.0,

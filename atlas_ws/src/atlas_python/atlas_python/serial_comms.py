@@ -92,7 +92,7 @@ class SerialComms(Node):
         self.serialTxStruct = duinoCmdStruct()
 
         # Setting up service
-        self.srv = self.create_service(MotionRequest, 'motion_request', self.send_command)
+        self.srv = self.create_service(MotionRequest, 'atlas/motion_request', self.send_command)
 
         self.get_logger().info("Serial Comms initialised")
 
