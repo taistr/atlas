@@ -52,6 +52,11 @@ class Planner(Node):
 
     def run(self) -> None:
         """Run the planner node"""
+        self.get_logger().info("Waiting for object detection service!")
+        self.detection_client.wait_for_service()
+        self.get_logger().info("Waiting for motion service!")
+        self.motion_client.wait_for_service()
+
         match self.state:
             case State.SEARCHING:
                 self.previous_detection = self.detection_client.call(Detection.Request())
