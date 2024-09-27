@@ -1,7 +1,7 @@
 import serial
 import select
 import sys
-import time
+#import time
 from time import sleep
 from threading import Lock
 import logging
@@ -118,8 +118,8 @@ class SerialComms(Node):
 
     # Handles UART communications
     def send_command(self, request, response):
-        self.serialTxStruct.arg1 = request.distance
-        self.serialTxStruct.arg2 = request.angle
+        self.serialTxStruct.arg1 = float('%.3f'%(request.distance))
+        self.serialTxStruct.arg2 = float('%.3f'%(request.angle))
         self.serialTxStruct.arg3 = 0.0
         self.serialTxStruct.arg4 = 0.0
         self.serialTxStruct.status = 100

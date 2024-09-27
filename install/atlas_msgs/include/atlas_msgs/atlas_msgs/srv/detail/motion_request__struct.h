@@ -17,6 +17,9 @@ extern "C"
 
 // Constants defined in the message
 
+/// Constant 'CMD'.
+static const char * const atlas_msgs__srv__MotionRequest_Request__CMD = "m";
+
 /// Struct defined in srv/MotionRequest in the package atlas_msgs.
 typedef struct atlas_msgs__srv__MotionRequest_Request
 {

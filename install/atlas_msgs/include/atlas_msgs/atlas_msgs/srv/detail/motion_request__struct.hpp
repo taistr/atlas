@@ -77,6 +77,7 @@ struct MotionRequest_Request_
   }
 
   // constant declarations
+  static const std::basic_string<char, std::char_traits<char>, typename std::allocator_traits<ContainerAllocator>::template rebind_alloc<char>> CMD;
 
   // pointer types
   using RawPtr =
@@ -137,6 +138,9 @@ using MotionRequest_Request =
   atlas_msgs::srv::MotionRequest_Request_<std::allocator<void>>;
 
 // constant definitions
+template<typename ContainerAllocator>
+const std::basic_string<char, std::char_traits<char>, typename std::allocator_traits<ContainerAllocator>::template rebind_alloc<char>>
+MotionRequest_Request_<ContainerAllocator>::CMD = "m";
 
 }  // namespace srv
 
