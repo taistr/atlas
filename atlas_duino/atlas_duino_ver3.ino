@@ -12,7 +12,7 @@
 #define MAX_PWM 255
 /* Minimum PWM signal */
 //#define MIN_PWM 50    //Equivalent to 19.6% duty cycle - 12V Polulu Motor
-#define MIN_PWM 65    //Equivalent to 19.6% duty cycle - 12V Polulu Motor
+#define MIN_PWM 70    //Equivalent to 27.5% duty cycle - 6V DFRobot Motor
 /* Range below MIN_PWM at which PWM signal is locked to MIN_PWM - To allow for motor micro-adjustments*/
 #define MIN_PWM_ALLOW_ZONE  20
 
