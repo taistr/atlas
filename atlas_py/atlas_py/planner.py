@@ -85,12 +85,16 @@ class Planner:
         """
         self.logger = logging.getLogger(__name__)
         self.state = State.SEARCHING
+
         self.camera = Camera()
         self.frame_grabber = FrameGrabber(self.camera)
         self.serial_comms = SerialComms()
         self.object_detector = ObjectDetection()
+
         self.moves = []
         self.last_detection_result = DetectionResult(False, 0, 0)
+
+        self.frame_grabber.start()
         self.logger.info("Planner initialised!")
 
     def change_state(self, state: State) -> None:

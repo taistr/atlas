@@ -153,7 +153,13 @@ class SerialComms:
                 raise TimeoutError("Timeout waiting for acceptance")
             elif self.serial_client.in_waiting > 0:
                 serial_data = self.serial_client.readline().decode("utf-8")
+                self.logger.info(f"Received raw data: {serial_data.strip()}")
                 received_command.from_serial_format(serial_data)
+                self.logger.info(
+                    'RCVD: status=%s, cmd=%s, arg1=%s, arg2=%s, arg3=%s, arg4=%s',
+                    received_command.status, received_command.cmd, received_command.arg1,
+                    received_command.arg2, received_command.arg3, received_command.arg4
+                )
                 acceptance_time = time.perf_counter_ns()
 
             if received_command.status == ACCEPTED_STATUS_CODE:
