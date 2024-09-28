@@ -3,11 +3,11 @@ from ultralytics import YOLO
 
 def main():
     # Load the YOLO model
-    model = YOLO("/home/atlas/Desktop/atlas/atlas_py/models/29_08_640px.pt")
+    model = YOLO("/home/atlas/Desktop/atlas/atlas_py/atlas_py/models/29_08_640px.onnx")
 
     while True:
         # Initialize the webcam
-        cap = cv2.VideoCapture(0)
+        cap = cv2.VideoCapture(1)
         if not cap.isOpened():
             print("Error: Could not open webcam.")
             continue

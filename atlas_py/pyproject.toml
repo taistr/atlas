@@ -11,7 +11,9 @@ pyserial = "^3.5"
 opencv-python = "^4.10.0.84"
 torch = "2.0.1"
 torchvision = "0.15.2"
-ultralytics = "^8.2.102"
+ultralytics = "<8.2.102"
+onnx = "^1.16.2"
+onnxruntime = "^1.19.2"
 
 
 [build-system]

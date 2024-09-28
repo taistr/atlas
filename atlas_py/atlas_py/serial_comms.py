@@ -68,8 +68,8 @@ class Command:
 SERIAL_INITIALISE_TIMEOUT = 1
 DEFAULT_SERIAL_PORT = "/dev/ttyACM0"
 DEFAULT_BAUD_RATE = 115200
-ACCEPTANCE_TIMEOUT_NS = 4 * 10e9
-COMPLETION_TIMEOUT_NS = 30 * 10e9
+ACCEPTANCE_TIMEOUT_NS = 4 * 1e9
+COMPLETION_TIMEOUT_NS = 30 * 1e9
 MOTOR_CMD = "m"
 ACCEPTED_STATUS_CODE = 202
 COMPLETED_STATUS_CODE = 200
@@ -130,10 +130,10 @@ class SerialComms:
 
         # send data over serial
         self.transition_state(CommandState.SENDING)
-        send_string = command.serial_format + "/r"
+        send_string = command.serial_format + "\r"
         try:
             self.serial_client.write(send_string.encode("utf-8"))
-            send_time = time.perf_counter()
+            send_time = time.perf_counter_ns()
         except serial.SerialException as e:
             self.logger.error(f"Error sending command: {e}")
             return
@@ -149,12 +149,12 @@ class SerialComms:
 
         # if motor command then wait for acceptance message
         while self.command_state == CommandState.WAITING_FOR_ACCEPTANCE and command.cmd == MOTOR_CMD:
-            if self.serial_client.in_waiting <= 0 and time.perf_counter() - send_time > ACCEPTANCE_TIMEOUT_NS:
+            if self.serial_client.in_waiting <= 0 and time.perf_counter_ns() - send_time > ACCEPTANCE_TIMEOUT_NS:
                 raise TimeoutError("Timeout waiting for acceptance")
             elif self.serial_client.in_waiting > 0:
                 serial_data = self.serial_client.readline().decode("utf-8")
                 received_command.from_serial_format(serial_data)
-                acceptance_time = time.perf_counter()
+                acceptance_time = time.perf_counter_ns()
 
             if received_command.status == ACCEPTED_STATUS_CODE:
                 self.transition_state(CommandState.WAITING_FOR_COMPLETION)
@@ -162,17 +162,18 @@ class SerialComms:
                 raise ValueError(f"Unexpected status code: {received_command.status}")
 
         # wait for success message
+        received_command.reset()
         while self.command_state == CommandState.WAITING_FOR_COMPLETION:
-            if self.serial_client.in_waiting <= 0 and time.perf_counter() - acceptance_time > COMPLETION_TIMEOUT_NS:
+            if self.serial_client.in_waiting <= 0 and time.perf_counter_ns() - acceptance_time > COMPLETION_TIMEOUT_NS:
                 raise TimeoutError("Timeout waiting for completion")
             elif self.serial_client.in_waiting > 0:
                 serial_data = self.serial_client.readline().decode("utf-8")
-                command.from_serial_format(serial_data)
+                received_command.from_serial_format(serial_data)
             
-            if command.status == COMPLETED_STATUS_CODE:
+            if received_command.status == COMPLETED_STATUS_CODE:
                 self.transition_state(CommandState.COMPLETED)
-            elif not command.status == FAILED_STATUS_CODE:
-                raise ValueError(f"Unexpected status code: {command.status}")
+            elif not received_command.status == FAILED_STATUS_CODE:
+                raise ValueError(f"Unexpected status code: {received_command.status}")
             
         self.transition_state(CommandState.IDLE)
 

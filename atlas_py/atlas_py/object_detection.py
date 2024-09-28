@@ -37,14 +37,14 @@ class ObjectDetection:
         response (DetectionResult): The latest detection result.
     """
 
-    def __init__(self, model_path="/home/atlas/Desktop/atlas/atlas_py/models/29_08_640px.pt"):
+    def __init__(self, model_path="/home/atlas/Desktop/atlas/atlas_py/atlas_py/models/29_08_640px.onnx"):
         """
         Initializes the ObjectDetection class by loading the YOLO model.
 
         :param model_path: Path to the YOLO model weights file.
         """
         self.logger = logging.getLogger(__name__)
-        self.model = YOLO(model_path)
+        self.model = YOLO(model_path, task="detect")
         self.response = DetectionResult(
             detection=False,
             angle=0.0,
