@@ -28,7 +28,8 @@ setup(
             'hello = atlas_python.hello:main',
             'object_detection = atlas_python.object_detection:main',
             'serial_comms = atlas_python.serial_comms:main',
-            'planner = atlas_python.planner:main',
+            'planner_m1 = atlas_python.planner_m1:main',
+            'planner_m2 = atlas_python.planner_m2:main',
         ],
     },
 )
