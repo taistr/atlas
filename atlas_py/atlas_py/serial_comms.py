@@ -10,6 +10,12 @@ class CommandState(Enum):
     WAITING_FOR_COMPLETION = auto()
     COMPLETED = auto()
 
+class CommandStatusCode(Enum):
+    CONTINUE = 100
+    ACCEPTED = 202
+    COMPLETED = 200
+    FAILED = 400
+
 class Command:
     def __init__(self, status=400, cmd='', arg1=0.0, arg2=0.0, arg3=0.0, arg4=0.0):
         self._logger = logging.getLogger(self.__class__.__name__)
@@ -99,6 +105,21 @@ class SerialComms:
         """
         self.command_state = new_state
         self.logger.info(f"Transitioned to state: {self.command_state}")
+
+    def start_motion(self, heading: float, distance: float) -> None:
+        """
+        Start the motion of the robot
+        
+        :param heading: the heading to move in
+        :param distance: the distance to move
+        """
+        command = Command(
+            status=CommandStatusCode.CONTINUE.value,
+            cmd=MOTOR_CMD,
+            arg1=float(f"{distance:.3f}"),
+            arg2=float(f"{heading:.3f}"),
+        )
+        self.send_command(command)
 
     def send_command(self, command: Command) -> None:
         """
