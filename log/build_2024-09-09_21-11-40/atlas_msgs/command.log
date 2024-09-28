@@ -1,2 +1,0 @@
-Invoking command in '/mnt/d/MOnash/ECE4191/Code/atlas/build/atlas_msgs': CMAKE_PREFIX_PATH=/opt/ros/humble WSLENV=ELECTRON_RUN_AS_NODE/w: /usr/bin/cmake /mnt/d/MOnash/ECE4191/Code/atlas/atlas_ws/src/atlas_msgs -DCMAKE_INSTALL_PREFIX=/mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs
-Invoked command in '/mnt/d/MOnash/ECE4191/Code/atlas/build/atlas_msgs' returned '1': CMAKE_PREFIX_PATH=/opt/ros/humble WSLENV=ELECTRON_RUN_AS_NODE/w: /usr/bin/cmake /mnt/d/MOnash/ECE4191/Code/atlas/atlas_ws/src/atlas_msgs -DCMAKE_INSTALL_PREFIX=/mnt/d/MOnash/ECE4191/Code/atlas/install/atlas_msgs

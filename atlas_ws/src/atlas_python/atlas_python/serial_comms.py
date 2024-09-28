@@ -143,7 +143,7 @@ class SerialComms(Node):
 
             while not self.COMMAND_COMPLETE:
                 if not self.DEBUG:
-                    if self.serial.in_waiting <=0:
+                    if self.serial.in_waiting <=0: # nothing in buffer
                         current_time = self.get_clock().now().nanoseconds
                         if self.COMMAND_ACCEPTED:
                             timeout_period = 30000000000    #nanoseconds
@@ -154,7 +154,7 @@ class SerialComms(Node):
                         if current_time > send_time + timeout_period:
                             self.COMMAND_ACCEPTED = False
                             raise Exception("Serial Timed Out.")
-                    elif self.serial.in_waiting > 0:
+                    elif self.serial.in_waiting > 0: # data in buffer (response from arduino)
                         incoming_data = self.serial.readline().decode('utf-8')
                         print(f"Received raw data: {incoming_data.strip()}")
                         self.serialRxStruct.from_serial_format(incoming_data)
