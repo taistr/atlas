@@ -1,4 +1,0 @@
-Invoking command in '/mnt/d/Monash/ECE4191/Code/atlas/build/atlas_msgs': CMAKE_PREFIX_PATH=/opt/ros/humble WSLENV=ELECTRON_RUN_AS_NODE/w: /usr/bin/cmake --build /mnt/d/Monash/ECE4191/Code/atlas/build/atlas_msgs -- -j16 -l16
-Invoked command in '/mnt/d/Monash/ECE4191/Code/atlas/build/atlas_msgs' returned '0': CMAKE_PREFIX_PATH=/opt/ros/humble WSLENV=ELECTRON_RUN_AS_NODE/w: /usr/bin/cmake --build /mnt/d/Monash/ECE4191/Code/atlas/build/atlas_msgs -- -j16 -l16
-Invoking command in '/mnt/d/Monash/ECE4191/Code/atlas/build/atlas_msgs': CMAKE_PREFIX_PATH=/opt/ros/humble WSLENV=ELECTRON_RUN_AS_NODE/w: /usr/bin/cmake --install /mnt/d/Monash/ECE4191/Code/atlas/build/atlas_msgs
-Invoked command in '/mnt/d/Monash/ECE4191/Code/atlas/build/atlas_msgs' returned '0': CMAKE_PREFIX_PATH=/opt/ros/humble WSLENV=ELECTRON_RUN_AS_NODE/w: /usr/bin/cmake --install /mnt/d/Monash/ECE4191/Code/atlas/build/atlas_msgs
