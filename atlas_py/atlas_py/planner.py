@@ -185,7 +185,6 @@ class Planner:
                         distance=move.distance
                     )
                     self.moves.append(move)
-                    self.wait(15)
                     self.change_state(State.FINISHED)
                 
                 case State.FINISHED:
@@ -193,8 +192,15 @@ class Planner:
                     break
 
 def main(args: dict = None):
-    planner = Planner()
-    planner.run()  # TODO: There are some exceptions that are not handled at the moment
+    try:
+        planner = Planner()
+        planner.run()  # TODO: There are some exceptions that are not handled at the moment
+    except KeyboardInterrupt:
+        logging.info("Keyboard interrupt received. Stopping gracefully...")
+    except Exception as e:
+        logging.error(f"An error occurred: {e}")
+    finally:
+        planner.frame_grabber.stop()  # Ensure cleanup on exit
 
 if __name__ == "__main__":
     main()

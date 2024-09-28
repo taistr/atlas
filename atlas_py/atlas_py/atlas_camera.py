@@ -4,7 +4,7 @@ import numpy as np
 import threading
 
 # Camera parameters
-DEFAULT_ID = 1  # Default camera ID
+DEFAULT_ID = 0  # Default camera ID
 DEFAULT_FRAME_WIDTH = 480  # Default frame width
 DEFAULT_FRAME_HEIGHT = 640  # Default frame height
 DEFAULT_FPS = 30  # Default frames per second (FPS)
@@ -100,6 +100,7 @@ class FrameGrabber:
 
         :param camera: The Camera object to grab frames from.
         """
+        self.logger = logging.getLogger(__name__)
         self.camera = camera
         self.frame = None
         self.running = False
@@ -118,7 +119,8 @@ class FrameGrabber:
         Stop the frame grabbing thread.
         """
         self.running = False
-        self.thread.join()
+        self.thread.join()  # Ensure the thread stops cleanly
+        self.logger.info("FrameGrabber stopped.")
 
     def _grab_frames(self):
         """
