@@ -93,4 +93,9 @@ class Hoist:
 
             lgpio.tx_pwm(self.gpio_handle, ENB, PWM_FREQUENCY, speed)
 
-    
+    def deposit_balls(self):
+        """
+        Deposit balls into the box.
+        """
+        # TODO: Implement the deposit balls method
+        raise NotImplementedError("Method not implemented.")
