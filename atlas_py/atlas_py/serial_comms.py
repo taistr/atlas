@@ -3,6 +3,16 @@ import serial
 from enum import Enum, auto
 import time
 
+SERIAL_INITIALISE_TIMEOUT = 1
+DEFAULT_SERIAL_PORT = "/dev/ttyACM0"
+DEFAULT_BAUD_RATE = 115200
+ACCEPTANCE_TIMEOUT_NS = 4 * 1e9
+COMPLETION_TIMEOUT_NS = 30 * 1e9
+MOTOR_CMD = "m"
+ACCEPTED_STATUS_CODE = 202
+COMPLETED_STATUS_CODE = 200
+FAILED_STATUS_CODE = 400
+
 class CommandState(Enum):
     IDLE = auto()
     SENDING = auto()
@@ -64,16 +74,6 @@ class Command:
         self.arg2 = 0.0
         self.arg3 = 0.0
         self.arg4 = 0.0
-
-SERIAL_INITIALISE_TIMEOUT = 1
-DEFAULT_SERIAL_PORT = "/dev/ttyACM0"
-DEFAULT_BAUD_RATE = 115200
-ACCEPTANCE_TIMEOUT_NS = 4 * 1e9
-COMPLETION_TIMEOUT_NS = 30 * 1e9
-MOTOR_CMD = "m"
-ACCEPTED_STATUS_CODE = 202
-COMPLETED_STATUS_CODE = 200
-FAILED_STATUS_CODE = 400
 
 class SerialComms:
     logger: logging.Logger
