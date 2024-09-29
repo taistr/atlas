@@ -1,4 +1,4 @@
 ---
 bool detection
-int32 x_offset
-int32 distance
+float32 angle
+float32 distance
