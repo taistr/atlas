@@ -2,7 +2,6 @@ import logging
 import cv2
 import time
 from atlas_camera import Camera, FrameGrabber
-from ultralytics import YOLO
 from object_detection import ObjectDetection, DetectionClass
 
 # Configure logging
@@ -30,7 +29,7 @@ def main():
                 continue
             
             # Perform object detection on the latest frame
-            detection_result = detection_model.detect_object(frame, DetectionClass.TENNIS_BALL)
+            detection_result = detection_model.detect_object(frame)
 
             if detection_result.detection:
                 logging.info(f"Tennis Ball Detected! Angle: {detection_result.angle:.2f}, Distance: {detection_result.distance:.2f}")
