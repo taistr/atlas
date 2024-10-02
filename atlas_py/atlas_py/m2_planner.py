@@ -145,6 +145,11 @@ class Planner:
                     self.ball_return_state()
                 case State.BOX_SEARCH:
                     self.box_search_state()
+                case State.DEPOSIT:
+                    self.deposit_state()
+                case _:
+                    self.logger.error("Invalid state reached. Transitioning to BALL_SEARCH.")
+                    self.change_state(State.BALL_SEARCH)
 
 
 
