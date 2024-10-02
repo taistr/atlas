@@ -1,17 +1,22 @@
-import sys
 from ultralytics import YOLO
-import pathlib
 import torch
-import cv2
 import logging
 from dataclasses import dataclass
 import numpy as np
+from enum import Enum
 
 # Dependencies
 from atlas_camera import DEFAULT_FRAME_WIDTH
 
-# Configure logging
-logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
+DEFAULT_MODEL_PATH = "/home/atlas/Desktop/atlas/atlas_py/atlas_py/models/29_08_640px.onnx"
+
+class DetectionClass(Enum):
+    """
+    Enumerates the objects that can be detected by the YOLO model.
+    """
+    TENNIS_BALL = "tennis-ball"
+    CARDBOARD_BOX = "cardboard-box"
+
 
 @dataclass
 class DetectionResult:
@@ -37,7 +42,7 @@ class ObjectDetection:
         response (DetectionResult): The latest detection result.
     """
 
-    def __init__(self, model_path="/home/atlas/Desktop/atlas/atlas_py/atlas_py/models/29_08_640px.onnx"):
+    def __init__(self, model_path=DEFAULT_MODEL_PATH):
         """
         Initializes the ObjectDetection class by loading the YOLO model.
 
