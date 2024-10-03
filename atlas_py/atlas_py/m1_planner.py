@@ -1,6 +1,5 @@
 from enum import Enum
 import time
-import numpy as np
 import logging
 from dataclasses import dataclass
 

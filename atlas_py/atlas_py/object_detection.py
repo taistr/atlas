@@ -10,7 +10,7 @@ from atlas_camera import DEFAULT_FRAME_WIDTH
 
 FRAME_CENTER_X = DEFAULT_FRAME_WIDTH // 2
 MINIMUM_DETECTION_CONFIDENCE = 0.5
-DEFAULT_MODEL_PATH = "/home/atlas/Desktop/atlas/atlas_py/atlas_py/models/29_08_640px.onnx"
+DEFAULT_MODEL_PATH = "/home/tyson/Documents/University/atlas/atlas_py/atlas_py/models/29_08_640px.pt"
 
 class DetectionClass(Enum):
     """
@@ -69,7 +69,7 @@ class ObjectDetection:
         iterable = 0
         for detection in boxes.cls.tolist():
             if detection == DetectionClass.TENNIS_BALL.value and detection_class == DetectionClass.TENNIS_BALL:
-                x_centre, _, _, height = boxes.xywh.tolist()
+                x_centre, _, _, height = boxes.xywh[iterable].tolist()
                 angle = self.calculate_ball_angle(x_centre)
                 distance = self.calculate_ball_distance(height)
                 detection_results.append(
@@ -97,7 +97,7 @@ class ObjectDetection:
         if detection_results:
             return min(detection_results, key=lambda x: x.distance)
         else:
-            DetectionResult(
+            return DetectionResult(
                 detection=False,
                 angle=0.0,
                 distance=0.0
@@ -122,16 +122,10 @@ class ObjectDetection:
         raise NotImplementedError("Method not implemented yet.")
 
     def calculate_ball_angle(self, x_centre: float) -> float:
-        """
-        Calculate the angle offset of the detected object relative to the robot's heading.
-
-        :param x_centre: The x-coordinate of the center of the detected object.
-        :return: The calculated angle offset.
-        """
-        x_distance = x_centre - FRAME_CENTER_X
+        x_distance = FRAME_CENTER_X - x_centre  # Reverse x_distance
         slope_angle = 0.0632085093204184
-        intercept_angle = 0.7163631056314085
-        return slope_angle * x_distance + intercept_angle
+        return slope_angle * x_distance
+
     
     def calculate_ball_distance(self, height: float) -> float:
         """
