@@ -7,7 +7,7 @@ from dataclasses import dataclass
 # Dependencies
 from atlas_camera import Camera, FrameGrabber
 from serial_comms import SerialComms
-from object_detection import ObjectDetection, DetectionResult
+from object_detection import ObjectDetection, DetectionResult, DetectionClass
 from hoist import Hoist
 
 # Planner parameters
@@ -151,8 +151,6 @@ class Planner:
                     self.logger.error("Invalid state reached. Transitioning to BALL_SEARCH.")
                     self.change_state(State.BALL_SEARCH)
 
-
-
     def initialise_state(self) -> None:
         """
         Atlas waits for a few seconds before starting the state machine.
@@ -177,7 +175,8 @@ class Planner:
         Atlas searches for a ball.
         """
         self.last_detection_result = self.object_detector.detect_object(
-            self.frame_grabber.get_latest_frame()
+            self.frame_grabber.get_latest_frame(),
+            DetectionClass.TENNIS_BALL
         )
 
         # If an object is detected, transition to the aiming state
@@ -206,7 +205,8 @@ class Planner:
             self.skip_aim = True
 
         self.last_detection_result = self.object_detector.detect_object(
-            self.frame_grabber.get_latest_frame()
+            self.frame_grabber.get_latest_frame(),
+            DetectionClass.TENNIS_BALL
         )
 
         if not self.last_detection_result.detection: # TODO: implement a retry mechanism
@@ -264,7 +264,8 @@ class Planner:
         """
         #TODO: refactor object detector to allow specifying class to detect
         self.last_detection_result = self.object_detector.detect_object(
-            self.frame_grabber.get_latest_frame()
+            self.frame_grabber.get_latest_frame(),
+            DetectionClass.CARDBOARD_BOX
         )
 
         # If an object is detected, transition to the aiming state
@@ -291,7 +292,8 @@ class Planner:
         self.moves.append(move)
 
         self.last_detection_result = self.object_detector.detect_object(
-            self.frame_grabber.get_latest_frame()
+            self.frame_grabber.get_latest_frame(),
+            DetectionClass.CARDBOARD_BOX
         )
 
         if not self.last_detection_result.detection: #TODO: implement a retry mechanism

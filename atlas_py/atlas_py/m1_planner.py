@@ -7,7 +7,7 @@ from dataclasses import dataclass
 # Dependencies
 from atlas_camera import Camera, FrameGrabber
 from serial_comms import SerialComms
-from object_detection import ObjectDetection, DetectionResult
+from object_detection import ObjectDetection, DetectionResult, DetectionClass
 
 # Planner parameters
 SEARCH_ANGLE = 17  # Angle to turn when searching for objects
@@ -124,7 +124,8 @@ class Planner:
             match self.state:
                 case State.SEARCHING:
                     self.last_detection_result = self.object_detector.detect_object(
-                        self.frame_grabber.get_latest_frame()
+                        self.frame_grabber.get_latest_frame(),
+                        detection_class=DetectionClass.TENNIS_BALL
                     )
 
                     # If an object is detected, transition to the aiming state
@@ -148,7 +149,8 @@ class Planner:
                     )
                     self.moves.append(move)
                     self.last_detection_result = self.object_detector.detect_object(
-                        self.frame_grabber.get_latest_frame()
+                        self.frame_grabber.get_latest_frame(),
+                        detection_class=DetectionClass.TENNIS_BALL
                     )
 
                     if self.last_detection_result.detection and self.last_detection_result.angle < ACCEPTANCE_ANGLE:

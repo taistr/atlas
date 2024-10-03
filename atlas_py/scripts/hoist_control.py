@@ -1,7 +1,7 @@
-import RPi.LGPIO as LGPIO
+import RPi.GPIO as GPIO
 from time import sleep
 
-# LGPIO pin assignments (LGPIO numbering)
+# RPi.GPIO pin assignments (BCM numbering)
 IN1 = 17
 IN2 = 27
 IN3 = 22
@@ -9,33 +9,39 @@ IN4 = 23
 ENA = 12
 ENB = 13
 
-# Initialize LGPIO
-h = LGPIO.gpiochip_open(0)  # Open the default GPIO chip
+# Initialize RPi.GPIO
+GPIO.setmode(GPIO.BCM)  # Use BCM pin numbering
+GPIO.setwarnings(False)  # Disable GPIO warnings
 
 # Set pin modes
-LGPIO.gpio_claim_output(h, IN1)
-LGPIO.gpio_claim_output(h, IN2)
-LGPIO.gpio_claim_output(h, IN3)
-LGPIO.gpio_claim_output(h, IN4)
-LGPIO.gpio_claim_output(h, ENA)
-LGPIO.gpio_claim_output(h, ENB)
+GPIO.setup(IN1, GPIO.OUT)
+GPIO.setup(IN2, GPIO.OUT)
+GPIO.setup(IN3, GPIO.OUT)
+GPIO.setup(IN4, GPIO.OUT)
+GPIO.setup(ENA, GPIO.OUT)
+GPIO.setup(ENB, GPIO.OUT)
 
 # Set up PWM
-LGPIO.gpio_pwm(h, ENA, 1000, 0)  # 1kHz PWM frequency, 0% duty cycle
-LGPIO.gpio_pwm(h, ENB, 1000, 0)
+pwm_A = GPIO.PWM(ENA, 1000)  # 1kHz frequency
+pwm_B = GPIO.PWM(ENB, 1000)  # 1kHz frequency
+
+# Start PWM with 0% duty cycle (motors off)
+pwm_A.start(0)
+pwm_B.start(0)
 
 # Example: Move motor A forward at half speed
-LGPIO.gpio_write(h, IN1, 1)  # HIGH in RPi.GPIO is 1 in RPi.LGPIO
-LGPIO.gpio_write(h, IN2, 0)  # LOW in RPi.GPIO is 0 in RPi.LGPIO
-LGPIO.gpio_pwm(h, ENA, 500)  # 50% duty cycle (range 0-1000)
+GPIO.output(IN1, GPIO.HIGH)  # Set IN1 to HIGH
+GPIO.output(IN2, GPIO.LOW)   # Set IN2 to LOW
+pwm_A.ChangeDutyCycle(50)    # 50% duty cycle
 
 sleep(2)
 
-LGPIO.gpio_write(h, IN1, 1)  # HIGH in RPi.GPIO is 1 in RPi.LGPIO
-LGPIO.gpio_write(h, IN2, 1)  # LOW in RPi.GPIO is 0 in RPi.LGPIO
-LGPIO.gpio_pwm(h, ENA, 0)  # 50% duty cycle (range 0-1000)
+# Stop the motor by setting both inputs to HIGH and turning off PWM
+GPIO.output(IN1, GPIO.HIGH)
+GPIO.output(IN2, GPIO.HIGH)
+pwm_A.ChangeDutyCycle(0)  # Set PWM to 0% (stop motor)
 
-# ... your motor control logic here ...
-
-# Clean up
-LGPIO.gpiochip_close(h)
+# Stop PWM and clean up
+pwm_A.stop()
+pwm_B.stop()
+GPIO.cleanup()

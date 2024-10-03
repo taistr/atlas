@@ -1,4 +1,4 @@
-import lgpio
+import RPi.GPIO as GPIO
 from time import sleep
 import logging
 from enum import Enum
@@ -8,10 +8,10 @@ IN2 = 27  # Motor A input 2
 IN3 = 22  # Motor B input 1
 IN4 = 23  # Motor B input 2
 ENA = 12  # Motor A enable (PWM)
-ENB = 13  # Motor B enable (PWM
+ENB = 13  # Motor B enable (PWM)
 PWM_FREQUENCY = 1000  # Hz
-INITIAL_GPIO_LEVEL = 0  # Start the all GPIO pins at 0
-INIITAL_PWM_DUTY_CYCLE = 0  # Start the PWM duty cycle at 0
+INITIAL_GPIO_LEVEL = 0  # Start all GPIO pins at 0
+INITIAL_PWM_DUTY_CYCLE = 0  # Start the PWM duty cycle at 0
 
 class HoistDirection(Enum):
     FORWARD = 0
@@ -30,30 +30,32 @@ class Hoist:
         self.logger = logging.getLogger(self.__class__.__name__)
         self.gpio_pins = [IN1, IN2, IN3, IN4, ENA, ENB]
 
-        # Initialize the gpio chip
-        self.gpio_handle = lgpio.gpiochip_open(0)
-        if self.gpio_handle < 0:
-            raise RuntimeError("Error: Could not open GPIO chip.")
+        # Initialize the GPIO library
+        GPIO.setmode(GPIO.BCM)  # Use BCM pin numbering
+        GPIO.setwarnings(False)  # Disable GPIO warnings
 
         # Claim the GPIO pins for the motor inputs
         for pin in self.gpio_pins:
-            result_code = lgpio.gpio_claim_output(self.gpio_handle, pin, INITIAL_GPIO_LEVEL)
-            if result_code < 0:
-                raise RuntimeError(f"Error: Could not claim GPIO pin {pin}.")
+            GPIO.setup(pin, GPIO.OUT, initial=INITIAL_GPIO_LEVEL)
             
         # Set the PWM frequency and duty cycle for the motor enable pins
-        lgpio.tx_pwm(self.gpio_handle, ENA, PWM_FREQUENCY, INIITAL_PWM_DUTY_CYCLE)
-        lgpio.tx_pwm(self.gpio_handle, ENB, PWM_FREQUENCY, INIITAL_PWM_DUTY_CYCLE)
+        self.pwm_A = GPIO.PWM(ENA, PWM_FREQUENCY)
+        self.pwm_B = GPIO.PWM(ENB, PWM_FREQUENCY)
         
+        # Start PWM with the initial duty cycle
+        self.pwm_A.start(INITIAL_PWM_DUTY_CYCLE)
+        self.pwm_B.start(INITIAL_PWM_DUTY_CYCLE)
 
-        self.logger.info(f"Hoist initialized with GPIO pins 
-                         ENA: {ENA}, ENB: {ENB}, IN1: {IN1}, IN2: {IN2}, IN3: {IN3}, IN4: {IN4}")
+        self.logger.info(f"Hoist initialized with GPIO pins "
+                         f"ENA: {ENA}, ENB: {ENB}, IN1: {IN1}, IN2: {IN2}, IN3: {IN3}, IN4: {IN4}")
         
     def __del__(self):
         """
         Releases the hoist resources upon object deletion.
         """
-        lgpio.gpiochip_close(self.gpio_handle)
+        self.pwm_A.stop()
+        self.pwm_B.stop()
+        GPIO.cleanup()  # Clean up GPIO resources
         self.logger.info("Hoist released")
 
     def control_motor(self, direction: HoistDirection, motor: HoistMotor, speed: int):
@@ -62,36 +64,36 @@ class Hoist:
 
         :param direction: The direction to move the motor.
         :param motor: The motor to control.
-        :param speed: The speed at which to move the motor.
+        :param speed: The speed at which to move the motor (0-100).
         """
         if speed < 0 or speed > 100:
             raise ValueError("Error: Speed must be between 0 and 100.")
 
         if motor == HoistMotor.MOTOR_A:
             if direction == HoistDirection.FORWARD:
-                lgpio.gpio_write(self.gpio_handle, IN1, 1)
-                lgpio.gpio_write(self.gpio_handle, IN2, 0)
+                GPIO.output(IN1, GPIO.HIGH)
+                GPIO.output(IN2, GPIO.LOW)
             elif direction == HoistDirection.BACKWARD:
-                lgpio.gpio_write(self.gpio_handle, IN1, 0)
-                lgpio.gpio_write(self.gpio_handle, IN2, 1)
+                GPIO.output(IN1, GPIO.LOW)
+                GPIO.output(IN2, GPIO.HIGH)
             elif direction == HoistDirection.STOP:
-                lgpio.gpio_write(self.gpio_handle, IN1, 0)
-                lgpio.gpio_write(self.gpio_handle, IN2, 0)
+                GPIO.output(IN1, GPIO.LOW)
+                GPIO.output(IN2, GPIO.LOW)
 
-            lgpio.tx_pwm(self.gpio_handle, ENA, PWM_FREQUENCY, speed)
+            self.pwm_A.ChangeDutyCycle(speed)
 
         elif motor == HoistMotor.MOTOR_B:
             if direction == HoistDirection.FORWARD:
-                lgpio.gpio_write(self.gpio_handle, IN3, 1)
-                lgpio.gpio_write(self.gpio_handle, IN4, 0)
+                GPIO.output(IN3, GPIO.HIGH)
+                GPIO.output(IN4, GPIO.LOW)
             elif direction == HoistDirection.BACKWARD:
-                lgpio.gpio_write(self.gpio_handle, IN3, 0)
-                lgpio.gpio_write(self.gpio_handle, IN4, 1)
+                GPIO.output(IN3, GPIO.LOW)
+                GPIO.output(IN4, GPIO.HIGH)
             elif direction == HoistDirection.STOP:
-                lgpio.gpio_write(self.gpio_handle, IN3, 0)
-                lgpio.gpio_write(self.gpio_handle, IN4, 0)
+                GPIO.output(IN3, GPIO.LOW)
+                GPIO.output(IN4, GPIO.LOW)
 
-            lgpio.tx_pwm(self.gpio_handle, ENB, PWM_FREQUENCY, speed)
+            self.pwm_B.ChangeDutyCycle(speed)
 
     def deposit_balls(self):
         """
