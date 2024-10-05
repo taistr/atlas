@@ -8,7 +8,7 @@ from dataclasses import dataclass
 from atlas_camera import Camera, FrameGrabber
 from serial_comms import SerialComms
 from object_detection import ObjectDetection, DetectionResult, DetectionClass
-from hoist import Hoist
+# from hoist import Hoist
 
 # Planner parameters
 SEARCH_ANGLE = 17  # Angle to turn when searching for objects
@@ -97,7 +97,7 @@ class Planner:
         self.frame_grabber = FrameGrabber(self.camera)
         self.serial_comms = SerialComms()
         self.object_detector = ObjectDetection()
-        self.hoist = Hoist()
+        # self.hoist = Hoist()
 
         self.moves = []
         self.last_detection_result = DetectionResult(False, 0, 0)
@@ -143,10 +143,10 @@ class Planner:
                     self.ball_collection_state()
                 case State.BALL_RETURN:
                     self.ball_return_state()
-                case State.BOX_SEARCH:
-                    self.box_search_state()
-                case State.DEPOSIT:
-                    self.deposit_state()
+                # case State.BOX_SEARCH:
+                #     self.box_search_state()
+                # case State.DEPOSIT:
+                #     self.deposit_state()
                 case _:
                     self.logger.error("Invalid state reached. Transitioning to BALL_SEARCH.")
                     self.change_state(State.BALL_SEARCH)
@@ -304,7 +304,7 @@ class Planner:
                 heading=0,
                 distance=self.last_detection_result.distance + FIRING_OFFSET
             )
-            self.hoist.deposit_balls()
+            # self.hoist.deposit_balls()
             time.sleep(DEFAULT_DELAY_TIME)
             self.serial_comms.start_motion(
                 heading=0,
