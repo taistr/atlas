@@ -91,7 +91,7 @@ class Planner:
         Initializes the Planner, setting up camera, serial communication, and object detection.
         """
         self.logger = logging.getLogger(__name__)
-        self.state = State.START
+        self.state = State.BALL_SEARCH
 
         self.camera = Camera()
         self.frame_grabber = FrameGrabber(self.camera)
@@ -283,7 +283,7 @@ class Planner:
         """
         Atlas deposits the balls into the box.
         """
-        # aim robot at the box #TODO: maybe implement a correction step here like bal_collection_state?
+        # aim robot at the box #TODO: maybe implement a correction step here like ball_collection_state?
         move = Move(angle=self.last_detection_result.angle, distance=0)
         self.serial_comms.start_motion(
             heading=move.angle,
