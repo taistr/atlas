@@ -15,8 +15,8 @@ SEARCH_ANGLE = 17  # Angle to turn when searching for objects
 ACCEPTANCE_ANGLE = 2  # Angle threshold for considering the object aimed at
 FIRING_OFFSET = 0.35  # Offset distance when moving towards the object
 TENNIS_COURT_CENTRE = 3.42 # metres (distance from corner of a tennis court to centre)
-MAX_ONESHOT_DISTANCE = 2 # metres (maximum distance to move in one shot)
-BALL_DEPOSIT_THRESHOLD = 3 # balls (number of balls to collect before depositing)
+MAX_ONESHOT_DISTANCE = 1 # metres (maximum distance to move in one shot)
+BALL_DEPOSIT_THRESHOLD = 5 # balls (number of balls to collect before depositing)
 DEFAULT_DELAY_TIME = 2 # seconds (default delay time for waiting)
 
 # Configure logging
@@ -194,25 +194,22 @@ class Planner:
         Atlas aims at the ball and moves towards it. #TODO: maybe implement as two states
         """
         # aim robot at the nearest ball
-        if not self.skip_aim:
-            move = Move(angle=self.last_detection_result.angle, distance=0)
-            self.serial_comms.start_motion(
-                heading=move.angle,
-                distance=move.distance
-            )
-            self.moves.append(move)
-
-            self.skip_aim = True
+        move = Move(angle=self.last_detection_result.angle, distance=0)
+        self.serial_comms.start_motion(
+            heading=move.angle,
+            distance=move.distance
+        )
+        self.moves.append(move)
 
         self.last_detection_result = self.object_detector.detect_object(
             self.frame_grabber.get_latest_frame(),
             DetectionClass.TENNIS_BALL
         )
-
+        self.logger.info(self.last_detection_result)
         if not self.last_detection_result.detection: # TODO: implement a retry mechanism
             self.change_state(State.BALL_SEARCH)
             return
-        elif self.last_detection_result and self.last_detection_result.angle < ACCEPTANCE_ANGLE:
+        elif self.last_detection_result.detection and self.last_detection_result.angle > ACCEPTANCE_ANGLE:
             return
 
         # presumably, we have a ball and it's within the acceptance angle
@@ -255,7 +252,7 @@ class Planner:
         self.ball_counter += 1
         self.logger.info(f"Ball {self.ball_counter} collected!")
 
-        if self.ball_counter >= BALL_DEPOSIT_THRESHOLD:
+        if self.ball_counter < BALL_DEPOSIT_THRESHOLD:
             self.change_state(State.BOX_SEARCH)
     
     def box_search_state(self) -> None:

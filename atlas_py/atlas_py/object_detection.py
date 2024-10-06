@@ -10,7 +10,7 @@ from atlas_camera import DEFAULT_FRAME_WIDTH
 
 FRAME_CENTER_X = DEFAULT_FRAME_WIDTH // 2
 MINIMUM_DETECTION_CONFIDENCE = 0.5
-DEFAULT_MODEL_PATH = "/home/tyson/Documents/University/atlas/atlas_py/atlas_py/models/29_08_640px.pt"
+DEFAULT_MODEL_PATH = "/home/atlas/Desktop/atlas/atlas_py/atlas_py/models/29_08_640px.onnx"
 
 class DetectionClass(Enum):
     """

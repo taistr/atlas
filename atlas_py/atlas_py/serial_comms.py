@@ -167,7 +167,7 @@ class SerialComms:
             elif not received_command.status == FAILED_STATUS_CODE:
                 raise ValueError(f"Unexpected status code: {received_command.status}")
 
-        # wait for success message
+        # wait for success message or timeout message
         received_command.reset()
         while self.command_state == CommandState.WAITING_FOR_COMPLETION:
             if self.serial_client.in_waiting <= 0 and time.perf_counter_ns() - acceptance_time > COMPLETION_TIMEOUT_NS:
