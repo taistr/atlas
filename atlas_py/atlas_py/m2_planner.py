@@ -7,7 +7,7 @@ from dataclasses import dataclass
 # Dependencies
 from atlas_camera import Camera, FrameGrabber
 from serial_comms import SerialComms
-from object_detection import ObjectDetection, DetectionResult, DetectionClass
+from object_detection import BallDetection, BoxDetection, DetectionResult
 # from hoist import Hoist
 
 # Planner parameters
@@ -16,7 +16,7 @@ ACCEPTANCE_ANGLE = 2  # Angle threshold for considering the object aimed at
 FIRING_OFFSET = 0.35  # Offset distance when moving towards the object
 TENNIS_COURT_CENTRE = 3.42 # metres (distance from corner of a tennis court to centre)
 MAX_ONESHOT_DISTANCE = 1 # metres (maximum distance to move in one shot)
-BALL_DEPOSIT_THRESHOLD = 5 # balls (number of balls to collect before depositing)
+BALL_DEPOSIT_THRESHOLD = 2 # balls (number of balls to collect before depositing)
 DEFAULT_DELAY_TIME = 2 # seconds (default delay time for waiting)
 
 # Configure logging
@@ -65,7 +65,8 @@ class State(Enum):
     BALL_COLLECTION = 3
     BALL_RETURN = 4
     BOX_SEARCH = 5
-    DEPOSIT = 6  
+    BOX_DEPOSIT = 6  
+    BOX_RETURN = 7
 
 class Planner:
     """
@@ -82,7 +83,8 @@ class Planner:
     logger: logging.Logger
     state: State
     serial_comms: SerialComms
-    object_detector: ObjectDetection
+    ball_detector: BallDetection
+    box_detector: BoxDetection
     moves: list[Move]
     last_detection_result = DetectionResult
 
@@ -96,7 +98,8 @@ class Planner:
         self.camera = Camera()
         self.frame_grabber = FrameGrabber(self.camera)
         self.serial_comms = SerialComms()
-        self.object_detector = ObjectDetection()
+        self.ball_detector = BallDetection()
+        self.box_detector = BoxDetection()
         # self.hoist = Hoist()
 
         self.moves = []
@@ -145,8 +148,8 @@ class Planner:
                     self.ball_return_state()
                 # case State.BOX_SEARCH:
                 #     self.box_search_state()
-                # case State.DEPOSIT:
-                #     self.deposit_state()
+                # case State.BOX_DEPOSIT:
+                #     self.box_deposit_state()
                 case _:
                     self.logger.error("Invalid state reached. Transitioning to BALL_SEARCH.")
                     self.change_state(State.BALL_SEARCH)
@@ -174,9 +177,8 @@ class Planner:
         """
         Atlas searches for a ball.
         """
-        self.last_detection_result = self.object_detector.detect_object(
+        self.last_detection_result = self.ball_detector.detect_balls(
             self.frame_grabber.get_latest_frame(),
-            DetectionClass.TENNIS_BALL
         )
 
         # If an object is detected, transition to the aiming state
@@ -201,9 +203,8 @@ class Planner:
         )
         self.moves.append(move)
 
-        self.last_detection_result = self.object_detector.detect_object(
+        self.last_detection_result = self.ball_detector.detect_balls(
             self.frame_grabber.get_latest_frame(),
-            DetectionClass.TENNIS_BALL
         )
         self.logger.info(self.last_detection_result)
         if not self.last_detection_result.detection: # TODO: implement a retry mechanism
@@ -259,16 +260,14 @@ class Planner:
         """
         Atlas searches for the box.
         """
-        #TODO: refactor object detector to allow specifying class to detect
-        self.last_detection_result = self.object_detector.detect_object(
+        self.last_detection_result = self.box_detector.detect_box(
             self.frame_grabber.get_latest_frame(),
-            DetectionClass.CARDBOARD_BOX
         )
 
         # If an object is detected, transition to the aiming state
         #! Potential to get stuck in this state if box is never detected
         if self.last_detection_result.detection:
-            self.change_state(State.DEPOSIT)
+            self.change_state(State.BOX_DEPOSIT)
         else:
             self.logger.info("Attempting to turn")
             self.serial_comms.start_motion(
@@ -276,40 +275,63 @@ class Planner:
                 distance=0
             )
 
-    def deposit_state(self) -> None:
+    def box_deposit_state(self) -> None:
         """
         Atlas deposits the balls into the box.
         """
         # aim robot at the box #TODO: maybe implement a correction step here like ball_collection_state?
-        move = Move(angle=self.last_detection_result.angle, distance=0)
+        move = Move(angle=self.last_detection_result.angle, distance=0) #TODO: maybe don't append these moves to the list
         self.serial_comms.start_motion(
             heading=move.angle,
             distance=move.distance
         )
         self.moves.append(move)
 
-        self.last_detection_result = self.object_detector.detect_object(
+        self.last_detection_result = self.box_detector.detect_box(
             self.frame_grabber.get_latest_frame(),
-            DetectionClass.CARDBOARD_BOX
         )
 
-        if not self.last_detection_result.detection: #TODO: implement a retry mechanism
+        if not self.last_detection_result.detection: #TODO: implement a retry mechanism (maybe like )
             self.change_state(State.BOX_SEARCH)
             return
-        elif self.last_detection_result and self.last_detection_result.angle < ACCEPTANCE_ANGLE:
+        elif self.last_detection_result.detection and self.last_detection_result.angle > ACCEPTANCE_ANGLE:  # TODO: do another acceptance angle for the box?  
+            return
+
+        self.logger.info("Moving towards the box!")
+
+        # drive the estimated (minimum) distance to the box
+        move = Move(
+            distance=self.last_detection_result.distance + FIRING_OFFSET,
+            angle=0,
+        )
+        self.serial_comms.start_motion(
+            heading=move.angle,
+            distance=move.distance
+        )
+        self.moves.append(move)
+
+        # IF limit switches are not activated continue to drive in 10cm increments until they are (perhaps with a limit of 1m)
+
+        # else: deposit the balls (activate the hoist)
+        self.ball_counter = 0
+
+        # Transition to box return state
+        self.change_state(State.BOX_RETURN)
+
+    def box_return_state(self) -> None:
+        """
+        Atlas returns to the starting position.
+        """
+        # return robot to previous position
+        while self.moves:
+            move = self.moves.pop()
             self.serial_comms.start_motion(
-                heading=0,
-                distance=self.last_detection_result.distance + FIRING_OFFSET
+                heading=-move.angle,
+                distance=-move.distance
             )
-            # self.hoist.deposit_balls()
-            time.sleep(DEFAULT_DELAY_TIME)
-            self.serial_comms.start_motion(
-                heading=0,
-                distance=-self.last_detection_result.distance - FIRING_OFFSET
-            )
-            self.change_state(State.BALL_SEARCH)
-            self.ball_counter = 0
-            return 
+        
+        self.change_state(State.BALL_SEARCH)
+    
 
 
 def main(args: dict = None):

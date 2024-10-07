@@ -6,7 +6,7 @@ from dataclasses import dataclass
 # Dependencies
 from atlas_camera import Camera, FrameGrabber
 from serial_comms import SerialComms
-from object_detection import ObjectDetection, DetectionResult, DetectionClass
+from object_detection import BallDetection, DetectionResult
 
 # Planner parameters
 SEARCH_ANGLE = 17  # Angle to turn when searching for objects
@@ -74,7 +74,7 @@ class Planner:
     logger: logging.Logger
     state: State
     serial_comms: SerialComms
-    object_detector: ObjectDetection
+    object_detector: BallDetection
     moves: list[Move]
     last_detection_result = DetectionResult
 
@@ -88,7 +88,7 @@ class Planner:
         self.camera = Camera()
         self.frame_grabber = FrameGrabber(self.camera)
         self.serial_comms = SerialComms()
-        self.object_detector = ObjectDetection()
+        self.object_detector = BallDetection()
 
         self.moves = []
         self.last_detection_result = DetectionResult(False, 0, 0)
@@ -122,9 +122,8 @@ class Planner:
         while True:
             match self.state:
                 case State.SEARCHING:
-                    self.last_detection_result = self.object_detector.detect_object(
+                    self.last_detection_result = self.object_detector.detect_balls(
                         self.frame_grabber.get_latest_frame(),
-                        detection_class=DetectionClass.TENNIS_BALL
                     )
 
                     # If an object is detected, transition to the aiming state
@@ -147,9 +146,8 @@ class Planner:
                         distance=move.distance
                     )
                     self.moves.append(move)
-                    self.last_detection_result = self.object_detector.detect_object(
+                    self.last_detection_result = self.object_detector.detect_balls(
                         self.frame_grabber.get_latest_frame(),
-                        detection_class=DetectionClass.TENNIS_BALL
                     )
 
                     if self.last_detection_result.detection and self.last_detection_result.angle < ACCEPTANCE_ANGLE:
