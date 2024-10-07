@@ -14,7 +14,7 @@ def test_camera_with_yolo():
     logger = logging.getLogger("CameraYOLOTest")
 
     # Initialize the YOLO model
-    model = YOLO("/home/tyson/Documents/University/atlas/atlas_py/atlas_py/models/tennis_ball/07_10_640px_ball.pt")
+    model = YOLO("/home/tyson/Documents/University/atlas/atlas_py/atlas_py/models/tennis_ball/07_10_640px_ball.ptq")
     logger.info("YOLO model loaded successfully.")
 
     # Initialize Camera and FrameGrabber

@@ -146,10 +146,12 @@ class Planner:
                     self.ball_collection_state()
                 case State.BALL_RETURN:
                     self.ball_return_state()
-                # case State.BOX_SEARCH:
-                #     self.box_search_state()
-                # case State.BOX_DEPOSIT:
-                #     self.box_deposit_state()
+                case State.BOX_SEARCH:
+                    self.box_search_state()
+                case State.BOX_DEPOSIT:
+                    self.box_deposit_state()
+                case State.BOX_RETURN:
+                    self.box_return_state()
                 case _:
                     self.logger.error("Invalid state reached. Transitioning to BALL_SEARCH.")
                     self.change_state(State.BALL_SEARCH)
@@ -196,6 +198,7 @@ class Planner:
         Atlas aims at the ball and moves towards it. #TODO: maybe implement as two states
         """
         # aim robot at the nearest ball
+        self.logger.info("Aiming at the ball!")
         move = Move(angle=self.last_detection_result.angle, distance=0)
         self.serial_comms.start_motion(
             heading=move.angle,
@@ -203,6 +206,7 @@ class Planner:
         )
         self.moves.append(move)
 
+        self.logger.info("Detecting the ball again...")
         self.last_detection_result = self.ball_detector.detect_balls(
             self.frame_grabber.get_latest_frame(),
         )
@@ -211,9 +215,11 @@ class Planner:
             self.change_state(State.BALL_SEARCH)
             return
         elif self.last_detection_result.detection and self.last_detection_result.angle > ACCEPTANCE_ANGLE:
+            self.logger.info("Ball not aligned, retrying...")
             return
 
         # presumably, we have a ball and it's within the acceptance angle
+        self.logger.info("Moving towards the ball!")
         if self.last_detection_result.distance <= MAX_ONESHOT_DISTANCE:
             move = Move(
                 distance=self.last_detection_result.distance + FIRING_OFFSET,
@@ -251,15 +257,18 @@ class Planner:
             )
         
         self.ball_counter += 1
-        self.logger.info(f"Ball {self.ball_counter} collected!")
+        self.logger.info(f"{self.ball_counter} ball/s collected!")
 
-        if self.ball_counter < BALL_DEPOSIT_THRESHOLD:
+        if self.ball_counter > BALL_DEPOSIT_THRESHOLD:
             self.change_state(State.BOX_SEARCH)
+        else:
+            self.change_state(State.BALL_SEARCH)
     
     def box_search_state(self) -> None:
         """
         Atlas searches for the box.
         """
+        self.logger.info("Detecting box...")
         self.last_detection_result = self.box_detector.detect_box(
             self.frame_grabber.get_latest_frame(),
         )
@@ -280,6 +289,7 @@ class Planner:
         Atlas deposits the balls into the box.
         """
         # aim robot at the box #TODO: maybe implement a correction step here like ball_collection_state?
+        self.logger.info("Aiming at the box!")
         move = Move(angle=self.last_detection_result.angle, distance=0) #TODO: maybe don't append these moves to the list
         self.serial_comms.start_motion(
             heading=move.angle,
@@ -287,6 +297,7 @@ class Planner:
         )
         self.moves.append(move)
 
+        self.logger.info("Detecting the box again...")
         self.last_detection_result = self.box_detector.detect_box(
             self.frame_grabber.get_latest_frame(),
         )
@@ -295,6 +306,7 @@ class Planner:
             self.change_state(State.BOX_SEARCH)
             return
         elif self.last_detection_result.detection and self.last_detection_result.angle > ACCEPTANCE_ANGLE:  # TODO: do another acceptance angle for the box?  
+            self.logger.info("Box not aligned, retrying...")
             return
 
         self.logger.info("Moving towards the box!")
