@@ -10,10 +10,7 @@ try:
     while True:
         # Check if any limit switch is pressed
         if limit_switches.switches_pressed():
-            if limit_switches.left_limit_switch_pressed():
-                print("Left limit switch pressed!")
-            if limit_switches.right_limit_switch_pressed():
-                print("Right limit switch pressed!")
+            print("switch activated")
         else:
             print("No limit switches pressed.")
 
