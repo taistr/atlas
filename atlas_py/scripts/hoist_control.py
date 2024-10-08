@@ -29,17 +29,37 @@ pwm_B = GPIO.PWM(ENB, 1000)  # 1kHz frequency
 pwm_A.start(0)
 pwm_B.start(0)
 
+print("moving motors")
+
 # Example: Move motor A forward at half speed
 GPIO.output(IN1, GPIO.HIGH)  # Set IN1 to HIGH
 GPIO.output(IN2, GPIO.LOW)   # Set IN2 to LOW
+GPIO.output(IN3, GPIO.HIGH)  # Set IN1 to HIGH
+GPIO.output(IN4, GPIO.LOW)   # Set IN2 to LOW
 pwm_A.ChangeDutyCycle(50)    # 50% duty cycle
+pwm_B.ChangeDutyCycle(50)
 
-sleep(2)
+sleep(3.5)
 
 # Stop the motor by setting both inputs to HIGH and turning off PWM
 GPIO.output(IN1, GPIO.HIGH)
 GPIO.output(IN2, GPIO.HIGH)
+GPIO.output(IN3, GPIO.HIGH)  # Set IN1 to HIGH
+GPIO.output(IN4, GPIO.HIGH)   # Set IN2 to LOW
 pwm_A.ChangeDutyCycle(0)  # Set PWM to 0% (stop motor)
+pwm_B.ChangeDutyCycle(0)
+
+sleep(5)
+
+# Example: Move motor A forward at half speed
+GPIO.output(IN1, GPIO.LOW)  # Set IN1 to HIGH
+GPIO.output(IN2, GPIO.HIGH)   # Set IN2 to LOW
+GPIO.output(IN3, GPIO.LOW)  # Set IN1 to HIGH
+GPIO.output(IN4, GPIO.HIGH)   # Set IN2 to LOW
+pwm_A.ChangeDutyCycle(50)    # 50% duty cycle
+pwm_B.ChangeDutyCycle(50)
+
+sleep(3.5)
 
 # Stop PWM and clean up
 pwm_A.stop()
