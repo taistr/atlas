@@ -12,7 +12,7 @@ FRAME_CENTER_X = DEFAULT_FRAME_WIDTH // 2
 MINIMUM_BALL_DETECTION_CONFIDENCE = 0.5
 MINIMUM_BOX_DETECTION_CONFIDENCE = 0.5
 DEFAULT_BALL_MODEL_PATH = "/home/atlas/Desktop/atlas/atlas_py/atlas_py/models/29_08_640px.onnx"
-DEFAULT_BOX_MODEL_PATH = "/home/atlas/atlas_py/atlas_py/models/box/07_10_640px_box1.pt"
+DEFAULT_BOX_MODEL_PATH = "/home/atlas/atlas_py/atlas_py/models/box/08_10_640px_box.pt"
 
 @dataclass
 class DetectionResult:

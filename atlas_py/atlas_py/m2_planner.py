@@ -8,12 +8,14 @@ from dataclasses import dataclass
 from atlas_camera import Camera, FrameGrabber
 from serial_comms import SerialComms
 from object_detection import BallDetection, BoxDetection, DetectionResult
+from limit_switches import LimitSwitches
 # from hoist import Hoist
 
 # Planner parameters
 SEARCH_ANGLE = 17  # Angle to turn when searching for objects
 ACCEPTANCE_ANGLE = 2  # Angle threshold for considering the object aimed at
 FIRING_OFFSET = 0.35  # Offset distance when moving towards the object
+INCREMENT_MOVEMENT_DISTANCE = 0.1  # Distance to move in each step
 TENNIS_COURT_CENTRE = 3.42 # metres (distance from corner of a tennis court to centre)
 MAX_ONESHOT_DISTANCE = 1 # metres (maximum distance to move in one shot)
 BALL_DEPOSIT_THRESHOLD = 2 # balls (number of balls to collect before depositing)
@@ -100,6 +102,7 @@ class Planner:
         self.serial_comms = SerialComms()
         self.ball_detector = BallDetection()
         self.box_detector = BoxDetection()
+        self.limit_switches = LimitSwitches()
         # self.hoist = Hoist()
 
         self.moves = []
@@ -290,12 +293,10 @@ class Planner:
         """
         # aim robot at the box #TODO: maybe implement a correction step here like ball_collection_state?
         self.logger.info("Aiming at the box!")
-        move = Move(angle=self.last_detection_result.angle, distance=0) #TODO: maybe don't append these moves to the list
         self.serial_comms.start_motion(
-            heading=move.angle,
-            distance=move.distance
+            heading=self.last_detection_result.angle,
+            distance=0
         )
-        self.moves.append(move)
 
         self.logger.info("Detecting the box again...")
         self.last_detection_result = self.box_detector.detect_box(
@@ -311,20 +312,31 @@ class Planner:
 
         self.logger.info("Moving towards the box!")
 
-        # drive the estimated (minimum) distance to the box
-        move = Move(
-            distance=self.last_detection_result.distance + FIRING_OFFSET,
-            angle=0,
-        )
-        self.serial_comms.start_motion(
-            heading=move.angle,
-            distance=move.distance
-        )
-        self.moves.append(move)
+        # # drive the estimated (minimum) distance to the box
+        # move = Move(
+        #     distance=self.last_detection_result.distance + FIRING_OFFSET,
+        #     angle=0,
+        # )
+        # self.serial_comms.start_motion(
+        #     heading=move.angle,
+        #     distance=move.distance
+        # )
+        # self.moves.append(move)
+
+        while not self.limit_switches.switches_pressed():
+            move = Move(
+                distance=INCREMENT_MOVEMENT_DISTANCE,
+                angle=0,
+            )
+            self.serial_comms.start_motion(
+                heading=move.angle,
+                distance=move.distance
+            )
+            self.moves.append(move)
 
         # IF limit switches are not activated continue to drive in 10cm increments until they are (perhaps with a limit of 1m)
 
-        # else: deposit the balls (activate the hoist)
+        # else: deposit the balls (activate the hoist) # TODO: implement hoist
         self.ball_counter = 0
 
         # Transition to box return state
