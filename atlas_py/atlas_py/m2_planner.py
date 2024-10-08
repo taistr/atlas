@@ -278,6 +278,7 @@ class Planner:
 
         # If an object is detected, transition to the aiming state
         #! Potential to get stuck in this state if box is never detected
+        self.logger.info(f"Detected box at angle: {self.last_detection_result.angle}")
         if self.last_detection_result.detection:
             self.change_state(State.BOX_DEPOSIT)
         else:

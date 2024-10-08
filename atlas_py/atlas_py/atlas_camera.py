@@ -4,7 +4,7 @@ import numpy as np
 import threading
 
 # Camera parameters
-DEFAULT_ID = 2  # Default camera ID
+DEFAULT_ID = 0  # Default camera ID
 CAMERA_FOV = 35
 DEFAULT_FRAME_WIDTH = 640  # Default frame width
 DEFAULT_FRAME_HEIGHT = 480  # Default frame height

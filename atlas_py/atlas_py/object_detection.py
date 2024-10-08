@@ -11,8 +11,8 @@ from atlas_camera import DEFAULT_FRAME_WIDTH, CAMERA_FOV
 FRAME_CENTER_X = DEFAULT_FRAME_WIDTH // 2
 MINIMUM_BALL_DETECTION_CONFIDENCE = 0.5
 MINIMUM_BOX_DETECTION_CONFIDENCE = 0.5
-DEFAULT_BALL_MODEL_PATH = "/home/tyson/Documents/University/atlas/atlas_py/atlas_py/models/tennis_ball/29_08_640px.onnx"
-DEFAULT_BOX_MODEL_PATH = "/home/tyson/Documents/University/atlas/atlas_py/atlas_py/models/box/08_10_640px_box.pt"
+DEFAULT_BALL_MODEL_PATH = "/home/atlas/Desktop/atlas/atlas_py/atlas_py/models/tennis_ball/29_08_640px.onnx"
+DEFAULT_BOX_MODEL_PATH = "/home/atlas/Desktop/atlas/atlas_py/atlas_py/models/box/08_10_640px_box.pt"
 
 @dataclass
 class DetectionResult:
