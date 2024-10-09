@@ -3,6 +3,16 @@ import serial
 from enum import Enum, auto
 import time
 
+SERIAL_INITIALISE_TIMEOUT = 1
+DEFAULT_SERIAL_PORT = "/dev/ttyACM0"
+DEFAULT_BAUD_RATE = 115200
+ACCEPTANCE_TIMEOUT_NS = 4 * 1e9
+COMPLETION_TIMEOUT_NS = 30 * 1e9
+MOTOR_CMD = "m"
+ACCEPTED_STATUS_CODE = 202
+COMPLETED_STATUS_CODE = 200
+FAILED_STATUS_CODE = 400
+
 class CommandState(Enum):
     IDLE = auto()
     SENDING = auto()
@@ -64,16 +74,6 @@ class Command:
         self.arg2 = 0.0
         self.arg3 = 0.0
         self.arg4 = 0.0
-
-SERIAL_INITIALISE_TIMEOUT = 1
-DEFAULT_SERIAL_PORT = "/dev/ttyACM0"
-DEFAULT_BAUD_RATE = 115200
-ACCEPTANCE_TIMEOUT_NS = 4 * 1e9
-COMPLETION_TIMEOUT_NS = 30 * 1e9
-MOTOR_CMD = "m"
-ACCEPTED_STATUS_CODE = 202
-COMPLETED_STATUS_CODE = 200
-FAILED_STATUS_CODE = 400
 
 class SerialComms:
     logger: logging.Logger
@@ -167,7 +167,7 @@ class SerialComms:
             elif not received_command.status == FAILED_STATUS_CODE:
                 raise ValueError(f"Unexpected status code: {received_command.status}")
 
-        # wait for success message
+        # wait for success message or timeout message
         received_command.reset()
         while self.command_state == CommandState.WAITING_FOR_COMPLETION:
             if self.serial_client.in_waiting <= 0 and time.perf_counter_ns() - acceptance_time > COMPLETION_TIMEOUT_NS:

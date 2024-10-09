@@ -5,16 +5,13 @@ import threading
 
 # Camera parameters
 DEFAULT_ID = 0  # Default camera ID
-DEFAULT_FRAME_WIDTH = 480  # Default frame width
-DEFAULT_FRAME_HEIGHT = 640  # Default frame height
+CAMERA_FOV = 35
+DEFAULT_FRAME_WIDTH = 640  # Default frame width
+DEFAULT_FRAME_HEIGHT = 480  # Default frame height
 DEFAULT_FPS = 30  # Default frames per second (FPS)
 # FOURCC codes for MJPEG and YUYV formats
 FOURCC_MJPEG = cv2.VideoWriter_fourcc(*'MJPG')  # MJPEG format
 FOURCC_YUYV = cv2.VideoWriter_fourcc(*'YUYV')   # YUYV format
-
-# Configure logging
-logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
-
 
 class Camera:
     """

@@ -14,6 +14,7 @@ torchvision = "0.15.2"
 ultralytics = "<8.2.102"
 onnx = "^1.16.2"
 onnxruntime = "^1.19.2"
+rpi-gpio = "^0.7.1"
 
 
 [build-system]
