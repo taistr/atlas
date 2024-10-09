@@ -21,6 +21,7 @@ MAX_ONESHOT_DISTANCE = 1 # metres (maximum distance to move in one shot)
 BALL_DEPOSIT_THRESHOLD = 3 # balls (number of balls to collect before depositing)
 DEFAULT_DELAY_TIME = 2 # seconds (default delay time for waiting)
 BALL_COLLECTION_RADIUS = 4 # metres (radius of the circle to search for balls)
+BALL_SEARCH_TIMEOUT_ANGLE = 360 # degrees (angle to search for balls before returning to box IF there are balls
 
 # Configure logging
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -115,6 +116,7 @@ class Planner:
         self.moves = []
         self.last_detection_result = DetectionResult(False, 0, 0)
         self.ball_counter = 0
+        self.search_angle_counter = 0
 
         self.frame_grabber.start()
         self.logger.info("Planner initialised!")
@@ -201,12 +203,18 @@ class Planner:
         # If an object is detected, transition to the aiming state
         if self.last_detection_result.detection and self.last_detection_result.distance <= BALL_COLLECTION_RADIUS:
             self.change_state(State.BALL_COLLECTION)
+            self.search_angle_counter = 0
+        elif self.search_angle_counter >= BALL_SEARCH_TIMEOUT_ANGLE and self.ball_counter > 0:
+            self.change_state(State.BOX_SEARCH)
+            self.search_angle_counter = 0
         else:
             self.logger.info("Attempting to turn")
             self.serial_comms.start_motion(
                 heading=SEARCH_ANGLE,
                 distance=0
             )
+            self.search_angle_counter += SEARCH_ANGLE
+            
     
     def ball_collection_state(self) -> None:
         """
