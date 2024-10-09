@@ -18,7 +18,7 @@ FIRING_OFFSET = 0.35  # Offset distance when moving towards the object
 INCREMENT_MOVEMENT_DISTANCE = 0.4  # Distance to move in each step
 TENNIS_COURT_CENTRE = 3.42 # metres (distance from corner of a tennis court to centre)
 MAX_ONESHOT_DISTANCE = 1 # metres (maximum distance to move in one shot)
-BALL_DEPOSIT_THRESHOLD = 1 # balls (number of balls to collect before depositing)
+BALL_DEPOSIT_THRESHOLD = 3 # balls (number of balls to collect before depositing)
 DEFAULT_DELAY_TIME = 2 # seconds (default delay time for waiting)
 
 # Configure logging
@@ -101,7 +101,7 @@ class Planner:
         Initializes the Planner, setting up camera, serial communication, and object detection.
         """
         self.logger = logging.getLogger(__name__)
-        self.state = State.BALL_SEARCH
+        self.state = State.INITIALISE
 
         self.camera = Camera()
         self.frame_grabber = FrameGrabber(self.camera)
