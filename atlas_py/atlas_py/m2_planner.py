@@ -21,6 +21,11 @@ MAX_ONESHOT_DISTANCE = 1 # metres (maximum distance to move in one shot)
 BALL_DEPOSIT_THRESHOLD = 3 # balls (number of balls to collect before depositing)
 DEFAULT_DELAY_TIME = 2 # seconds (default delay time for waiting)
 
+LEFT_LIMIT_SWITCH_PIN = 26
+RIGHT_LIMIT_SWITCH_PIN = 16
+LEFTLOWER_LIMIT_SWITCH_PIN = 0
+RIGHTLOWER_LIMIT_SWITCH_PIN = 1
+
 # Configure logging
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 
@@ -348,10 +353,85 @@ class Planner:
         )
         self.moves.append(move)
 
-        if self.limit_switches.switches_pressed():
+        pressed_switches = self.limit_switches.switches_pressed() 
+        
+        if len(pressed_switches) > 2:
             self.change_state(State.BOX_DEPOSIT)
-        else:
-            return
+        elif len(pressed_switches) == 1:
+            if pressed_switches[0] == LEFT_LIMIT_SWITCH_PIN:
+                self.logger.info("Moving towards the box!")
+                move = Move(
+                    distance=0.05,
+                    angle=10,
+                )
+                self.serial_comms.start_motion(
+                heading=move.angle,
+                distance=move.distance
+                )
+                self.moves.append(move)
+            elif pressed_switches[0] == RIGHT_LIMIT_SWITCH_PIN:
+                self.logger.info("Moving towards the box!")
+                move = Move(
+                    distance=0.05,
+                    angle=-10,
+                )
+                self.serial_comms.start_motion(
+                heading=move.angle,
+                distance=move.distance
+                )
+                self.moves.append(move)
+            elif pressed_switches[0] == LEFTLOWER_LIMIT_SWITCH_PIN:
+                self.logger.info("Moving towards the box!")
+                move = Move(
+                    distance=0.05,
+                    angle=20,
+                )
+                self.serial_comms.start_motion(
+                heading=move.angle,
+                distance=move.distance
+                )
+                self.moves.append(move)
+            elif pressed_switches[0] == RIGHTLOWER_LIMIT_SWITCH_PIN:
+                self.logger.info("Moving towards the box!")
+                move = Move(
+                    distance=0.05,
+                    angle=-20,
+                )
+                self.serial_comms.start_motion(
+                heading=move.angle,
+                distance=move.distance
+                )
+                self.moves.append(move)
+        elif len(pressed_switches) == 2:
+            if LEFT_LIMIT_SWITCH_PIN in pressed_switches and LEFTLOWER_LIMIT_SWITCH_PIN in pressed_switches:
+                self.logger.info("Moving towards the box!")
+                move = Move(
+                    distance=0.05,
+                    angle=10,
+                )
+                self.serial_comms.start_motion(
+                heading=move.angle,
+                distance=move.distance
+                )
+                self.moves.append(move)
+            elif RIGHT_LIMIT_SWITCH_PIN in pressed_switches and RIGHTLOWER_LIMIT_SWITCH_PIN in pressed_switches:
+                self.logger.info("Moving towards the box!")
+                move = Move(
+                    distance=0.05,
+                    angle=-10,
+                )
+                self.serial_comms.start_motion(
+                heading=move.angle,
+                distance=move.distance
+                )
+                self.moves.append(move)
+            elif RIGHT_LIMIT_SWITCH_PIN in pressed_switches and LEFT_LIMIT_SWITCH_PIN in pressed_switches:
+                self.change_state(State.BOX_DEPOSIT)
+
+        # if self.limit_switches.switches_pressed():
+        #     self.change_state(State.BOX_DEPOSIT)
+        # else:
+        #     return
 
     def box_abort_state(self) -> None:
         """

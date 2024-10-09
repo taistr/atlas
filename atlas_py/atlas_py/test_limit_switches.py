@@ -1,6 +1,6 @@
 import time
 import RPi.GPIO as GPIO
-from limit_switches import LimitSwitches  # Replace 'your_module' with the actual module name
+from limit_switches import LimitSwitches  
 
 # Create an instance of the LimitSwitches class
 limit_switches = LimitSwitches()
@@ -8,9 +8,11 @@ limit_switches = LimitSwitches()
 try:
     print("Press the limit switches to test...")
     while True:
-        # Check if any limit switch is pressed
-        if limit_switches.switches_pressed():
-            print("switch activated")
+        # Get the list of pressed switches
+        pressed_switches = limit_switches.switches_pressed() 
+        
+        if pressed_switches:
+            print(f"Pressed pins: {', '.join(map(str, pressed_switches))}")
         else:
             print("No limit switches pressed.")
 
