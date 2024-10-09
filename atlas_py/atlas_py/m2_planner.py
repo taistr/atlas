@@ -20,6 +20,7 @@ TENNIS_COURT_CENTRE = 3.42 # metres (distance from corner of a tennis court to c
 MAX_ONESHOT_DISTANCE = 1 # metres (maximum distance to move in one shot)
 BALL_DEPOSIT_THRESHOLD = 3 # balls (number of balls to collect before depositing)
 DEFAULT_DELAY_TIME = 2 # seconds (default delay time for waiting)
+BALL_COLLECTION_RADIUS = 4 # metres (radius of the circle to search for balls)
 
 # Configure logging
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -198,7 +199,7 @@ class Planner:
         )
 
         # If an object is detected, transition to the aiming state
-        if self.last_detection_result.detection:
+        if self.last_detection_result.detection and self.last_detection_result.distance <= BALL_COLLECTION_RADIUS:
             self.change_state(State.BALL_COLLECTION)
         else:
             self.logger.info("Attempting to turn")
