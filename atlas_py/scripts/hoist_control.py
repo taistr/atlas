@@ -31,7 +31,7 @@ pwm_B.start(0)
 
 print("moving motors")
 
-# Example: Move motor A forward at half speed
+#! Raise the hoist up to ramp 
 GPIO.output(IN1, GPIO.HIGH)  # Set IN1 to HIGH
 GPIO.output(IN2, GPIO.LOW)   # Set IN2 to LOW
 GPIO.output(IN3, GPIO.HIGH)  # Set IN1 to HIGH
@@ -39,19 +39,21 @@ GPIO.output(IN4, GPIO.LOW)   # Set IN2 to LOW
 pwm_A.ChangeDutyCycle(50)    # 50% duty cycle
 pwm_B.ChangeDutyCycle(50)
 
-sleep(3.5)
+sleep(4.5)
 
-# Stop the motor by setting both inputs to HIGH and turning off PWM
+#! Stop the front motor and back motor
+
 GPIO.output(IN1, GPIO.HIGH)
 GPIO.output(IN2, GPIO.HIGH)
 GPIO.output(IN3, GPIO.HIGH)  # Set IN1 to HIGH
 GPIO.output(IN4, GPIO.HIGH)   # Set IN2 to LOW
 pwm_A.ChangeDutyCycle(0)  # Set PWM to 0% (stop motor)
 pwm_B.ChangeDutyCycle(0)
+sleep(3)
 
-sleep(5)
 
-# Example: Move motor A forward at half speed
+#! Lower the basket
+
 GPIO.output(IN1, GPIO.LOW)  # Set IN1 to HIGH
 GPIO.output(IN2, GPIO.HIGH)   # Set IN2 to LOW
 GPIO.output(IN3, GPIO.LOW)  # Set IN1 to HIGH
@@ -59,7 +61,7 @@ GPIO.output(IN4, GPIO.HIGH)   # Set IN2 to LOW
 pwm_A.ChangeDutyCycle(50)    # 50% duty cycle
 pwm_B.ChangeDutyCycle(50)
 
-sleep(3.5)
+sleep(4.5)
 
 # Stop PWM and clean up
 pwm_A.stop()

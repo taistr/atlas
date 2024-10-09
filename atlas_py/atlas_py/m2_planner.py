@@ -95,7 +95,7 @@ class Planner:
         Initializes the Planner, setting up camera, serial communication, and object detection.
         """
         self.logger = logging.getLogger(__name__)
-        self.state = State.BALL_SEARCH
+        self.state = State.BOX_SEARCH
 
         self.camera = Camera()
         self.frame_grabber = FrameGrabber(self.camera)
