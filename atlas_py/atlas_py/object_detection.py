@@ -11,8 +11,8 @@ from atlas_camera import DEFAULT_FRAME_WIDTH, CAMERA_FOV
 FRAME_CENTER_X = DEFAULT_FRAME_WIDTH // 2
 MINIMUM_BALL_DETECTION_CONFIDENCE = 0.5
 MINIMUM_BOX_DETECTION_CONFIDENCE = 0.5
-DEFAULT_BALL_MODEL_PATH = "/home/atlas/Desktop/atlas/atlas_py/atlas_py/models/29_08_640px.onnx"
-DEFAULT_BOX_MODEL_PATH = "/home/atlas/atlas_py/atlas_py/models/box/08_10_640px_box.pt"
+DEFAULT_BALL_MODEL_PATH = "/home/tyson/Documents/University/atlas/atlas_py/atlas_py/models/tennis_ball/29_08_640px.onnx"
+DEFAULT_BOX_MODEL_PATH = "/home/tyson/Documents/University/atlas/atlas_py/atlas_py/models/box/08_10_640px_box.pt"
 
 @dataclass
 class DetectionResult:
@@ -127,7 +127,7 @@ class BoxDetection:
         :return: A DetectionResult object containing detection status, angle, and distance. Distance will always be returned as 0.
         """
 
-        results = self.model(frame, conf=MINIMUM_BALL_DETECTION_CONFIDENCE)
+        results = self.box_model(frame, conf=MINIMUM_BALL_DETECTION_CONFIDENCE)
         boxes = results[0].boxes
 
         # If any objects were detected
@@ -158,7 +158,7 @@ class BoxDetection:
         :param x_centre: the centre of the object in the frame
         :return: the angle of the object in degrees
         """
-        x_relative = x_centre - FRAME_CENTER_X
+        x_relative = -(x_centre - FRAME_CENTER_X)
         angle = (x_relative / DEFAULT_FRAME_WIDTH) * CAMERA_FOV / 2
 
         return angle
