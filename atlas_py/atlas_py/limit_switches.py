@@ -10,11 +10,9 @@ class LimitSwitches:
         GPIO.setmode(GPIO.BCM)
         GPIO.setup(LEFT_LIMIT_SWITCH_PIN, GPIO.IN, pull_up_down=GPIO.PUD_UP)
         GPIO.setup(RIGHT_LIMIT_SWITCH_PIN, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-        GPIO.setup(LEFTLOWER_LIMIT_SWITCH_PIN, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-        GPIO.setup(RIGHTLOWER_LIMIT_SWITCH_PIN, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
     def switches_pressed(self):
-        return not GPIO.input(LEFT_LIMIT_SWITCH_PIN) or not GPIO.input(RIGHT_LIMIT_SWITCH_PIN) or not GPIO.input(RIGHTLOWER_LIMIT_SWITCH_PIN) or not GPIO.input(LEFTLOWER_LIMIT_SWITCH_PIN)
+        return not GPIO.input(LEFT_LIMIT_SWITCH_PIN) or not GPIO.input(RIGHT_LIMIT_SWITCH_PIN)
 
     def cleanup(self):
         GPIO.cleanup()
