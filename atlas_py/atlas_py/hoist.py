@@ -62,7 +62,7 @@ class Hoist:
         :param motor: The motor to move.
         
         """
-        if motor == HoistMotor.MOTOR_FRONT:
+        if motor == HoistMotor.MOTOR_REAR:
             match direction:
                 case HoistDirection.UP:
                     GPIO.output(IN1, GPIO.HIGH)
@@ -103,18 +103,22 @@ class Hoist:
         """
         Deposit the ball into the basket.
         """
+
+        self.move(HoistMotor.MOTOR_FRONT, HoistDirection.UP, 100)
+        sleep(1)
         
         self.move(HoistMotor.MOTOR_REAR, HoistDirection.UP, 100)
-        self.move(HoistMotor.MOTOR_FRONT, HoistDirection.UP, 100)
-        sleep(5.5)
+        sleep(5)
 
-        self.move(HoistMotor.MOTOR_REAR, HoistDirection.STOP)
         self.move(HoistMotor.MOTOR_FRONT, HoistDirection.STOP)
         sleep(3)
 
+        self.move(HoistMotor.MOTOR_REAR, HoistDirection.STOP)
+        sleep(5)
+
         self.move(HoistMotor.MOTOR_REAR, HoistDirection.DOWN, 100)
         self.move(HoistMotor.MOTOR_FRONT, HoistDirection.DOWN, 100)
-        sleep(5.5)
+        sleep(5)
 
         self.move(HoistMotor.MOTOR_FRONT, HoistDirection.RELAX)
         self.move(HoistMotor.MOTOR_REAR, HoistDirection.RELAX)
