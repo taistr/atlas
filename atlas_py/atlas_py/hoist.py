@@ -17,6 +17,7 @@ class HoistDirection(Enum):
     UP = 0
     DOWN = 1
     STOP = 2
+    RELAX = 3
 
 class HoistMotor(Enum):
     MOTOR_FRONT = 0
@@ -75,6 +76,10 @@ class Hoist:
                     GPIO.output(IN1, GPIO.HIGH)
                     GPIO.output(IN2, GPIO.HIGH)
                     self.pwm_front.ChangeDutyCycle(0)
+                case HoistDirection.RELAX:
+                    GPIO.output(IN1, GPIO.HIGH)
+                    GPIO.output(IN2, GPIO.HIGH)
+                    self.pwm_front.ChangeDutyCycle(0)
         else:
             match direction:
                 case HoistDirection.UP:
@@ -89,19 +94,27 @@ class Hoist:
                     GPIO.output(IN3, GPIO.HIGH)
                     GPIO.output(IN4, GPIO.HIGH)
                     self.pwm_rear.ChangeDutyCycle(0)
+                case HoistDirection.RELAX:
+                    GPIO.output(IN3, GPIO.HIGH)
+                    GPIO.output(IN4, GPIO.HIGH)
+                    self.pwm_front.ChangeDutyCycle(0)
 
     def deposit(self):
         """
         Deposit the ball into the basket.
         """
-        self.move(HoistMotor.MOTOR_REAR, HoistDirection.UP, 50)
-        self.move(HoistMotor.MOTOR_FRONT, HoistDirection.UP, 50)
-        sleep(4.5)
+        
+        self.move(HoistMotor.MOTOR_REAR, HoistDirection.UP, 100)
+        self.move(HoistMotor.MOTOR_FRONT, HoistDirection.UP, 100)
+        sleep(5.5)
 
         self.move(HoistMotor.MOTOR_REAR, HoistDirection.STOP)
         self.move(HoistMotor.MOTOR_FRONT, HoistDirection.STOP)
         sleep(3)
 
-        self.move(HoistMotor.MOTOR_REAR, HoistDirection.DOWN, 50)
-        self.move(HoistMotor.MOTOR_FRONT, HoistDirection.DOWN, 50)
-        sleep(4.5)
+        self.move(HoistMotor.MOTOR_REAR, HoistDirection.DOWN, 100)
+        self.move(HoistMotor.MOTOR_FRONT, HoistDirection.DOWN, 100)
+        sleep(5.5)
+
+        self.move(HoistMotor.MOTOR_FRONT, HoistDirection.RELAX)
+        self.move(HoistMotor.MOTOR_REAR, HoistDirection.RELAX)
