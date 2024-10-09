@@ -360,6 +360,8 @@ def main(args: dict = None):
         logging.error(f"An error occurred: {e}")
     finally:
         planner.frame_grabber.stop()  # Ensure cleanup on exit
+        planner.limit_switches.cleanup()
+        planner.hoist.cleanup()
 
 if __name__ == "__main__":
     main()
