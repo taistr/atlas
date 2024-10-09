@@ -1,7 +1,7 @@
 import RPi.GPIO as GPIO
 
-LEFT_LIMIT_SWITCH_PIN = 16
-RIGHT_LIMIT_SWITCH_PIN = 26
+LEFT_LIMIT_SWITCH_PIN = 26
+RIGHT_LIMIT_SWITCH_PIN = 16
 
 class LimitSwitches:
     def __init__(self):
