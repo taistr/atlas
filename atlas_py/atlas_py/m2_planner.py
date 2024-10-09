@@ -9,7 +9,7 @@ from atlas_camera import Camera, FrameGrabber
 from serial_comms import SerialComms
 from object_detection import BallDetection, BoxDetection, DetectionResult
 from limit_switches import LimitSwitches
-# from hoist import Hoist
+from hoist import Hoist
 
 # Planner parameters
 SEARCH_ANGLE = 17  # Angle to turn when searching for objects
@@ -87,6 +87,9 @@ class Planner:
     serial_comms: SerialComms
     ball_detector: BallDetection
     box_detector: BoxDetection
+    frame_grabber: FrameGrabber
+    limit_switches: LimitSwitches
+    hoist: Hoist
     moves: list[Move]
     last_detection_result = DetectionResult
 
@@ -103,7 +106,7 @@ class Planner:
         self.ball_detector = BallDetection()
         self.box_detector = BoxDetection()
         self.limit_switches = LimitSwitches()
-        # self.hoist = Hoist()
+        self.hoist = Hoist()
 
         self.moves = []
         self.last_detection_result = DetectionResult(False, 0, 0)
@@ -313,17 +316,6 @@ class Planner:
 
         self.logger.info("Moving towards the box!")
 
-        # # drive the estimated (minimum) distance to the box
-        # move = Move(
-        #     distance=self.last_detection_result.distance + FIRING_OFFSET,
-        #     angle=0,
-        # )
-        # self.serial_comms.start_motion(
-        #     heading=move.angle,
-        #     distance=move.distance
-        # )
-        # self.moves.append(move)
-
         while not self.limit_switches.switches_pressed():
             move = Move(
                 distance=INCREMENT_MOVEMENT_DISTANCE,
@@ -335,9 +327,10 @@ class Planner:
             )
             self.moves.append(move)
 
-        # IF limit switches are not activated continue to drive in 10cm increments until they are (perhaps with a limit of 1m)
+        self.logger.info("Box reached!")
+        self.wait(DEFAULT_DELAY_TIME)
+        self.hoist.deposit()
 
-        # else: deposit the balls (activate the hoist) # TODO: implement hoist
         self.ball_counter = 0
 
         # Transition to box return state
@@ -356,8 +349,6 @@ class Planner:
             )
         
         self.change_state(State.BALL_SEARCH)
-    
-
 
 def main(args: dict = None):
     try:
