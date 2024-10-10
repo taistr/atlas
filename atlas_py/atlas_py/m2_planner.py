@@ -22,6 +22,7 @@ BALL_DEPOSIT_THRESHOLD = 3 # balls (number of balls to collect before depositing
 DEFAULT_DELAY_TIME = 2 # seconds (default delay time for waiting)
 BALL_COLLECTION_RADIUS = 4 # metres (radius of the circle to search for balls)
 BALL_SEARCH_TIMEOUT_ANGLE = 360 # degrees (angle to search for balls before returning to box IF there are balls
+WAIT_TIME = 2
 
 # Configure logging
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -177,7 +178,6 @@ class Planner:
         """
         Atlas waits for a few seconds before starting the state machine.
         """
-        WAIT_TIME = 5
         self.logger.info(f"Atlas will be starting in {WAIT_TIME} seconds...")
         time.sleep(WAIT_TIME)
         self.change_state(State.START) # Transition to the next state
