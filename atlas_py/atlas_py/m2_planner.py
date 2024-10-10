@@ -375,7 +375,6 @@ class Planner:
                 distance=-move.distance
             )
 
-        self.change_state(State.BOX_SEARCH)
         
     def box_deposit_state(self) -> None:
         """

@@ -7,7 +7,7 @@ SERIAL_INITIALISE_TIMEOUT = 1
 DEFAULT_SERIAL_PORT = "/dev/ttyACM0"
 DEFAULT_BAUD_RATE = 115200
 ACCEPTANCE_TIMEOUT_NS = 4 * 1e9
-COMPLETION_TIMEOUT_NS = 30 * 1e9
+COMPLETION_TIMEOUT_NS = 10 * 1e9
 MOTOR_CMD = "m"
 ACCEPTED_STATUS_CODE = 202
 COMPLETED_STATUS_CODE = 200
@@ -113,13 +113,16 @@ class SerialComms:
         :param heading: the heading to move in
         :param distance: the distance to move
         """
-        command = Command(
-            status=CommandStatusCode.CONTINUE.value,
-            cmd=MOTOR_CMD,
-            arg1=float(f"{distance:.3f}"),
-            arg2=float(f"{heading:.3f}"),
-        )
-        self.send_command(command)
+        try:
+            command = Command(
+                status=CommandStatusCode.CONTINUE.value,
+                cmd=MOTOR_CMD,
+                arg1=float(f"{distance:.3f}"),
+                arg2=float(f"{heading:.3f}"),
+            )
+            self.send_command(command)
+        except TimeoutError as e:
+            self.logger.error("Encountered a timeout on motor move - took longer than 10s")
 
     def send_command(self, command: Command) -> None:
         """
